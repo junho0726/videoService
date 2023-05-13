@@ -10,7 +10,6 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,40 +17,23 @@ import java.util.List;
 @Builder
 @Entity
 @DynamicInsert
-public class User {
+public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userSeq;
+    private int fileSeq;
 
     @Column(nullable = false)
-    private String id;
+    private String filePath;
 
     @Column(nullable = false)
-    private String pw;
+    private String fileFullPath;
 
     @Column(nullable = false)
-    private String name;
+    private String fileOriginName;
 
-    @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String tel;
-
-    @Column(nullable = false)
-    private String ip;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Video> video;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<LikeState> likeState;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
-    private Channel channel;
+    @OneToOne
+    private Video video;
 
     @Column(nullable = false)
     @CreationTimestamp
