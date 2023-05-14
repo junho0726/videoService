@@ -1,15 +1,31 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+
+    <router-view></router-view>
+
+    <div>
+        <router-link to="/">홈으로 가기</router-link>
+    </div>
+
+    <div>
+        <router-link to="/login">login으로 가기</router-link>
+    </div>
+
+    <div>
+        <router-link to="/join">join으로 가기</router-link>
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import {useRoute} from "vue-router";
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  setup() {
+    let route = useRoute();
+
+    return {
+        route
+    }
   }
 }
 </script>
