@@ -33,6 +33,7 @@ public class File {
     private String fileOriginName;
 
     @OneToOne
+    @JoinColumn(name = "videoSeq")
     private Video video;
 
     @Column(nullable = false)

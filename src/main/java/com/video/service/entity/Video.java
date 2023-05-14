@@ -47,7 +47,7 @@ public class Video {
     @JoinColumn(name = "categorySeq")
     private Category category;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "video")
+    @OneToOne(mappedBy = "video")
     private File file;
 
     @Column(nullable = false)

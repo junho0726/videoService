@@ -25,14 +25,15 @@ public class Channel {
     private int channelSeq;
 
     @OneToOne
+    @JoinColumn(name = "userSeq")
     private User user;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "channel", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.DETACH)
     private List<Video> video;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subscriberSeq")
+    @ManyToOne
+    @JoinColumn(name = "userSeq", insertable = false, updatable = false)
     private User subscriber;
 
     @Column(nullable = false)

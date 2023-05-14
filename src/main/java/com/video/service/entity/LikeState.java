@@ -26,14 +26,14 @@ public class LikeState {
     @Column(nullable = false)
     private String likeState;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "videoSeq", nullable = false)
-    private Video video;
+//    @JsonBackReference
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "videoSeq", nullable = false)
+//    private Video video;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userSeq", nullable = false)
+    @JoinColumn(name = "userSeq")
     private User user;
 
     @Column(nullable = false)

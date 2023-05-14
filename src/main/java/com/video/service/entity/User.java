@@ -43,15 +43,19 @@ public class User {
     private String ip;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Video> video;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<LikeState> likeState;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToOne(mappedBy = "user")
     private Channel channel;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    private List<Channel> subscribeChannel;
 
     @Column(nullable = false)
     @CreationTimestamp
