@@ -7,6 +7,7 @@ import com.video.service.entity.User;
 import com.video.service.service.ChannelService;
 import com.video.service.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,17 +60,12 @@ public class UserController {
     public ApiResponse userLogin(@RequestBody User user, HttpServletRequest req) throws Exception{
         ApiResponse response = new ApiResponse();
         try{
-            String enPw = user.getPw();
-            String encryptedPassword = passwordEncoder.encode(enPw);
-            user.setPw(encryptedPassword);
             User findUser = userService.findByid(user);
-            System.out.println("userPw="+ user.getPw());
             if (findUser != null){
-                User loginUser =userService.userLogin(user);
-                    if(loginUser != null){
+                if(BCrypt.checkpw(user.getPw(), findUser.getPw())){
                         response.setCode("0000");
                         response.setMessage("Successed!!");
-                        response.setData(loginUser);
+                        response.setData(findUser);
                     }else{
                         response.setCode("0001");
                         response.setMessage("Incorrect password");
