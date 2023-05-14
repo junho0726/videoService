@@ -63,7 +63,6 @@ public class UserController {
             String encryptedPassword = passwordEncoder.encode(enPw);
             user.setPw(encryptedPassword);
             User findUser = userService.findByid(user);
-            System.out.println("userEntity="+ findUser.getUserSeq());
             System.out.println("userPw="+ user.getPw());
             if (findUser != null){
                 User loginUser =userService.userLogin(user);
