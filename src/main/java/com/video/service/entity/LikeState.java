@@ -1,6 +1,7 @@
 package com.video.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,17 +22,15 @@ public class LikeState {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int likeSeq;
+    private int likeStateSeq;
 
     @Column(nullable = false)
     private String likeState;
 
-//    @JsonBackReference
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "videoSeq", nullable = false)
-//    private Video video;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "videoSeq")
+    private Video video;
 
-    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userSeq")
     private User user;

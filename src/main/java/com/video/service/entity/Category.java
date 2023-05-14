@@ -1,5 +1,6 @@
 package com.video.service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,12 +26,8 @@ public class Category {
     @Column(nullable = false)
     private String name;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "category", cascade = CascadeType.DETACH)
-    private List<Keyword> keyword;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "category", cascade = CascadeType.DETACH)
+    @JsonIgnoreProperties("category")
+    @ManyToMany(mappedBy = "category", cascade = CascadeType.DETACH)
     private List<Video> video;
 
 }

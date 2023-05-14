@@ -1,5 +1,7 @@
 package com.video.service.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,16 +27,14 @@ public class Channel {
     private int channelSeq;
 
     @OneToOne
+    @JsonBackReference
     @JoinColumn(name = "userSeq")
     private User user;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.DETACH)
-    private List<Video> video;
-
-    @ManyToOne
-    @JoinColumn(name = "userSeq", insertable = false, updatable = false)
-    private User subscriber;
+//    @ManyToOne
+//    @JsonBackReference
+//    @JoinColumn(name = "subscriberSeq", insertable = false, updatable = false)
+//    private User subscriber;
 
     @Column(nullable = false)
     @CreationTimestamp

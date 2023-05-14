@@ -1,5 +1,6 @@
 package com.video.service.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +33,7 @@ public class File {
     @Column(nullable = false)
     private String fileOriginName;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "videoSeq")
     private Video video;
 

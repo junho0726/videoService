@@ -1,6 +1,8 @@
 package com.video.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +12,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -34,21 +37,12 @@ public class Video {
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userSeq")
-    private User user;
-
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "channelSeq")
     private Channel channel;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "categorySeq")
-    private Category category;
-
-    @OneToOne(mappedBy = "video")
-    private File file;
+    private List<Category> category;
 
     @Column(nullable = false)
     @CreationTimestamp
