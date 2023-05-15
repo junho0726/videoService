@@ -11,6 +11,4 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findByid(String id);
-    @Query("SELECT u FROM User u WHERE u.id = :id AND u.pw = :pw")
-    User userLogin(String id, String pw);
 }

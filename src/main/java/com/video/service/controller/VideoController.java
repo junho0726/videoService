@@ -1,18 +1,21 @@
 package com.video.service.controller;
 
 import com.video.service.entity.*;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@ResponseBody
 @RequestMapping("/api/")
+@RequiredArgsConstructor
 public class VideoController {
 
-    @PostMapping(value = "insert/video")
-    public Video insertVideo(@RequestBody Video video) {
-        return video;
-    }
+/*    @PostMapping(value = "insertVideo")
+    public ApiResponse insertVideo(@RequestBody Video video)
+    {
+
+
+        return ApiResponse;
+    }*/
 
 }

@@ -31,6 +31,10 @@ public class Channel {
     @JoinColumn(name = "userSeq")
     private User user;
 
+
+    @OneToMany(mappedBy = "channel")
+    private List<Video> video;
+
 //    @ManyToOne
 //    @JsonBackReference
 //    @JoinColumn(name = "subscriberSeq", insertable = false, updatable = false)

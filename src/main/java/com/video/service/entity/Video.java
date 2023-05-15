@@ -41,7 +41,9 @@ public class Video {
     private Channel channel;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categorySeq")
+    @JoinTable(name="video_category",
+            joinColumns = @JoinColumn(name = "video_videoSeq"),
+            inverseJoinColumns = @JoinColumn(name = "category_categorySeq"))
     private List<Category> category;
 
     @Column(nullable = false)
