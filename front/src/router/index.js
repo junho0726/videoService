@@ -3,6 +3,8 @@ import App from "@/App.vue";
 import Home from "@/view/Home.vue";
 import Login from "@/view/Login.vue";
 import Join from "@/view/Join.vue";
+import MyChannel from "@/user/MyChannel.vue";
+import MyPage from "@/user/MyPage.vue";
 
 // routes 배열 초기화
 const routes = [
@@ -25,6 +27,16 @@ const routes = [
         path: "/join",
         name: "join",
         component: Join
+    },
+    {
+        path: "/mypage",
+        name: "mypage",
+        component: MyPage
+    },
+    {
+        path: "/mychannel",
+        name: "mychannel",
+        component: MyChannel
     }
 ];
 

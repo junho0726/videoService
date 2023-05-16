@@ -110,7 +110,7 @@ let join = async () => {
     if(checkIdState.value) {
         if(checkEmpty() && checkPw()) {
             try {
-                let response = await axios.post('/api/joinProc', {
+                let response = await axios.post('/api/user/joinProc', {
                     id: id.value,
                     pw: pw.value,
                     rePw: rePw.value,

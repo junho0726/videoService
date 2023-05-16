@@ -34,7 +34,7 @@ let login = async () => {
     if(checkEmpty()) {
 
         try {
-            let response = await axios.post('/api/login', {
+            let response = await axios.post('/api/user/login', {
                 id: id.value,
                 pw: pw.value
             });
