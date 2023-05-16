@@ -2,8 +2,8 @@ package com.video.service.controller;
 
 
 import com.video.service.entity.ApiResponse;
-import com.video.service.entity.Channel;
-import com.video.service.entity.User;
+import com.video.service.entity.ChannelEntity;
+import com.video.service.entity.UserEntity;
 import com.video.service.service.ChannelService;
 import com.video.service.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "joinProc")
-    public ApiResponse userJoin(@RequestBody User user, HttpServletRequest req) throws Exception {
+    public ApiResponse userJoin(@RequestBody UserEntity user, HttpServletRequest req) throws Exception {
         ApiResponse response = new ApiResponse();
         try {
             String enPw = user.getPw();
@@ -35,13 +35,13 @@ public class UserController {
             String ip = req.getHeader("X-Forwarded-For");
             if (ip == null) ip = req.getRemoteAddr();
             user.setIp(ip);
-            User savedUser = userService.userJoin(user);
+            UserEntity savedUser = userService.userJoin(user);
             if (savedUser != null) {
                 response.setCode("0000");
                 response.setMessage("Successed!!");
                 response.setData(savedUser);
 
-                Channel channel = new Channel();
+                ChannelEntity channel = new ChannelEntity();
                 channel.setUser(savedUser);
                 channelService.ChannelSave(channel);
             } else {
@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @PostMapping(value = "updateProc")
-    public ApiResponse userUpdate(@RequestBody User user, HttpServletRequest req) throws Exception {
+    public ApiResponse userUpdate(@RequestBody UserEntity user, HttpServletRequest req) throws Exception {
         ApiResponse response = new ApiResponse();
         try {
             String enPw = user.getPw();
@@ -66,12 +66,12 @@ public class UserController {
             String ip = req.getHeader("X-Forwarded-For");
             if (ip == null) ip = req.getRemoteAddr();
             user.setIp(ip);
-            User updateUser = userService.userUpdate(user);
+            UserEntity updateUser = userService.userUpdate(user);
             if (updateUser != null) {
                 response.setCode("0000");
                 response.setMessage("Successed!!");
                 response.setData(updateUser);
-                Channel channel = new Channel();
+                ChannelEntity channel = new ChannelEntity();
                 channel.setUser(updateUser);
             } else {
                 response.setCode("0001");
@@ -86,10 +86,10 @@ public class UserController {
     }
 
     @PostMapping(value ="login")
-    public ApiResponse userLogin(@RequestBody User user, HttpServletRequest req) throws Exception{
+    public ApiResponse userLogin(@RequestBody UserEntity user, HttpServletRequest req) throws Exception{
         ApiResponse response = new ApiResponse();
         try{
-            User findUser = userService.findByid(user);
+            UserEntity findUser = userService.findByid(user);
             if (findUser != null){
                 if(BCrypt.checkpw(user.getPw(), findUser.getPw())){
                         response.setCode("0000");
@@ -112,7 +112,7 @@ public class UserController {
 
 
     @PostMapping(value ="checkId")
-    public ApiResponse checkId(@RequestBody User user, HttpServletRequest req) throws Exception{
+    public ApiResponse checkId(@RequestBody UserEntity user, HttpServletRequest req) throws Exception{
         ApiResponse response = new ApiResponse();
         try{
             boolean checkId = userService.checkId(user);

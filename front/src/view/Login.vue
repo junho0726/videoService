@@ -15,7 +15,6 @@
     <br>
     <div>
         <button type="button" @click="login">Login</button>
-        <button type="button">Join</button>
     </div>
 </template>
 
@@ -39,7 +38,11 @@ let login = async () => {
                 id: id.value,
                 pw: pw.value
             });
-            console.log(response.data);
+            if(response.data.code == "0000") {
+                alert("환영합니다.");
+            } else {
+                alert("아이디 혹은 비밀번호를 확인해주세요.");
+            }
         } catch (error) {
             console.error(error);
         }

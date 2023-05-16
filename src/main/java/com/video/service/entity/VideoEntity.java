@@ -1,8 +1,6 @@
 package com.video.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +18,7 @@ import java.util.List;
 @Builder
 @Entity
 @DynamicInsert
-public class Video {
+public class VideoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,13 +36,13 @@ public class Video {
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "channelSeq")
-    private Channel channel;
+    private ChannelEntity channel;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="video_category",
             joinColumns = @JoinColumn(name = "video_videoSeq"),
             inverseJoinColumns = @JoinColumn(name = "category_categorySeq"))
-    private List<Category> category;
+    private List<CategoryEntity> category;
 
     @Column(nullable = false)
     @CreationTimestamp

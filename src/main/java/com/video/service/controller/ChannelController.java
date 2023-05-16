@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChannelController {
 
     @PostMapping(value = "insert/channel")
-    public Channel insertChannel(@RequestBody Channel channel) {
+    public ChannelEntity insertChannel(@RequestBody ChannelEntity channel) {
         return channel;
     }
 

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 public class LikeStateController {
 
     @PostMapping(value = "insert/likeState")
-    public LikeState insertLikeState(@RequestBody LikeState likeState) {
+    public LikeStateEntity insertLikeState(@RequestBody LikeStateEntity likeState) {
         return likeState;
     }
 

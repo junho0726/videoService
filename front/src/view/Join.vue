@@ -4,9 +4,17 @@
     <h1>Join 페이지</h1>
 
     <div>
-        <input type="text" id="id" v-model="id" placeholder="아이디를 입력해주세요.">
+        <div>
+            <input type="text" id="id" v-model="id" @change="() => {checkIdState = false;}" placeholder="아이디를 입력해주세요.">
+        </div>
+        <div>
+            <span>{{ checkEmptyId }}</span>
+            <span>{{ checkIdMsg }}</span>
+        </div>
+        <div>
+            <button type="button" @click="checkId()">아이디 확인</button>
+        </div>
     </div>
-    <span>{{ checkEmptyId }}</span>
     <br>
     <div>
         <input type="text" id="pw" v-model="pw" placeholder="비밀번호를 입력해주세요.">
@@ -58,7 +66,33 @@ let checkEmptyName = ref('');
 let checkEmptyEmail = ref('');
 let checkEmptyTel = ref('');
 
+let checkIdState = ref('');
+let checkIdMsg = ref('');
 let checkPwMsg = ref('');
+
+async function checkId() {
+    if(id.value == '') {
+        checkEmptyId.value = '아이디를 입력해주세요.'
+        return false;
+    } else {
+        checkEmptyId.value = ''
+    }
+    try {
+        let response = await axios.post('./api/checkId', {
+            id: id.value
+        });
+       console.log(response);
+       if(response.data.code == "0000") {
+            checkIdMsg.value = '사용 가능한 아이디 입니다.'
+            checkIdState.value = true;
+       } else {
+            checkIdMsg.value = '이미 존재하는 아이디 입니다.'
+            checkIdState.value = false;
+       }
+    } catch(err) {
+       console.log(err);
+    }
+}
 
 function checkPw() {
     if(pw.value != rePw.value) {
@@ -73,20 +107,29 @@ function checkPw() {
 
 let join = async () => {
 
-    if(checkEmpty() && checkPw()) {
-        try {
-            let response = await axios.post('/api/joinProc', {
-                id: id.value,
-                pw: pw.value,
-                rePw: rePw.value,
-                name: name.value,
-                email: email.value,
-                tel: tel.value
-            });
-            console.log(response.data);
-        } catch (error) {
-            console.error(error);
+    if(checkIdState.value) {
+        if(checkEmpty() && checkPw()) {
+            try {
+                let response = await axios.post('/api/joinProc', {
+                    id: id.value,
+                    pw: pw.value,
+                    rePw: rePw.value,
+                    name: name.value,
+                    email: email.value,
+                    tel: tel.value
+                });
+                if(response.data.code == "0000") {
+                    alert('회원가입에 성공하셨습니다.');
+                    location.href = "./login";
+                } else {
+
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
+    } else {
+        alert('아이디 중복 여부를 체크해주세요.');
     }
 };
 

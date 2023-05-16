@@ -1,7 +1,6 @@
 package com.video.service.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,17 +16,17 @@ import javax.persistence.*;
 @Builder
 @Entity
 @DynamicInsert
-public class Keyword {
+public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int keywordSeq;
+    private int categorySeq;
 
     @Column(nullable = false)
-    private String keyword;
+    private String name;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categorySeq")
-    private Category category;
+    @JsonIgnoreProperties("category")
+    @ManyToMany(mappedBy = "category", cascade = CascadeType.DETACH)
+    private List<VideoEntity> video;
+
 }

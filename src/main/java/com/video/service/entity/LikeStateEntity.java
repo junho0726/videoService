@@ -16,24 +16,22 @@ import java.sql.Timestamp;
 @Builder
 @Entity
 @DynamicInsert
-public class File {
+public class LikeStateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int fileSeq;
+    private int likeStateSeq;
 
     @Column(nullable = false)
-    private String filePath;
+    private String likeState;
 
-    @Column(nullable = false)
-    private String fileFullPath;
-
-    @Column(nullable = false)
-    private String fileOriginName;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "videoSeq")
     private VideoEntity video;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userSeq")
+    private UserEntity user;
 
     @Column(nullable = false)
     @CreationTimestamp

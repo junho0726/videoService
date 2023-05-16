@@ -1,9 +1,6 @@
 package com.video.service.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +10,6 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,7 +17,7 @@ import java.util.List;
 @Builder
 @Entity
 @DynamicInsert
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +43,7 @@ public class User {
 
     @JsonIgnore
     @OneToOne(mappedBy = "user")
-    private Channel channel;
+    private ChannelEntity channel;
 
 //    @JsonIgnoreProperties("subscriber")
 //    @OneToMany(mappedBy = "subscriber", cascade = CascadeType.DETACH)

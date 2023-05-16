@@ -1,7 +1,6 @@
 package com.video.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +10,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,22 +18,25 @@ import java.sql.Timestamp;
 @Builder
 @Entity
 @DynamicInsert
-public class LikeState {
+public class ChannelEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int likeStateSeq;
+    private int channelSeq;
 
-    @Column(nullable = false)
-    private String likeState;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "videoSeq")
-    private Video video;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
+    @JsonBackReference
     @JoinColumn(name = "userSeq")
-    private User user;
+    private UserEntity user;
+
+
+    @OneToMany(mappedBy = "channel")
+    private List<VideoEntity> video;
+
+//    @ManyToOne
+//    @JsonBackReference
+//    @JoinColumn(name = "subscriberSeq", insertable = false, updatable = false)
+//    private User subscriber;
 
     @Column(nullable = false)
     @CreationTimestamp
