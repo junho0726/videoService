@@ -1,4 +1,4 @@
-package com.video.service.config;
+/*package com.video.service.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -16,4 +16,4 @@ public class WebConfig implements WebMvcConfigurer {
 
         // 위 설정들이 모두 true일 때만 접근 허용됨
     }
-}
+}*/

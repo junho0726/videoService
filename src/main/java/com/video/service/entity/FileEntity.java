@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @Builder
 @Entity
 @DynamicInsert
-public class File {
+public class FileEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

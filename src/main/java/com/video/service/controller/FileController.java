@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FileController {
 
     @PostMapping(value = "insert/file")
-    public File insertFile(@RequestBody File file) {
+    public FileEntity insertFile(@RequestBody FileEntity file) {
         return file;
     }
 
