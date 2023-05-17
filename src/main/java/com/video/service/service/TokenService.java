@@ -19,13 +19,13 @@ public class TokenService {
     public TokenEntity tokenInsert(TokenEntity token) throws Exception{
         return tokenRepository.save(token);
     }
-    public boolean findByUserSeq(int userSeq) throws Exception{
+    public TokenEntity findByUserSeq(int userSeq) throws Exception{
         return tokenRepository.findByUserSeq(userSeq);
     }
 
     @Transactional
     public void updateAccessToken(TokenEntity tokenEntity) throws Exception {
-        tokenRepository.updateAccessToken(tokenEntity.getAccessToken(), tokenEntity.getTokenSeq());
+        tokenRepository.updateAccessToken(tokenEntity.getAccessToken(), tokenEntity.getUser().getUserSeq());
     }
 
 }

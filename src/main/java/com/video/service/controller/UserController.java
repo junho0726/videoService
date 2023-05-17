@@ -104,9 +104,8 @@ public class UserController {
                         TokenEntity tokenEntity = new TokenEntity();
                         tokenEntity.setAccessToken(accessToken);
                         tokenEntity.setUser(findUser);
-                        findUser.setToken(tokenEntity);
-                        Boolean checkToken = tokenService.findByUserSeq(findUser.getUserSeq());
-                        if(checkToken == false){
+                        TokenEntity checkToken = tokenService.findByUserSeq(findUser.getUserSeq());
+                        if(checkToken == null){
                              tokenService.tokenInsert(tokenEntity);
                         }else{
                             tokenService.updateAccessToken(tokenEntity);
@@ -127,6 +126,7 @@ public class UserController {
                 response.setMessage("Could not found user");
             }
         }catch (Exception e){
+            e.getMessage();
             response.setCode("0001");
             response.setMessage("Error :" + e.getMessage());
         }
