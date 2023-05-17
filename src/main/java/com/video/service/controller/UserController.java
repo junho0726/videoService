@@ -1,11 +1,14 @@
 package com.video.service.controller;
 
 
+import com.video.service.dto.ApiLoginTokenDto;
 import com.video.service.dto.ApiResponseDto;
 import com.video.service.entity.ChannelEntity;
+import com.video.service.entity.TokenEntity;
 import com.video.service.entity.UserEntity;
 import com.video.service.service.ChannelService;
 import com.video.service.service.JwtService;
+import com.video.service.service.TokenService;
 import com.video.service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -26,6 +29,8 @@ public class UserController {
 
     private final JwtService jwtService;
 
+    private final TokenService tokenService;
+
     private final PasswordEncoder passwordEncoder;
 
 
@@ -40,17 +45,12 @@ public class UserController {
             if (ip == null) ip = req.getRemoteAddr();
             user.setIp(ip);
             UserEntity savedUser = userService.userJoin(user);
-            String accessToken = jwtService.createToken( savedUser.getId(), "Access");
-            String refreshToken = jwtService.createToken( savedUser.getId(), "Refresh");
-            savedUser.setRefreshToken(refreshToken);
-            savedUser.setAccessToken(accessToken);
-            UserEntity tokenSavedUser = userService.userJoin(user);
-            if (tokenSavedUser != null) {
+            if (savedUser != null) {
                 response.setCode("0000");
                 response.setMessage("Successed!!");
-                response.setData(tokenSavedUser);
+                response.setData(savedUser);
                 ChannelEntity channel = new ChannelEntity();
-                channel.setUser(tokenSavedUser);
+                channel.setUser(savedUser);
                 channelService.ChannelSave(channel);
             } else {
                 response.setCode("0001");
@@ -100,9 +100,24 @@ public class UserController {
             UserEntity findUser = userService.findByid(user);
             if (findUser != null){
                 if(BCrypt.checkpw(user.getPw(), findUser.getPw())){
+                        String accessToken = jwtService.createToken(findUser.getId());
+                        TokenEntity tokenEntity = new TokenEntity();
+                        tokenEntity.setAccessToken(accessToken);
+                        tokenEntity.setUser(findUser);
+                        findUser.setToken(tokenEntity);
+                        Boolean checkToken = tokenService.findByUserSeq(findUser.getUserSeq());
+                        if(checkToken == false){
+                             tokenService.tokenInsert(tokenEntity);
+                        }else{
+                            tokenService.updateAccessToken(tokenEntity);
+                        }
+                        userService.userJoin(findUser);
+                        ApiLoginTokenDto loginTokenDto = new ApiLoginTokenDto();
+                        loginTokenDto.setAccessToken(accessToken);
+                        loginTokenDto.setUserSeq(findUser.getUserSeq());
                         response.setCode("0000");
                         response.setMessage("Successed!!");
-                        response.setData(findUser);
+                        response.setData(loginTokenDto);
                     }else{
                         response.setCode("0001");
                         response.setMessage("Incorrect password");
