@@ -32,9 +32,8 @@ public class JwtService {
     private static final String SECRET_KEY = "videoService";
 
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;              // 30분
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
 
-    public String createToken(String subject, String type) {
+    public String createToken(String subject) {
 
         // 토큰을 서명하기 위해 사용해야할 알고리즘 선택
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -42,19 +41,12 @@ public class JwtService {
         byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
         Key signingKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
 
-        if(type.equals("Access")){
-            return Jwts.builder()
-                    .setSubject(subject)
-                    .signWith(signatureAlgorithm, signingKey)
-                    .setExpiration(new Date(nowTime + ACCESS_TOKEN_EXPIRE_TIME))
-                    .compact();
-        }else{
-            return Jwts.builder()
-                    .setSubject(subject)
-                    .setExpiration(new Date(nowTime + REFRESH_TOKEN_EXPIRE_TIME))
-                    .signWith(signatureAlgorithm, signingKey)
-                    .compact();
-        }
+        return Jwts.builder()
+                .setSubject(subject)
+                .signWith(signatureAlgorithm, signingKey)
+                .setExpiration(new Date(nowTime + ACCESS_TOKEN_EXPIRE_TIME))
+                .compact();
+
     }
 
     public Map getSubject(String token) {

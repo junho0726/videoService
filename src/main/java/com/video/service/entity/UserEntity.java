@@ -41,16 +41,13 @@ public class UserEntity {
     @Column(nullable = false)
     private String ip;
 
-    @Column(nullable = true)
-    private String accessToken;
-
-    @Column(nullable = true)
-    private String refreshToken;
-
     @JsonIgnore
     @OneToOne(mappedBy = "user")
     private ChannelEntity channel;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "user")
+    private TokenEntity token;
 
 //    @JsonIgnoreProperties("subscriber")
 //    @OneToMany(mappedBy = "subscriber", cascade = CascadeType.DETACH)

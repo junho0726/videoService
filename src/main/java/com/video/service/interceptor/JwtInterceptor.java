@@ -29,38 +29,34 @@ public class JwtInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("start");
         String accessToken = request.getHeader(ACCESS_TOKEN);
-        String refreshToken = request.getHeader(REFRESH_TOKEN);
-        Map accessTokenResult = new HashMap();
         if (accessToken != null) {
-             accessTokenResult = jwtService.getSubject(accessToken);
-            if (accessTokenResult.get("result").equals("S")) {
+            boolean isAccessToken = refreshTokenValidation(accessToken);
+            if (isAccessToken) {
+                return true;
+            }else{
+                return false;
             }
-        } else if (refreshToken != null) {
-            boolean isRefreshToken = refreshTokenValidation(refreshToken);
-            String loginId =  accessTokenResult.get("fdId").toString();
-            if (isRefreshToken) {
-                String newAccessToken = jwtService.createToken(loginId, "Access");
-            } else {
-                String newRefreshToken = jwtService.createToken(loginId, "Refresh");
-            }
-        } else {
+        }else{
             return false;
         }
-        return true;
     }
 
-    public Boolean refreshTokenValidation(String refreshToken) throws Exception {
+    public Boolean refreshTokenValidation(String accessToken) throws Exception {
 
-        Map refreshTokenResult = jwtService.getSubject(refreshToken);
+        Map accessTokenResult = jwtService.getSubject(accessToken);
 
-        if(!refreshTokenResult.get("result").equals("S")){
+        if(!accessTokenResult.get("result").equals("S")){
             return false;
         }
-        UserEntity refreshUser = new UserEntity();
-        refreshUser.setId(refreshTokenResult.get("fdId").toString());
-        UserEntity user = userService.findByid(refreshUser);
+        UserEntity accessUser = new UserEntity();
+        accessUser.setId(accessTokenResult.get("fdId").toString());
+        UserEntity user = userService.findByid(accessUser);
 
-        return refreshToken.equals(user.getRefreshToken());
+        if (user == null || user.getToken() == null) {
+            return false;
+        }
+
+        return accessToken.equals(user.getToken().getAccessToken());
     }
 
 
