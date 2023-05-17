@@ -16,26 +16,15 @@ public class TokenService {
     @Autowired
     private TokenRepository tokenRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     public TokenEntity tokenInsert(TokenEntity token) throws Exception{
         return tokenRepository.save(token);
     }
-    public boolean findByUserSeq(int userSeq) throws Exception{
+    public TokenEntity findByUserSeq(int userSeq) throws Exception{
         return tokenRepository.findByUserSeq(userSeq);
     }
 
     @Transactional
     public void updateAccessToken(TokenEntity tokenEntity) throws Exception {
-        TokenEntity token = tokenRepository.findById(tokenEntity.getTokenSeq()).orElseThrow(() -> {
-            return new IllegalArgumentException("로그인 화면으로 이동1");
-        });
-        UserEntity userEntity = userRepository.findById(token.getUser().getUserSeq()).orElseThrow(() -> {
-            return new IllegalArgumentException("로그인 화면으로 이동2");
-        });
-
-        token.setAccessToken(tokenEntity.getAccessToken());
-        userEntity.setUserSeq(tokenEntity.getUser().getUserSeq());
+        tokenRepository.updateAccessToken(tokenEntity.getAccessToken(), tokenEntity.getUser().getUserSeq());
     }
 }
