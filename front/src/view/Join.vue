@@ -78,7 +78,7 @@ async function checkId() {
         checkEmptyId.value = ''
     }
     try {
-        let response = await axios.post('./api/checkId', {
+        let response = await axios.post('./api/user/checkId', {
             id: id.value
         });
        console.log(response);

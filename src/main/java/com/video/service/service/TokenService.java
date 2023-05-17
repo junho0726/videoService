@@ -16,6 +16,9 @@ public class TokenService {
     @Autowired
     private TokenRepository tokenRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public TokenEntity tokenInsert(TokenEntity token) throws Exception{
         return tokenRepository.save(token);
     }
@@ -25,7 +28,14 @@ public class TokenService {
 
     @Transactional
     public void updateAccessToken(TokenEntity tokenEntity) throws Exception {
-        tokenRepository.updateAccessToken(tokenEntity.getAccessToken(), tokenEntity.getTokenSeq());
-    }
+        TokenEntity token = tokenRepository.findById(tokenEntity.getTokenSeq()).orElseThrow(() -> {
+            return new IllegalArgumentException("로그인 화면으로 이동1");
+        });
+        UserEntity userEntity = userRepository.findById(token.getUser().getUserSeq()).orElseThrow(() -> {
+            return new IllegalArgumentException("로그인 화면으로 이동2");
+        });
 
+        token.setAccessToken(tokenEntity.getAccessToken());
+        userEntity.setUserSeq(tokenEntity.getUser().getUserSeq());
+    }
 }
