@@ -78,7 +78,7 @@ async function checkId() {
         checkEmptyId.value = ''
     }
     try {
-        let response = await axios.post('./api/checkId', {
+        let response = await axios.post('./api/user/checkId', {
             id: id.value
         });
        console.log(response);
@@ -110,7 +110,7 @@ let join = async () => {
     if(checkIdState.value) {
         if(checkEmpty() && checkPw()) {
             try {
-                let response = await axios.post('/api/joinProc', {
+                let response = await axios.post('/api/user/joinProc', {
                     id: id.value,
                     pw: pw.value,
                     rePw: rePw.value,

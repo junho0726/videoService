@@ -33,7 +33,6 @@ public class UserController {
 
     private final PasswordEncoder passwordEncoder;
 
-
     @PostMapping(value = "user/joinProc")
     public ApiResponseDto userJoin(@RequestBody UserEntity user, HttpServletRequest req) throws Exception {
         ApiResponseDto response = new ApiResponseDto();
