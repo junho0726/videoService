@@ -5,6 +5,7 @@ import Login from "@/view/Login.vue";
 import Join from "@/view/Join.vue";
 import MyChannel from "@/user/MyChannel.vue";
 import MyPage from "@/user/MyPage.vue";
+import store from "@/store";
 
 // routes 배열 초기화
 const routes = [
@@ -44,5 +45,18 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 });
+
+router.beforeEach((to, from, next) => {
+    console.log(to.name)
+    if(to.name !== 'login' && to.name !== 'home' && to.name !== 'join') {
+        if(store.getters['user/getToken'] == null) {
+            next('/login');
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+})
 
 export default router;

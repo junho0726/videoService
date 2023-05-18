@@ -1,25 +1,132 @@
 <template>
-    <div>
-        <Header @show-sidebar="showSidebar()"/>
-        <div class="content">
-            <SideBar v-if="isShowSidebar"/>
-            내 페이지
+    <Header/>
+    <div class="contents">
+        <h1>회원 정보</h1>
+        <br>
+        <div>
+            <input type="text" id="id" v-model="userInfo.id" disabled>
+        </div>
+        <br>
+        <div>
+            <input type="text" id="pw" :value="userInfo.pw" placeholder="비밀번호를 입력해주세요." :disabled="!updateState">
+        </div>
+        <span>{{ checkEmptyPw }}</span>
+        <br>
+        <div>
+            <input type="text" id="name" v-model="userInfo.name" placeholder="이름을 입력해주세요." :disabled="!updateState">
+        </div>
+        <span>{{ checkEmptyName }}</span>
+        <br>
+        <div>
+            <input type="text" id="email" v-model="userInfo.email" placeholder="이메일을 입력해주세요." :disabled="!updateState">
+        </div>
+        <span>{{ checkEmptyEmail }}</span>
+        <br>
+        <div>
+            <input type="text" id="tel" v-model="userInfo.tel" placeholder="연락처를 입력해주세요." :disabled="!updateState">
+        </div>
+        <span>{{ checkEmptyTel }}</span>
+        <br>
+        <div>
+            <button class="btn-join" type="button" @click="handelUpdateState()" v-if="updateState">취소</button>
+            <button class="btn-join" type="button" @click="handelUpdateState()" v-if="!updateState">수정</button>
+            <button class="btn-join" type="button" @click="update" v-if="updateState">완료</button>
         </div>
     </div>
 </template>
 
 <script setup>
-import Header from '@/layout/Header.vue';
-import SideBar from '@/layout/SideBar.vue';
-import { ref } from 'vue';
+import Header from "@/layout/Header.vue";
+import axios from "axios";
+import {computed, ref} from 'vue';
+import router from "@/router";
+import instance from "@/api/axios";
+import store from "@/store";
 
-let isShowSidebar = ref(false);
+let checkEmptyPw = ref('');
+let checkEmptyName = ref('');
+let checkEmptyEmail = ref('');
+let checkEmptyTel = ref('');
 
-function showSidebar() {
-    isShowSidebar.value = !isShowSidebar.value;
+let updateState = ref(false);
+
+let userInfo = computed(() => {
+     return instance.post('/api/user/info');
+});
+
+let update = async () => {
+    if(checkEmpty()) {
+        try {
+            let response = await axios.post('/api/user/updateProc', {
+                pw: userInfo.value,
+                name: userInfo.value,
+                email: userInfo.value,
+                tel: userInfo.value
+            });
+            if(response.data.code == "0000") {
+                alert('회원 정보 수정에 성공하셨습니다.');
+                await router.push('/login');
+            } else {
+                alert('예기치 못한 에러가 발생했습니다.');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+};
+
+function handelUpdateState() {
+    updateState.value = !updateState.value;
 }
+
+function checkEmpty() {
+    if(pw.value == '') {
+        checkEmptyPw.value = '비밀번호를 입력해주세요.'
+        return false;
+    } else {
+        checkEmptyPw.value = ''
+    }
+    if(name.value == '') {
+        checkEmptyName.value = '이름을 입력해주세요.'
+        return false;
+    } else {
+        checkEmptyName.value = ''
+    }
+    if(email.value == '') {
+        checkEmptyEmail.value = '이메일을 입력해주세요.'
+        return false;
+    } else {
+        checkEmptyEmail.value = ''
+    }
+    if(tel.value == '') {
+        checkEmptyTel.value = '연락처를 입력해주세요.'
+        return false;
+    } else {
+        checkEmptyTel.value = ''
+    }
+    return true;
+}
+
 </script>
 
-<style>
+<style scoped>
 
+.contents {
+    text-align: center;
+    margin-top: 5%;
+}
+
+.contents input {
+    width: 13%;
+    margin-right: 1%;
+}
+
+.contents-row button {
+    width: 5%;
+}
+
+.btn-join {
+    width: 10%;
+    margin-right: 1%;
+}
 </style>
