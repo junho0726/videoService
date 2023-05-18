@@ -16,7 +16,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
     JwtInterceptor jwtInterceptor;
 
     private static final String[] EXCLUDE_PATHS = {
-            "/api/user/**",
+            "/api/user/login",
+            "/api/user/joinProc",
+            "/api/user/checkId"
     };
 
     @Override
