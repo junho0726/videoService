@@ -43,6 +43,7 @@
 import Header from "@/layout/Header.vue";
 import axios from "axios";
 import { ref } from 'vue';
+import router from "@/router";
 
 let id = ref('');
 let pw = ref('');
@@ -58,7 +59,33 @@ let checkEmptyName = ref('');
 let checkEmptyEmail = ref('');
 let checkEmptyTel = ref('');
 
+let checkIdState = ref(false);
+let checkIdMsg = ref('');
 let checkPwMsg = ref('');
+
+async function checkId() {
+    if(id.value == '') {
+        checkEmptyId.value = '아이디를 입력해주세요.'
+        return false;
+    } else {
+        checkEmptyId.value = ''
+    }
+    try {
+        let response = await axios.post('./api/user/checkId', {
+            id: id.value
+        });
+       console.log(response);
+       if(response.data.code == "0000") {
+            checkIdMsg.value = '사용 가능한 아이디 입니다.'
+            checkIdState.value = true;
+       } else {
+            checkIdMsg.value = '이미 존재하는 아이디 입니다.'
+            checkIdState.value = false;
+       }
+    } catch(err) {
+       console.log(err);
+    }
+}
 
 function checkPw() {
     if(pw.value != rePw.value) {
@@ -69,24 +96,33 @@ function checkPw() {
         checkPwMsg.value = '';
         return true;
     }
-};
+}
 
 let join = async () => {
 
-    if(checkEmpty() && checkPw()) {
-        try {
-            let response = await axios.post('/api/joinProc', {
-                id: id.value,
-                pw: pw.value,
-                rePw: rePw.value,
-                name: name.value,
-                email: email.value,
-                tel: tel.value
-            });
-            console.log(response.data);
-        } catch (error) {
-            console.error(error);
+    if(checkIdState.value) {
+        if(checkEmpty() && checkPw()) {
+            try {
+                let response = await axios.post('/api/user/joinProc', {
+                    id: id.value,
+                    pw: pw.value,
+                    rePw: rePw.value,
+                    name: name.value,
+                    email: email.value,
+                    tel: tel.value
+                });
+                if(response.data.code == "0000") {
+                    alert('회원가입에 성공하셨습니다.');
+                    await router.push('/login');
+                } else {
+                    alert('예기치 못한 에러가 발생했습니다.');
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
+    } else {
+        alert('아이디 중복 여부를 체크해주세요.');
     }
 };
 
@@ -132,5 +168,30 @@ function checkEmpty() {
 
 </script>
 
-<style>
+<style scoped>
+
+.contents {
+    text-align: center;
+    margin-top: 5%;
+}
+
+.contents-row {
+    display: flex;
+    justify-content: center;
+}
+
+.contents input {
+    width: 13%;
+    margin-right: 1%;
+}
+
+.contents-row button {
+    width: 7%;
+}
+
+.btn-join {
+    width: 10%;
+    margin-right: 1%;
+}
+
 </style>
