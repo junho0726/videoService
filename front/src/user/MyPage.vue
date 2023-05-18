@@ -51,9 +51,7 @@ let checkEmptyTel = ref('');
 let updateState = ref(false);
 
 let userInfo = computed(() => {
-     return instance.post('/api/user/getUser', {
-        userSeq: store.getters['user/getUserSeq']
-    });
+     return instance.post('/api/user/info');
 });
 
 let update = async () => {
