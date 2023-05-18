@@ -8,8 +8,13 @@
         <div class="profile-div" @mouseover="over()" @mouseleave="leave()">
             <img class="profile-img" src="@/assets/basic_profile.png">
             <div class="profile-menu" v-if="showProfileInfo">
-                <router-link to="/login">LOGIN</router-link>
-                <router-link to="/join">JOIN</router-link>
+                <div v-if="!isLogin">
+                    <router-link to="/login">LOGIN</router-link>
+                    <router-link to="/join">JOIN</router-link>
+                </div>
+                <div v-if="isLogin">
+                    <router-link to="#" v-if="isLogin">LOGOUT</router-link>                -
+                </div>
             </div>
         </div>
     </div>
@@ -17,8 +22,17 @@
 
 <script setup>
 import { ref } from 'vue';
+import store from '@/store';
 
 let showProfileInfo = ref(false);
+let isLogin = ref(false);
+
+onMounted(() => {
+    if(store.getters['user/getToken'] != null) {
+        console.log(store.getters['user/getToken']);
+        isLogin.value = true;
+    }
+});
 
 function over() {
     showProfileInfo.value = true;
@@ -27,6 +41,7 @@ function over() {
 function leave() {
     showProfileInfo.value = false;
 }
+
 
 </script>
 
@@ -56,7 +71,6 @@ function leave() {
 
 .profile-menu {
     display: flex;
-    flex-direction: column;
 }
 
 </style>
