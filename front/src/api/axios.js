@@ -8,7 +8,8 @@ let instance = axios.create({
 });
 
 instance.interceptors.request.use(config => {
-    config.headers.set({ 'Access-Token' : store.getters['user/getToken'] })
+    config.headers['Access-Token'] = store.getters['user/getToken'];
+    return config;
 });
 
 export default instance;

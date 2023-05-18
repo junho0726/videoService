@@ -20,9 +20,9 @@
 
 <script setup>
 import Header from "@/layout/Header.vue";
-import axios from "axios";
 import store from '@/store';
 import { ref } from 'vue';
+import instance from "@/api/axios";
 
 let id = ref('');
 let pw = ref('');
@@ -34,7 +34,7 @@ let login = async () => {
 
     if(checkEmpty()) {
         try {
-            let response = await axios.post('/api/user/login', {
+            let response = await instance.post('/api/user/login', {
                 id: id.value,
                 pw: pw.value
             });
