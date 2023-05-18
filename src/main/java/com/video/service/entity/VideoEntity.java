@@ -25,9 +25,6 @@ public class VideoEntity {
     private int videoSeq;
 
     @Column(nullable = false)
-    private String gubn;
-
-    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)

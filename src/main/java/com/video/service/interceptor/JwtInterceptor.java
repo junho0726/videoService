@@ -16,7 +16,6 @@ import java.util.Map;
 public class JwtInterceptor implements HandlerInterceptor {
 
     public static final String ACCESS_TOKEN = "Access_Token";
-    public static final String REFRESH_TOKEN = "Refresh_Token";
 
     @Autowired
     private JwtService jwtService;
@@ -27,10 +26,9 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("start");
         String accessToken = request.getHeader(ACCESS_TOKEN);
         if (accessToken != null) {
-            boolean isAccessToken = refreshTokenValidation(accessToken);
+            boolean isAccessToken = accessTokenValidation(accessToken);
             if (isAccessToken) {
                 return true;
             }else{
@@ -41,7 +39,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
     }
 
-    public Boolean refreshTokenValidation(String accessToken) throws Exception {
+    public Boolean accessTokenValidation(String accessToken) throws Exception {
 
         Map accessTokenResult = jwtService.getSubject(accessToken);
 

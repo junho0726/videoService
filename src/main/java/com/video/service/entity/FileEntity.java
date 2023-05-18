@@ -23,6 +23,9 @@ public class FileEntity {
     private int fileSeq;
 
     @Column(nullable = false)
+    private String gubn;
+
+    @Column(nullable = false)
     private String filePath;
 
     @Column(nullable = false)
