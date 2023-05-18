@@ -8,7 +8,7 @@
         </div>
         <br>
         <div>
-            <input type="text" id="pw" :value="userInfo.pw" placeholder="비밀번호를 입력해주세요." :disabled="!updateState">
+            <input type="text" id="pw" v-model="userInfo.pw" placeholder="비밀번호를 입력해주세요." :disabled="!updateState">
         </div>
         <span>{{ checkEmptyPw }}</span>
         <br>
@@ -37,11 +37,8 @@
 
 <script setup>
 import Header from "@/layout/Header.vue";
-import axios from "axios";
-import {computed, ref} from 'vue';
-import router from "@/router";
+import {ref} from 'vue';
 import instance from "@/api/axios";
-import store from "@/store";
 
 let checkEmptyPw = ref('');
 let checkEmptyName = ref('');
@@ -49,23 +46,27 @@ let checkEmptyEmail = ref('');
 let checkEmptyTel = ref('');
 
 let updateState = ref(false);
+let userInfo = ref({});
 
-let userInfo = computed(() => {
-     return instance.post('/api/user/info');
+// eslint-disable-next-line no-unused-vars
+instance.post('/api/user/info').then(value => {
+  userInfo.value = value.data.data;
 });
 
 let update = async () => {
     if(checkEmpty()) {
         try {
-            let response = await axios.post('/api/user/updateProc', {
-                pw: userInfo.value,
-                name: userInfo.value,
-                email: userInfo.value,
-                tel: userInfo.value
+            let response = await instance.post('/api/user/updateProc', {
+                id: userInfo.value.id,
+                pw: userInfo.value.pw,
+                name: userInfo.value.name,
+                email: userInfo.value.email,
+                tel: userInfo.value.tel
             });
+                console.log(response.data);
             if(response.data.code == "0000") {
                 alert('회원 정보 수정에 성공하셨습니다.');
-                await router.push('/login');
+                updateState.value = false;
             } else {
                 alert('예기치 못한 에러가 발생했습니다.');
             }
@@ -80,25 +81,25 @@ function handelUpdateState() {
 }
 
 function checkEmpty() {
-    if(pw.value == '') {
+    if(userInfo.value.pw == '') {
         checkEmptyPw.value = '비밀번호를 입력해주세요.'
         return false;
     } else {
         checkEmptyPw.value = ''
     }
-    if(name.value == '') {
+    if(userInfo.value.name == '') {
         checkEmptyName.value = '이름을 입력해주세요.'
         return false;
     } else {
         checkEmptyName.value = ''
     }
-    if(email.value == '') {
+    if(userInfo.value.email == '') {
         checkEmptyEmail.value = '이메일을 입력해주세요.'
         return false;
     } else {
         checkEmptyEmail.value = ''
     }
-    if(tel.value == '') {
+    if(userInfo.value.tel == '') {
         checkEmptyTel.value = '연락처를 입력해주세요.'
         return false;
     } else {

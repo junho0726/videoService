@@ -47,7 +47,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    console.log(to.name)
+
     if(to.name !== 'login' && to.name !== 'home' && to.name !== 'join') {
         if(store.getters['user/getToken'] == null) {
             next('/login');
