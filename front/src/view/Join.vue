@@ -1,49 +1,48 @@
 <template>
     <Header/>
-
-    <h1>Join 페이지</h1>
-
-    <div>
+    <div class="contents">
+        <h1>회원 가입</h1>
+        <br>
         <div>
-            <input type="text" id="id" v-model="id" @change="() => {checkIdState = false;}" placeholder="아이디를 입력해주세요.">
+            <div class="contents-row">
+                <input type="text" id="id" v-model="id" @change="() => {checkIdState = false;}" placeholder="아이디를 입력해주세요.">
+                <button type="button" @click="checkId()">아이디 확인</button>
+            </div>
+            <div>
+                <span>{{ checkEmptyId }}</span>
+                <span>{{ checkIdMsg }}</span>
+            </div>
         </div>
+        <br>
         <div>
-            <span>{{ checkEmptyId }}</span>
-            <span>{{ checkIdMsg }}</span>
+            <input type="text" id="pw" v-model="pw" placeholder="비밀번호를 입력해주세요.">
         </div>
+        <span>{{ checkEmptyPw }}</span>
+        <br>
         <div>
-            <button type="button" @click="checkId()">아이디 확인</button>
+            <input type="text" id="re-pw" @change="checkPw()" v-model="rePw" placeholder="비밀번호를 한번 더 입력해주세요.">
         </div>
-    </div>
-    <br>
-    <div>
-        <input type="text" id="pw" v-model="pw" placeholder="비밀번호를 입력해주세요.">
-    </div>
-    <span>{{ checkEmptyPw }}</span>
-    <br>
-    <div>
-        <input type="text" id="re-pw" @change="checkPw()" v-model="rePw" placeholder="비밀번호를 한번 더 입력해주세요.">
-    </div>
-    <span>{{ checkPwMsg }}</span>
-    <span>{{ checkEmptyRePw }}</span>
-    <br>
-    <div>
-        <input type="text" id="name" v-model="name" placeholder="이름을 입력해주세요.">
-    </div>
-    <span>{{ checkEmptyName }}</span>
-    <br>
-    <div>
-        <input type="text" id="email" v-model="email" placeholder="이메일을 입력해주세요.">
-    </div>
-    <span>{{ checkEmptyEmail }}</span>
-    <br>
-    <div>
-        <input type="text" id="tel" v-model="tel" placeholder="연락처를 입력해주세요.">
-    </div>
-    <span>{{ checkEmptyTel }}</span>
-    <br>
-    <div>
-        <button type="button" @click="join">Join</button>
+        <span>{{ checkPwMsg }}</span>
+        <span>{{ checkEmptyRePw }}</span>
+        <br>
+        <div>
+            <input type="text" id="name" v-model="name" placeholder="이름을 입력해주세요.">
+        </div>
+        <span>{{ checkEmptyName }}</span>
+        <br>
+        <div>
+            <input type="text" id="email" v-model="email" placeholder="이메일을 입력해주세요.">
+        </div>
+        <span>{{ checkEmptyEmail }}</span>
+        <br>
+        <div>
+            <input type="text" id="tel" v-model="tel" placeholder="연락처를 입력해주세요.">
+        </div>
+        <span>{{ checkEmptyTel }}</span>
+        <br>
+        <div>
+            <button class="btn-join" type="button" @click="join">Join</button>
+        </div>
     </div>
 </template>
 
@@ -51,6 +50,7 @@
 import Header from "@/layout/Header.vue";
 import axios from "axios";
 import { ref } from 'vue';
+import router from "@/router";
 
 let id = ref('');
 let pw = ref('');
@@ -66,7 +66,7 @@ let checkEmptyName = ref('');
 let checkEmptyEmail = ref('');
 let checkEmptyTel = ref('');
 
-let checkIdState = ref('');
+let checkIdState = ref(false);
 let checkIdMsg = ref('');
 let checkPwMsg = ref('');
 
@@ -120,9 +120,9 @@ let join = async () => {
                 });
                 if(response.data.code == "0000") {
                     alert('회원가입에 성공하셨습니다.');
-                    location.href = "./login";
+                    await router.push('/login');
                 } else {
-
+                    alert('예기치 못한 에러가 발생했습니다.');
                 }
             } catch (error) {
                 console.error(error);
@@ -175,5 +175,30 @@ function checkEmpty() {
 
 </script>
 
-<style>
+<style scoped>
+
+.contents {
+    text-align: center;
+    margin-top: 5%;
+}
+
+.contents-row {
+    display: flex;
+    justify-content: center;
+}
+
+.contents input {
+    width: 13%;
+    margin-right: 1%;
+}
+
+.contents-row button {
+    width: 5%;
+}
+
+.btn-join {
+    width: 10%;
+    margin-right: 1%;
+}
+
 </style>

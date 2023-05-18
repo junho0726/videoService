@@ -8,24 +8,38 @@
         <div class="profile-div" @mouseover="over()" @mouseleave="leave()">
             <img class="profile-img" src="@/assets/basic_profile.png">
             <div class="profile-menu" v-if="showProfileInfo">
-                <router-link to="/login">LOGIN</router-link>
-                <router-link to="/join">JOIN</router-link>
+                <router-link v-if="!isLogin" to="/login">LOGIN</router-link>
+                <router-link v-if="!isLogin" to="/join">JOIN</router-link>
+                <router-link v-if="isLogin" to="/mypage">MY PAGE</router-link>
+                <router-link v-if="isLogin" to="/mychannel">MY CHANNEL</router-link>
+                <span v-if="isLogin" @click="logout()">LOGOUT</span>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {computed, ref} from 'vue';
+import store from "@/store";
 
 let showProfileInfo = ref(false);
+let isLogin = computed(() => {
+    console.log(store.getters['user/getToken']);
+    return store.getters['user/getToken'] !== null;
+});
 
 function over() {
+    console.log(isLogin.value);
     showProfileInfo.value = true;
 }
 
 function leave() {
     showProfileInfo.value = false;
+}
+
+function logout() {
+    alert('로그아웃 되었습니다.');
+    location.href = '/login';
 }
 
 </script>
