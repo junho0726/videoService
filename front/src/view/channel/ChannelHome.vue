@@ -6,7 +6,7 @@
             <span>스토리를 공유하고 시청자와 소통해 보세요. 업로드한 동영상이 여기에 표시됩니다.</span>
             <div>
                 <br>
-                <button class="btn-upload">동영상 업로드</button>
+                <button class="btn-upload" @click="handelModal()">동영상 업로드</button>
             </div>
             <div>
                 <br>
@@ -14,9 +14,21 @@
             </div>
         </div>
     </div>
+    <UploadVideoModal @closeModal="handelModal()" :show-modal="showModal" />
+
 </template>
 
 <script setup>
+
+import {ref} from "vue";
+import UploadVideoModal from "@/modal/UploadVideoModal.vue";
+
+let showModal = ref(false);
+
+function handelModal() {
+    showModal.value = !showModal.value;
+}
+
 
 </script>
 
@@ -51,4 +63,5 @@ a {
 h2 {
     margin-bottom: 5px;
 }
+
 </style>
