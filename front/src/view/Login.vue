@@ -34,34 +34,15 @@ let login = async () => {
 
     if(checkEmpty()) {
         try {
-            if(store.getters['user/getToken'] != null) {
-                let response = await axios.post('/api/user/login', {
-                    id: id.value,
-                    pw: pw.value
-                },
-                {
-                    headers: {
-                        'Access_Token': store.getters['setToken']
-                    }
-                }
-                );
-                if(response.data.code == "0000") {
-                    alert("토큰 인증 완료");
-                } else {
-                    console.log();
-                    alert("토큰 인증 실패");
-                }
+            let response = await axios.post('/api/user/login', {
+                id: id.value,
+                pw: pw.value
+            });
+            if(response.data.code == "0000") {
+                await store.dispatch('user/setToken', response.data.data.accessToken);
+                alert("환영합니다.");
             } else {
-                let response = await axios.post('/api/user/login', {
-                    id: id.value,
-                    pw: pw.value
-                });
-                if(response.data.code == "0000") {
-                    store.dispatch('user/setToken', response.data.data.accessToken);
-                    alert("환영합니다.");
-                } else {
-                    alert("아이디 혹은 비밀번호를 확인해주세요.");
-                }
+                alert("아이디 혹은 비밀번호를 확인해주세요.");
             }
         } catch (error) {
             console.error(error);
