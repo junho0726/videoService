@@ -77,6 +77,10 @@
                     <p>파일 이름</p>
                     <span>{{ fileInfo.name }}</span>
                   </div>
+                    <div class="div-btn">
+                        <button class="btn-cancel" @click="$emit('closeModal')">취소</button>
+                        <button class="btn-post" @click="post()">게시</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -84,7 +88,7 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import { ref } from "vue";
 import axios from "axios";
 import store from "@/store";
 
@@ -125,8 +129,9 @@ async function uploadFile(file) {
           "Access_Token": store.getters['user/getToken']
       }
   }).then(value => {
+        console.log(value);
       if(value.data.code == "0000") {
-        console.log(response);
+
       }
   }).catch(reason => {
       console.log(reason);
@@ -135,8 +140,8 @@ async function uploadFile(file) {
 }
 
 function setFileInfo(file) {
+    if(checkType(file)) {
     let response = uploadFile(file);
-    if(checkType()) {
         // TODO !!
         // 여기서 파일의 정보를 ref() 객체에 저장한다.
         fileInfo.value.name = response.name;
@@ -152,15 +157,15 @@ function openFile() {
     inputFile.value.click();
 }
 
-function checkType() {
-    // TODO !!
-    console.log('대충 체크함');
-    correctFile.value = true;
-    return true;
+function checkType(file) {
+    if(file.type == "video/mp4") {
+        correctFile.value = true;
+        return true;
+    }
+    return false;
 }
 
 function copyLink() {
-
     let copyLink = document.createElement('input');
     copyLink.value = fileInfo.value.link;
     document.body.append(copyLink);
@@ -169,6 +174,15 @@ function copyLink() {
     document.body.removeChild(copyLink);
     alert('복사 되었습니다.');
 }
+
+function post() {
+    if(fileInfo.value.title.trim() == "") {
+        alert("제목은 필수 항목란입니다.");
+    } else {
+
+    }
+}
+
 
 
 </script>
@@ -308,6 +322,7 @@ span {
 }
 
 .videoBox {
+  position: relative;
   width: 30%;
   padding: 2%;
 }
@@ -350,7 +365,7 @@ span {
   background-color: #F9F9F9;
   border: none;
   border-radius: 5px;
-  width: 100%;
+  width: 98%;
   height: auto;
   text-align: left;
   padding: 8px;
@@ -364,6 +379,32 @@ span {
   border-radius: 15px;
   text-align: start;
   padding: 10px 20px;
+  margin: 5% 0;
+}
+
+.div-btn {
+    position: absolute;
+    right: 3%;
+    top: 85%;
+}
+
+.div-btn button {
+    margin-right: 15px;
+    border: none;
+    border-radius: 25px;
+    width: 120px;
+    height: 45px;
+    font-size: 18px;
+}
+
+.btn-post {
+    background-color: #3EA6FF;
+    color: black;
+}
+
+.btn-cancel {
+    background-color: black;
+    color: white;
 }
 
 </style>

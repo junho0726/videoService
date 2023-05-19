@@ -4,28 +4,32 @@
         <h1>회원 정보</h1>
         <br>
         <div>
-            <input type="text" id="id" v-model="userInfo.id" disabled>
+            <span>아이디</span> <input type="text" id="id" v-model="userInfo.id" disabled>
         </div>
         <br>
         <div>
-            <input type="text" id="name" v-model="userInfo.name" placeholder="이름을 입력해주세요." :disabled="!updateState">
+            <span>이름</span> <input type="text" id="name" v-model="userInfo.name" placeholder="이름을 입력해주세요." :disabled="!updateState">
         </div>
         <span>{{ checkEmptyName }}</span>
         <br>
         <div>
-            <input type="text" id="email" v-model="userInfo.email" placeholder="이메일을 입력해주세요." :disabled="!updateState">
+            <span>이메일</span> <input type="text" id="email" v-model="userInfo.email" placeholder="이메일을 입력해주세요." :disabled="!updateState">
         </div>
         <span>{{ checkEmptyEmail }}</span>
         <br>
         <div>
-            <input type="text" id="tel" v-model="userInfo.tel" placeholder="연락처를 입력해주세요." :disabled="!updateState">
+            <span>연락처</span> <input type="text" id="tel" v-model="userInfo.tel" placeholder="연락처를 입력해주세요." :disabled="!updateState">
         </div>
         <span>{{ checkEmptyTel }}</span>
+        <br><br>
+        <div>
+            <button class="btn-info" type="button" @click="handelUpdateState()" v-if="updateState">취소</button>
+            <button class="btn-info" type="button" @click="handelUpdateState()" v-if="!updateState">수정</button>
+            <button class="btn-info" type="button" @click="update" v-if="updateState">완료</button>
+        </div>
         <br>
         <div>
-            <button class="btn-join" type="button" @click="handelUpdateState()" v-if="updateState">취소</button>
-            <button class="btn-join" type="button" @click="handelUpdateState()" v-if="!updateState">수정</button>
-            <button class="btn-join" type="button" @click="update" v-if="updateState">완료</button>
+            <button class="btn-info" type="button">비밀번호 변경하기</button>
         </div>
     </div>
 </template>
@@ -53,8 +57,10 @@ let update = async () => {
     if(checkEmpty()) {
         try {
             let response = await instance.post('/api/user/updateProc', {
+                userSeq: userInfo.value.userSeq,
                 id: userInfo.value.id,
                 name: userInfo.value.name,
+                pw: userInfo.value.pw,
                 email: userInfo.value.email,
                 tel: userInfo.value.tel
             });
@@ -110,12 +116,13 @@ function checkEmpty() {
     margin-right: 1%;
 }
 
-.contents-row button {
-    width: 5%;
-}
 
-.btn-join {
-    width: 10%;
+.btn-info {
+    width: 13%;
+    height: 30px;
     margin-right: 1%;
+    background-color: #3EA6FF;
+    border: none;
+    border-radius: 15px;
 }
 </style>
