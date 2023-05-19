@@ -18,7 +18,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
     private static final String[] EXCLUDE_PATHS = {
             "/api/user/login",
             "/api/user/joinProc",
-            "/api/user/checkId"
+            "/api/user/checkId",
+            "/api/channel/findAll"
     };
 
     @Override
