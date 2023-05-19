@@ -8,11 +8,6 @@
         </div>
         <br>
         <div>
-            <input type="text" id="pw" v-model="userInfo.pw" placeholder="비밀번호를 입력해주세요." :disabled="!updateState">
-        </div>
-        <span>{{ checkEmptyPw }}</span>
-        <br>
-        <div>
             <input type="text" id="name" v-model="userInfo.name" placeholder="이름을 입력해주세요." :disabled="!updateState">
         </div>
         <span>{{ checkEmptyName }}</span>
@@ -40,7 +35,6 @@ import Header from "@/layout/Header.vue";
 import {ref} from 'vue';
 import instance from "@/api/axios";
 
-let checkEmptyPw = ref('');
 let checkEmptyName = ref('');
 let checkEmptyEmail = ref('');
 let checkEmptyTel = ref('');
@@ -51,6 +45,8 @@ let userInfo = ref({});
 // eslint-disable-next-line no-unused-vars
 instance.post('/api/user/info').then(value => {
   userInfo.value = value.data.data;
+}).catch(reason => {
+    console.log(reason);
 });
 
 let update = async () => {
@@ -58,12 +54,10 @@ let update = async () => {
         try {
             let response = await instance.post('/api/user/updateProc', {
                 id: userInfo.value.id,
-                pw: userInfo.value.pw,
                 name: userInfo.value.name,
                 email: userInfo.value.email,
                 tel: userInfo.value.tel
             });
-                console.log(response.data);
             if(response.data.code == "0000") {
                 alert('회원 정보 수정에 성공하셨습니다.');
                 updateState.value = false;
@@ -81,12 +75,6 @@ function handelUpdateState() {
 }
 
 function checkEmpty() {
-    if(userInfo.value.pw == '') {
-        checkEmptyPw.value = '비밀번호를 입력해주세요.'
-        return false;
-    } else {
-        checkEmptyPw.value = ''
-    }
     if(userInfo.value.name == '') {
         checkEmptyName.value = '이름을 입력해주세요.'
         return false;

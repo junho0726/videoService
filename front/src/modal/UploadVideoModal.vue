@@ -85,7 +85,8 @@
 
 <script setup>
 import {ref} from "vue";
-import instance from "@/api/axios";
+import axios from "axios";
+import store from "@/store";
 
 defineProps({
     showModal: Boolean
@@ -99,23 +100,8 @@ let fileInfo = ref({
   name: '',
   title: '',
   contents: '',
-  link: 'http://localhost:8080/video/KakaoTalk_20230120_173903157.mp4'
+  link: 'http://localhost:8080/video/KakaoTalk_20230518_172717609.mp4'
 });
-
-async function uploadFile(file) {
-  // eslint-disable-next-line no-unused-vars
-  let response = await instance.post('/api/video/insertProc', {
-    video: file
-  });
-  // TODO !!
-  // 성공이면 isUploadFile = true로 동영상 => 설정 화면 렌더링
-  // return true로 진행
-
-  // 실패면 return false로 사용자에게 재시도 요청
-  isUploadFile.value = true;
-  console.log(response);
-  return response;
-}
 
 function handleFile(e) {
     e.preventDefault();
@@ -129,6 +115,25 @@ function handleFile(e) {
     }
 }
 
+async function uploadFile(file) {
+  // eslint-disable-next-line no-unused-vars
+  let response = await axios.post('/api/video/insertProc', {
+    video: file
+  }, {
+      headers: {
+          'Content-Type': 'multipart/form-data',
+          "Access_Token": store.getters['user/getToken']
+      }
+  }).then(value => {
+      if(value.data.code == "0000") {
+        console.log(response);
+      }
+  }).catch(reason => {
+      console.log(reason);
+  });
+  return response;
+}
+
 function setFileInfo(file) {
     let response = uploadFile(file);
     if(checkType()) {
@@ -137,6 +142,7 @@ function setFileInfo(file) {
         fileInfo.value.name = response.name;
         // fileInfo.value.title = response.name.substring(0, file.name.lastIndexOf('.'));
         // fileInfo.value.link = response.link;
+        isUploadFile.value = true;
     } else {
         alert('확장자를 확인하거나 재시도 해주세요.');
     }

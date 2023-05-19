@@ -1,5 +1,5 @@
 <template>
-    <Header @show-sidebar="showSidebar()"/>
+    <Header />
     <div class="contents">
     <h1>로그인</h1>
         <br>
@@ -47,8 +47,8 @@ let login = async () => {
                 id: id.value,
                 pw: pw.value
             });
+            console.log(response.data);
             if(response.data.code == "0000") {
-                console.log(response.data);
                 await store.dispatch('user/setToken', response.data.data.accessToken);
                 await store.dispatch('user/setUserSeq', 1);
                 await router.push('/');
