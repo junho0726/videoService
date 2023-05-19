@@ -11,7 +11,6 @@ import com.video.service.service.JwtService;
 import com.video.service.service.TokenService;
 import com.video.service.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +51,7 @@ public class UserController {
                 response.setData(savedUser);
                 ChannelEntity channel = new ChannelEntity();
                 channel.setUser(savedUser);
-                channelService.ChannelSave(channel);
+                channelService.channelSave(channel);
             } else {
                 response.setCode("0001");
                 response.setMessage("Failed to join user");
