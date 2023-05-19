@@ -10,9 +10,9 @@ spring:
       suffix: .jsp
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://127.0.0.1:3306/videoService?serverTimezone=Asia/Seoul
-    username: jun
-    password: tkfkd786
+    url: jdbc:mariadb://127.0.0.1:3308/video-service?serverTimezone=Asia/Seoul
+    username: min
+    password: qwe123!
   servlet:
     multipart:
       enabled: true
@@ -23,7 +23,7 @@ spring:
   jpa:
     open-in-view: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       use-new-id-generator-mappings: false

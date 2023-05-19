@@ -120,9 +120,10 @@ function handleFile(e) {
 }
 
 async function uploadFile(file) {
+    console.log(file)
   // eslint-disable-next-line no-unused-vars
   let response = await axios.post('/api/video/insertProc', {
-    video: file
+      videoFile: file
   }, {
       headers: {
           'Content-Type': 'multipart/form-data',
