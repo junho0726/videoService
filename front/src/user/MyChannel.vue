@@ -3,7 +3,7 @@
         <div class="contents-wrap">
                 <div class="contents">
                         <div class="profile-box">
-                                <img class="channel-profile-img" src="@/assets/basic_profile.png">
+                                <img class="channel-profile-img" src="../assets/basic_profile.png">
                                 <div class="profile-detail">
                                         <span class="profile-name">경민 김</span>
                                         <div>
@@ -28,9 +28,9 @@
 <script setup>
 import Header from '@/layout/Header.vue';
 import { ref } from "vue";
-import ChannelHome from "@/view/channel/ChannelHome.vue";
-import ChannelList from "@/view/channel/ChannelList.vue";
-import ChannelInfo from "@/view/channel/ChannelInfo.vue";
+import ChannelHome from "@/components/channel/ChannelHome.vue";
+import ChannelList from "@/components/channel/ChannelList.vue";
+import ChannelInfo from "@/components/channel/ChannelInfo.vue";
 
 let isActive = ref([true, false, false]);
 

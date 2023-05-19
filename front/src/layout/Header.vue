@@ -29,7 +29,6 @@ let isLogin = computed(() => {
 });
 
 function over() {
-    console.log(isLogin.value);
     showProfileInfo.value = true;
 }
 

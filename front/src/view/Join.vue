@@ -103,7 +103,7 @@ function checkPw() {
         checkPwMsg.value = '';
         return true;
     }
-};
+}
 
 let join = async () => {
 
@@ -193,7 +193,7 @@ function checkEmpty() {
 }
 
 .contents-row button {
-    width: 5%;
+    width: 7%;
 }
 
 .btn-join {

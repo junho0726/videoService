@@ -1,7 +1,7 @@
 <template>
     <div class="contents">
         <div class="div-none-video">
-            <img src="@/assets/none_video.png">
+            <img src="../../assets/none_video.png">
             <h2>동영상을 업로드하여 시작하기</h2>
             <span>스토리를 공유하고 시청자와 소통해 보세요. 업로드한 동영상이 여기에 표시됩니다.</span>
             <div>

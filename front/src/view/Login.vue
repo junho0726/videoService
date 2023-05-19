@@ -32,7 +32,6 @@ import store from '@/store';
 import { ref } from 'vue';
 import instance from "@/api/axios";
 import router from "@/router";
-import SideBar from "@/layout/SideBar.vue";
 
 let id = ref('');
 let pw = ref('');
@@ -43,23 +42,23 @@ let checkEmptyPw = ref('');
 let login = async () => {
 
     if(checkEmpty()) {
-            await store.dispatch('user/setToken', 'test token');
-            await store.dispatch('user/setUserSeq', 1);
-            await router.push('/');
-        // try {
-        //     let response = await instance.post('/api/user/login', {
-        //         id: id.value,
-        //         pw: pw.value
-        //     });
-        //     if(response.data.code == "0000") {
-        //         await store.dispatch('user/setToken', response.data.data.accessToken);
-        //         alert("환영합니다.");
-        //     } else {
-        //         alert("아이디 혹은 비밀번호를 확인해주세요.");
-        //     }
-        // } catch (error) {
-        //     console.error(error);
-        // }
+        try {
+            let response = await instance.post('/api/user/login', {
+                id: id.value,
+                pw: pw.value
+            });
+            if(response.data.code == "0000") {
+                console.log(response.data);
+                await store.dispatch('user/setToken', response.data.data.accessToken);
+                await store.dispatch('user/setUserSeq', 1);
+                await router.push('/');
+                alert("환영합니다.");
+            } else {
+                alert("아이디 혹은 비밀번호를 확인해주세요.");
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 };
 
@@ -85,7 +84,7 @@ function checkEmpty() {
 
 .contents {
     text-align: center;
-    margin-top: 7%;
+    margin-top: 5%;
 }
 
 .contents input {
