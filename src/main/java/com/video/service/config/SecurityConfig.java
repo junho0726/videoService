@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .cors().and()
             .authorizeRequests()
-            .antMatchers("/api/**").permitAll()
+            .antMatchers("/api/**", "/resource/**").permitAll()
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
             .and().csrf().disable(); // csrf 토큰 비활성화
     }

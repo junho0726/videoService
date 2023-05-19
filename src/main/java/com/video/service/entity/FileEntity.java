@@ -34,6 +34,9 @@ public class FileEntity {
     @Column(nullable = false)
     private String fileOriginName;
 
+    @Column(nullable = false)
+    private String fileName;
+
     @ManyToOne
     @JoinColumn(name = "videoSeq")
     private VideoEntity video;
