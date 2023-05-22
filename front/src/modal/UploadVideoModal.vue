@@ -112,43 +112,38 @@ function handleFile(event) {
     let file = null;
     if(inputFile.value == null) {
         file = event.dataTransfer.files[0];
-        setFileInfo(file);
+        uploadFile(file);
     } else {
         file = inputFile.value.files[0];
-        setFileInfo(file);
+        uploadFile(file);
     }
 }
 
 async function uploadFile(file) {
-    console.log(file)
   // eslint-disable-next-line no-unused-vars
-  let response = await axios.post('/api/video/insertProc', {
-      videoFile: file,
-      video: {
-          title: file.name
-      }
+  await axios.post('/api/video/insertProc', {
+      videoFile: file
   }, {
       headers: {
           'Content-Type': 'multipart/form-data',
           "Access_Token": store.getters['user/getToken']
       }
   }).then(value => {
-        console.log(value);
-      if(value.data.code == "0000") {
-
-      }
+      // if(value.data.code == "0000") {
+        console.log("??")
+        value.data;
+        console.log(value.data + "!@#");
+        console.log("??")
+        setFileInfo(value.data);
+      // }
   }).catch(reason => {
       console.log(reason);
   });
-  return response;
 }
 
-function setFileInfo(file) {
-    if(checkType(file)) {
-    let response = uploadFile(file);
-        // TODO !!
-        // 여기서 파일의 정보를 ref() 객체에 저장한다.
-        fileInfo.value.name = response.name;
+function setFileInfo(responseFile) {
+    if(checkType(responseFile)) {
+        // fileInfo.value.name = response.name;
         // fileInfo.value.title = response.name.substring(0, file.name.lastIndexOf('.'));
         // fileInfo.value.link = response.link;
         isUploadFile.value = true;
@@ -389,7 +384,7 @@ span {
 .div-btn {
     position: absolute;
     right: 3%;
-    top: 85%;
+    bottom: 15%;
 }
 
 .div-btn button {

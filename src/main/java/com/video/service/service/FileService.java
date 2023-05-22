@@ -21,6 +21,7 @@ public class FileService {
     }
 
     public List<FileDto> findByVideo(VideoEntity videoEntity) {
+
         return fileRepository.findByVideo(videoEntity);
     }
 

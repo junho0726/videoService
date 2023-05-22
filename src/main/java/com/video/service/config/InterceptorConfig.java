@@ -19,7 +19,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
             "/api/user/login",
             "/api/user/joinProc",
             "/api/user/checkId",
-            "/api/channel/findAll"
+            "/api/channel/findAll",
+            "/api/test/11"
     };
 
     @Override
