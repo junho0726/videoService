@@ -6,6 +6,9 @@ import com.video.service.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
+
 @Service
 public class VideoService {
 
@@ -14,6 +17,18 @@ public class VideoService {
 
     public VideoEntity insertVideo(VideoEntity video) throws Exception{
         return videoRepository.save(video);
+    }
+
+    @Transactional
+    public VideoEntity videoUpdate(VideoEntity video) throws Exception {
+        VideoEntity videoEntity = videoRepository.findById(video.getVideoSeq()).orElseThrow(() -> {
+            return new IllegalArgumentException("존재하지 않는 비디오입니다..");
+        });
+
+        videoEntity.setTitle(video.getTitle());
+        videoEntity.setContent(video.getContent());
+
+        return videoEntity;
     }
 
 }

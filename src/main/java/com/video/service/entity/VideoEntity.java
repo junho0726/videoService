@@ -24,13 +24,13 @@ public class VideoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int videoSeq;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String content;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int count;
 
     @JsonBackReference
