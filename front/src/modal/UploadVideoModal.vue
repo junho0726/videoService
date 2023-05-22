@@ -2,7 +2,7 @@
     <div class="overlay" v-show="showModal"></div>
 
     <!--  파일 올리기 전  -->
-    <div v-if="!isUploadFile" @drop="handleFile($event)" @dragover.prevent class="videoModal" v-show="showModal">
+    <div v-if="!isUploadFile" @drop="dropFile($event)" @dragover.prevent class="videoModal" v-show="showModal">
         <div class="modal-title">
             <span>동영상 업로드</span>
             <button @click="$emit('closeModal')">X</button>
@@ -10,7 +10,7 @@
         <div class="modal-contents">
             <button class="btn-upload"><img src="@/assets/upload_video.png"></button>
             <span>동영상 파일을 드래그 앤 드롭하여 업로드</span>
-            <input type="file" ref="inputFile" @change="handleFile" style="display: none;">
+            <input type="file" ref="inputFile" @change="insertFile()" style="display: none;">
             <button class="btn-select"  @click="openFile()">파일 선택</button>
         </div>
     </div>
@@ -104,22 +104,20 @@ let fileInfo = ref({
   name: '',
   title: '',
   contents: '',
-  link: 'http://localhost:8080/video/KakaoTalk_20230518_172717609.mp4'
+  link: ''
 });
 
-function handleFile(event) {
-    event.preventDefault();
-    let file = null;
-    if(inputFile.value == null) {
-        file = event.dataTransfer.files[0];
-        uploadFile(file);
-    } else {
-        file = inputFile.value.files[0];
-        uploadFile(file);
-    }
+function dropFile(event) {
+  event.preventDefault();
+  uploadFile(event.dataTransfer.files[0]);
+}
+
+function insertFile() {
+  uploadFile(inputFile.value.files[0]);
 }
 
 async function uploadFile(file) {
+  console.log(file);
   // eslint-disable-next-line no-unused-vars
   await axios.post('/api/video/fileInsert ', {
       videoFile: file
@@ -130,10 +128,6 @@ async function uploadFile(file) {
       }
   }).then(value => {
       // if(value.data.code == "0000") {
-        console.log("??")
-        value.data;
-        console.log(value.data);
-        console.log("??")
         setFileInfo(value.data);
       // }
   }).catch(reason => {
@@ -142,11 +136,12 @@ async function uploadFile(file) {
 }
 
 function setFileInfo(responseFile) {
-    console.log(responseFile);
     if(checkType(responseFile)) {
-        // fileInfo.value.name = response.name;
-        // fileInfo.value.title = response.name.substring(0, file.name.lastIndexOf('.'));
-        // fileInfo.value.link = response.link;
+      let file = responseFile.data;
+        fileInfo.value.name = file.fileOriginName;
+        fileInfo.value.title = file.fileOriginName.substring(0, file.fileOriginName.lastIndexOf('.'));
+        fileInfo.value.link = "http://localhost:8080/" + file.filePath + '/' + file.fileName;
+        fileInfo.value.fileSeq = file.fileSeq;
         isUploadFile.value = true;
     } else {
         alert('확장자를 확인하거나 재시도 해주세요.');
@@ -158,11 +153,14 @@ function openFile() {
 }
 
 function checkType(file) {
-    if(file.type == "video/mp4") {
+    let resFile = file.data.fileOriginName;
+    console.log(resFile.substring(resFile.lastIndexOf('.') + 1, resFile.lastIndex));
+    if(resFile.substring(resFile.lastIndexOf('.') + 1, resFile.lastIndex) === "mp4") {
         correctFile.value = true;
         return true;
+    } else {
+        return false;
     }
-    return false;
 }
 
 function copyLink() {
@@ -179,7 +177,20 @@ function post() {
     if(fileInfo.value.title.trim() == "") {
         alert("제목은 필수 항목란입니다.");
     } else {
-
+      console.log(fileInfo.value)
+        axios.post("/api/video/videoInsert",
+            {
+                  "videoDto" : fileInfo.value
+                },
+          { headers: {
+                  'Content-Type': 'application/json; charset=UTF-8',
+                  "Access_Token": store.getters['user/getToken']
+                }
+        }).then(value => {
+            console.log(value);
+        }).catch(reason => {
+            console.log(reason);
+        })
     }
 }
 
