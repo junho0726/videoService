@@ -28,12 +28,8 @@ public class FileDto
 
         public FileDto(FileEntity fileEntity){
             fileSeq =fileEntity.getFileSeq();
-            gubn = fileEntity.getGubn();
             fileFullPath = fileEntity.getFileFullPath();
             fileName = fileEntity.getFileName();
-            videoTitle = fileEntity.getVideo().getTitle();
-            videoContent =fileEntity.getVideo().getContent();
-            videoCount = fileEntity.getVideo().getCount();
         }
 
 }
