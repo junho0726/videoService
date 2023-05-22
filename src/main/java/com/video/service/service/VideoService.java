@@ -1,13 +1,12 @@
 package com.video.service.service;
 
 
+import com.video.service.entity.UserEntity;
 import com.video.service.entity.VideoEntity;
 import com.video.service.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class VideoService {
@@ -19,16 +18,30 @@ public class VideoService {
         return videoRepository.save(video);
     }
 
+
     @Transactional
+    public VideoEntity updateVideo(VideoEntity video) throws Exception {
+        VideoEntity videoEntity = videoRepository.findById(video.getVideoSeq()).orElseThrow(() -> {
+            return new IllegalArgumentException("ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” ë¹„ë””ì˜¤ìž…ë‹ˆë‹¤..");
+        });
+        videoEntity.setContent(video.getContent());
+        videoEntity.setTitle(video.getTitle());
+        videoEntity.setThumbnail(video.getThumbnail());
+
+        return videoEntity;
+    }
+
+
+/*    @Transactional
     public VideoEntity videoUpdate(VideoEntity video) throws Exception {
         VideoEntity videoEntity = videoRepository.findById(video.getVideoSeq()).orElseThrow(() -> {
-            return new IllegalArgumentException("Á¸ÀçÇÏÁö ¾Ê´Â ºñµð¿ÀÀÔ´Ï´Ù..");
+            return new IllegalArgumentException("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½..");
         });
 
         videoEntity.setTitle(video.getTitle());
         videoEntity.setContent(video.getContent());
 
         return videoEntity;
-    }
+    }*/
 
 }

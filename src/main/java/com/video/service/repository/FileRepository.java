@@ -11,7 +11,5 @@ import java.util.List;
 
 public interface FileRepository extends JpaRepository <FileEntity, Integer> {
 
-    @Query(value = "SELECT f FROM FileEntity f WHERE f.video = :video")
-    List<FileDto>  findByVideo(VideoEntity video);
 
 }

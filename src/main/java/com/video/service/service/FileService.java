@@ -19,10 +19,10 @@ public class FileService {
     public FileEntity insertFile(FileEntity fileEntity) throws Exception {
         return fileRepository.save(fileEntity);
     }
-
+/*
     public List<FileDto> findByVideo(VideoEntity videoEntity) {
 
         return fileRepository.findByVideo(videoEntity);
-    }
+    }*/
 
 }

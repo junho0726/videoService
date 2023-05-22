@@ -25,7 +25,7 @@ public class ChannelController {
 
     private final FileService fileService;
 
-    @PostMapping(value = "channel/findAll")
+/*    @PostMapping(value = "channel/findAll")
     public ApiResponseDto channelFindAll() {
         ApiResponseDto apiResponseDto = new ApiResponseDto();
 
@@ -76,5 +76,5 @@ public class ChannelController {
         }
 
         return apiResponseDto;
-    }
+    }*/
 }

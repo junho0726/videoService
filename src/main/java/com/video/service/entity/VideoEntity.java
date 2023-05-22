@@ -38,6 +38,14 @@ public class VideoEntity {
     @JoinColumn(name = "channelSeq")
     private ChannelEntity channel;
 
+    @OneToOne
+    @JoinColumn(name = "fileSeq")
+    private FileEntity file;
+
+    @OneToOne
+    @JoinColumn(name = "thumbnailSeq")
+    private ThumbnailEntity thumbnail;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="video_category",
             joinColumns = @JoinColumn(name = "video_videoSeq"),

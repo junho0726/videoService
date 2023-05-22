@@ -2,10 +2,7 @@ package com.video.service.controller;
 
 import com.video.service.dto.*;
 import com.video.service.entity.*;
-import com.video.service.service.FileService;
-import com.video.service.service.JwtService;
-import com.video.service.service.UserService;
-import com.video.service.service.VideoService;
+import com.video.service.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +36,10 @@ public class VideoController {
 
     private final FileService fileService;
 
-    @PostMapping(value = "video/insertProc")
-    public ApiResponseDto insert(@RequestHeader("Access_Token") String accessToken, @RequestPart MultipartFile videoFile, HttpServletRequest req) {
+    private final ThumbnailService thumbnailService;
+
+    @PostMapping(value = "video/fileInsert")
+    public ApiResponseDto fileInsert(@RequestHeader("Access_Token") String accessToken, @RequestPart MultipartFile videoFile) {
         ApiResponseDto response = new ApiResponseDto();
         try {
             UserEntity user = new UserEntity();
@@ -54,19 +53,45 @@ public class VideoController {
             Path videoSavePath = Paths.get(uploadPath, videoFolderPath, videoFileName);
             videoFile.transferTo(videoSavePath);
 
-            VideoEntity video = new VideoEntity();
-
-            video.setChannel(findUser.getChannel());
-            VideoEntity saveVideo = videoService.insertVideo(video);
-
             FileEntity videoFileEntity = new FileEntity();
-            videoFileEntity.setGubn("videoFile");
-            videoFileEntity.setVideo(video);
             videoFileEntity.setFilePath(videoFolderPath);
             videoFileEntity.setFileFullPath(videoSavePath.toString());
             videoFileEntity.setFileOriginName(videoOriginalName);
             videoFileEntity.setFileName(videoFileName);
-            fileService.insertFile(videoFileEntity);
+            FileEntity saveFile = fileService.insertFile(videoFileEntity);
+
+            response.setData(saveFile);
+            response.setCode("0001");
+            response.setMessage("성공");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode("0001");
+            response.setMessage("Error: " + e.getMessage());
+        }
+        return response;
+    }
+
+    @PostMapping(value = "video/videoInsert")
+    public ApiResponseDto videoInsert(@RequestHeader("Access_Token") String accessToken, @RequestBody VideoDto videoDto, MultipartFile thumbnail)  throws Exception {
+        ApiResponseDto response = new ApiResponseDto();
+        try {
+            UserEntity user = new UserEntity();
+            Map resultMap = jwtService.getSubject(accessToken);
+            user.setId(resultMap.get("fdId").toString());
+            UserEntity findUser = userService.findByid(user);
+
+
+            VideoEntity videoEntity = new VideoEntity();
+            FileEntity fileEntity = new FileEntity();
+            fileEntity.setFileSeq(videoDto.getFileSeq());
+            videoEntity.setFile(fileEntity);
+            videoEntity.setTitle(videoDto.getTitle());
+            videoEntity.setContent(videoDto.getContent());
+            videoEntity.setChannel(findUser.getChannel());
+
+
+            VideoEntity saveVideo = videoService.insertVideo(videoEntity);
 
             response.setData(saveVideo);
             response.setCode("0001");
@@ -80,47 +105,8 @@ public class VideoController {
         return response;
     }
 
-    @PostMapping(value = "video/updateProc")
-    public ApiResponseDto update(@RequestHeader("Access_Token") String accessToken, @RequestPart VideoEntity video,  @RequestPart(value="videoFile", required = false) MultipartFile videoFile, HttpServletRequest req)  throws Exception {
-        ApiResponseDto response = new ApiResponseDto();
-        try {
-            UserEntity user = new UserEntity();
-            Map resultMap = jwtService.getSubject(accessToken);
-            user.setId(resultMap.get("fdId").toString());
-            UserEntity findUser = userService.findByid(user);
 
-            videoService.videoUpdate(video);
-
-            if(videoFile != null) {
-                String videoOriginalName = videoFile.getOriginalFilename();
-                String videoFileName = UUID.randomUUID().toString() + "_" + videoOriginalName;
-                String videoFolderPath = makeFolder();
-                Path videoSavePath = Paths.get(uploadPath, videoFolderPath, videoFileName);
-                videoFile.transferTo(videoSavePath);
-
-                FileEntity videoFileEntity = new FileEntity();
-                videoFileEntity.setGubn("videoFile");
-                videoFileEntity.setVideo(video);
-                videoFileEntity.setFilePath(videoFolderPath);
-                videoFileEntity.setFileFullPath(videoSavePath.toString());
-                videoFileEntity.setFileOriginName(videoOriginalName);
-                videoFileEntity.setFileName(videoFileName);
-                fileService.insertFile(videoFileEntity);
-
-            }
-            response.setCode("0001");
-            response.setMessage("성공");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.setCode("0001");
-            response.setMessage("Error: " + e.getMessage());
-        }
-        return response;
-    }
-
-
-    @PostMapping(value = "thumb/insertProc")
+   @PostMapping(value = "video/thumbnailInsert")
     public ApiResponseDto insertThumbnail(@RequestHeader("Access_Token") String accessToken, @RequestPart VideoEntity video, MultipartFile thumbnail) {
         ApiResponseDto response = new ApiResponseDto();
         try {
@@ -141,21 +127,17 @@ public class VideoController {
             String thumbnailFolderPath = makeFolder();
             Path thumbnailSavePath = Paths.get(uploadPath, thumbnailFolderPath, thumbnailFileName);
             thumbnail.transferTo(thumbnailSavePath);
-            video.setChannel(findUser.getChannel());
 
-            FileEntity thumbnailFile = new FileEntity();
-            thumbnailFile.setGubn("thumbnail");
-            thumbnailFile.setVideo(video);
+            ThumbnailEntity thumbnailFile = new ThumbnailEntity();
             thumbnailFile.setFilePath(thumbnailFolderPath);
             thumbnailFile.setFileFullPath(thumbnailSavePath.toString());
             thumbnailFile.setFileOriginName(thumbnailOriginalName);
             thumbnailFile.setFileName(thumbnailFileName);
-            fileService.insertFile(thumbnailFile);
+            ThumbnailEntity saveThumbnail = thumbnailService.insertThumbnail(thumbnailFile);
 
-            ApiFileDto apiFileDto = new ApiFileDto();
-            apiFileDto.setFileFullPath(thumbnailSavePath.toString());
-            apiFileDto.setFileName(thumbnailFileName);
-            response.setData(apiFileDto);
+            video.setThumbnail(saveThumbnail);
+            videoService.updateVideo(video);
+
             response.setCode("0001");
             response.setMessage("성공");
 

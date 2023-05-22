@@ -16,11 +16,11 @@ import java.sql.Timestamp;
 @Builder
 @Entity
 @DynamicInsert
-public class FileEntity {
+public class ThumbnailEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int fileSeq;
+    private int thumbnailSeq;
 
     @Column(nullable = false)
     private String filePath;
