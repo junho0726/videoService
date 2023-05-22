@@ -121,7 +121,7 @@ function handleFile(event) {
 
 async function uploadFile(file) {
   // eslint-disable-next-line no-unused-vars
-  await axios.post('/api/video/insertProc', {
+  await axios.post('/api/video/fileInsert ', {
       videoFile: file
   }, {
       headers: {
@@ -132,7 +132,7 @@ async function uploadFile(file) {
       // if(value.data.code == "0000") {
         console.log("??")
         value.data;
-        console.log(value.data + "!@#");
+        console.log(value.data);
         console.log("??")
         setFileInfo(value.data);
       // }
@@ -142,6 +142,7 @@ async function uploadFile(file) {
 }
 
 function setFileInfo(responseFile) {
+    console.log(responseFile);
     if(checkType(responseFile)) {
         // fileInfo.value.name = response.name;
         // fileInfo.value.title = response.name.substring(0, file.name.lastIndexOf('.'));
