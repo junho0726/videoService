@@ -39,7 +39,7 @@ public class VideoController {
     private final FileService fileService;
 
     @PostMapping(value = "video/insertProc")
-    public ApiResponseDto insertVideo(@RequestHeader("Access_Token") String accessToken, @RequestPart VideoEntity video,  MultipartFile videoFile, HttpServletRequest req) {
+    public ApiResponseDto insertVideo(@RequestHeader("Access_Token") String accessToken, @RequestBody VideoEntity video, MultipartFile videoFile, HttpServletRequest req) {
         ApiResponseDto response = new ApiResponseDto();
         try {
             UserEntity user = new UserEntity();

@@ -2,7 +2,7 @@
     <div class="overlay" v-show="showModal"></div>
 
     <!--  파일 올리기 전  -->
-    <div v-if="!isUploadFile" @drop="handleFile" @dragover.prevent class="videoModal" v-show="showModal">
+    <div v-if="!isUploadFile" @drop="handleFile($event)" @dragover.prevent class="videoModal" v-show="showModal">
         <div class="modal-title">
             <span>동영상 업로드</span>
             <button @click="$emit('closeModal')">X</button>
@@ -107,11 +107,11 @@ let fileInfo = ref({
   link: 'http://localhost:8080/video/KakaoTalk_20230518_172717609.mp4'
 });
 
-function handleFile(e) {
-    e.preventDefault();
+function handleFile(event) {
+    event.preventDefault();
     let file = null;
     if(inputFile.value == null) {
-        file = e.dataTransfer.files[0];
+        file = event.dataTransfer.files[0];
         setFileInfo(file);
     } else {
         file = inputFile.value.files[0];
@@ -123,7 +123,10 @@ async function uploadFile(file) {
     console.log(file)
   // eslint-disable-next-line no-unused-vars
   let response = await axios.post('/api/video/insertProc', {
-      videoFile: file
+      videoFile: file,
+      video: {
+          title: file.name
+      }
   }, {
       headers: {
           'Content-Type': 'multipart/form-data',
