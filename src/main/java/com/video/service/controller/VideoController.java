@@ -5,6 +5,10 @@ import com.video.service.entity.*;
 import com.video.service.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,10 +18,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @ResponseBody
@@ -47,15 +49,15 @@ public class VideoController {
             user.setId(resultMap.get("fdId").toString());
             UserEntity findUser = userService.findByid(user);
 
-            String videoOriginalName = videoFile.getOriginalFilename();
+            String videoOriginalName = videoFile.getOriginalFilename().replaceAll("\\s", "");
             String videoFileName = UUID.randomUUID().toString() + "_" + videoOriginalName;
             String videoFolderPath = makeFolder();
             Path videoSavePath = Paths.get(uploadPath, videoFolderPath, videoFileName);
             videoFile.transferTo(videoSavePath);
-
+            String changePath = videoSavePath.toString();
             FileEntity videoFileEntity = new FileEntity();
-            videoFileEntity.setFilePath(videoFolderPath);
-            videoFileEntity.setFileFullPath(videoSavePath.toString());
+            videoFileEntity.setFilePath(videoFolderPath.replaceAll("\\\\", "/"));
+            videoFileEntity.setFileFullPath(changePath.replaceAll("\\\\", "/"));
             videoFileEntity.setFileOriginName(videoOriginalName);
             videoFileEntity.setFileName(videoFileName);
             FileEntity saveFile = fileService.insertFile(videoFileEntity);
@@ -81,7 +83,6 @@ public class VideoController {
             user.setId(resultMap.get("fdId").toString());
             UserEntity findUser = userService.findByid(user);
 
-
             VideoEntity videoEntity = new VideoEntity();
             FileEntity fileEntity = new FileEntity();
             fileEntity.setFileSeq(videoDto.getFileSeq());
@@ -89,7 +90,6 @@ public class VideoController {
             videoEntity.setTitle(videoDto.getTitle());
             videoEntity.setContent(videoDto.getContent());
             videoEntity.setChannel(findUser.getChannel());
-
 
             VideoEntity saveVideo = videoService.insertVideo(videoEntity);
 
@@ -149,6 +149,105 @@ public class VideoController {
         return response;
     }
 
+    @GetMapping(value = "video/findAll")
+    public ApiResponseDto videoFindAll(@RequestParam("page") Integer page, @RequestParam("size") Integer size, @RequestParam(value = "channelSeq", required = false) Integer channelSeq) {
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        Pageable pageable = PageRequest.of(page - 1 , size);
+        try {
+            Page<VideoEntity> videos;
+            List<ApiFileDto> result;
+            PaginationDto pagination = new PaginationDto();
+
+            if (channelSeq != null) {
+                ChannelEntity channelEntity = new ChannelEntity();
+                int seq = channelSeq.intValue();
+                channelEntity.setChannelSeq(seq);
+                videos = videoService.findAllByChannel(channelEntity, pageable);
+            } else {
+                videos = videoService.findAll(pageable);
+            }
+
+            result = videos.getContent().stream()
+                    .map(video -> {
+                        ApiFileDto apiFileDto = new ApiFileDto();
+                        ChannelEntity channel = video.getChannel();
+                        apiFileDto.setUserId(channel.getUser().getId());
+                        apiFileDto.setUserName(channel.getUser().getName());
+                        apiFileDto.setVideoSeq(video.getVideoSeq());
+                        apiFileDto.setVideoTitle(video.getTitle());
+                        apiFileDto.setVideoContent(video.getContent());
+                        apiFileDto.setVideoCount(video.getCount());
+                        FileEntity videoFile = fileService.findByVideo(video);
+                        apiFileDto.setFileFullPath(videoFile.getFileFullPath());
+                        apiFileDto.setFileName(videoFile.getFileName());
+                        apiFileDto.setFileOriginName(videoFile.getFileOriginName());
+                        return apiFileDto;
+                    })
+                    .collect(Collectors.toList());
+
+            pagination.setPage(videos.getNumber() + 1);
+            pagination.setSize(videos.getSize());
+            pagination.setTotalCount(videos.getTotalElements());
+            pagination.setTotalPages(videos.getTotalPages());
+
+            apiResponseDto.setData(result);
+            apiResponseDto.setCode("0000");
+            apiResponseDto.setMessage("Successed!!");
+            apiResponseDto.setPagination(pagination);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return apiResponseDto;
+    }
+
+    @GetMapping(value = "video/findMyVideoAll")
+    public ApiResponseDto findMyVideoAll(@RequestHeader("Access_Token") String accessToken, @RequestParam("page") Integer page, @RequestParam("size") Integer size) {
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        Pageable pageable = PageRequest.of(page - 1 , size);
+        try {
+            UserEntity user = new UserEntity();
+            Map resultMap = jwtService.getSubject(accessToken);
+            user.setId(resultMap.get("fdId").toString());
+            UserEntity findUser = userService.findByid(user);
+            Page<VideoEntity> videos = videoService.findAllByChannel(findUser.getChannel(), pageable);
+            List<ApiFileDto> result = videos.getContent().stream()
+                    .map(video -> {
+                        ApiFileDto apiFileDto = new ApiFileDto();
+                        ChannelEntity channel = video.getChannel();
+                        apiFileDto.setUserId(channel.getUser().getId());
+                        apiFileDto.setUserName(channel.getUser().getName());
+                        apiFileDto.setVideoSeq(video.getVideoSeq());
+                        apiFileDto.setVideoTitle(video.getTitle());
+                        apiFileDto.setVideoContent(video.getContent());
+                        apiFileDto.setVideoCount(video.getCount());
+                        FileEntity videoFile = fileService.findByVideo(video);
+                        apiFileDto.setFileFullPath(videoFile.getFileFullPath());
+                        apiFileDto.setFileName(videoFile.getFileName());
+                        apiFileDto.setFileOriginName(videoFile.getFileOriginName());
+                        return apiFileDto;
+                    })
+                    .collect(Collectors.toList());
+
+            PaginationDto pagination = new PaginationDto();
+            pagination.setPage(videos.getNumber()+1);
+            pagination.setSize(videos.getSize());
+            pagination.setTotalCount(videos.getTotalElements());
+            pagination.setTotalPages(videos.getTotalPages());
+
+            apiResponseDto.setData(result);
+            apiResponseDto.setCode("0000");
+            apiResponseDto.setMessage("Successed!!");
+            apiResponseDto.setPagination(pagination);
+        } catch (Exception e) {
+            // 예외 처리 코드
+            e.printStackTrace();
+            // 예외 처리 후 필요한 작업 수행
+        }
+
+        return apiResponseDto;
+    }
 
 
     private String makeFolder(){

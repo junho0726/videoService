@@ -24,11 +24,13 @@ public class ChannelEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int channelSeq;
 
-    @OneToOne
+    @Column(nullable = false)
+    private String channelName;
+
     @JsonBackReference
+    @OneToOne
     @JoinColumn(name = "userSeq")
     private UserEntity user;
-
 
     @OneToMany(mappedBy = "channel")
     private List<VideoEntity> video;

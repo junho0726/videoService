@@ -6,6 +6,7 @@ import com.video.service.entity.FileEntity;
 import com.video.service.entity.UserEntity;
 import com.video.service.entity.VideoEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class ChannelDto
 {
 

@@ -1,12 +1,18 @@
 package com.video.service.service;
 
 
+import com.video.service.entity.ChannelEntity;
+import com.video.service.entity.FileEntity;
 import com.video.service.entity.UserEntity;
 import com.video.service.entity.VideoEntity;
 import com.video.service.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class VideoService {
@@ -17,7 +23,6 @@ public class VideoService {
     public VideoEntity insertVideo(VideoEntity video) throws Exception{
         return videoRepository.save(video);
     }
-
 
     @Transactional
     public VideoEntity updateVideo(VideoEntity video) throws Exception {
@@ -30,6 +35,21 @@ public class VideoService {
 
         return videoEntity;
     }
+
+    public Page<VideoEntity> findAll(Pageable pageable) throws Exception {
+
+        Page<VideoEntity> videoPage = videoRepository.findAll(pageable);
+
+        return videoPage;
+    }
+
+    public Page<VideoEntity> findAllByChannel(ChannelEntity channelEntity, Pageable pageable) throws Exception {
+
+        Page<VideoEntity> videoPage = videoRepository.findAllByChannel(channelEntity.getChannelSeq(), pageable);
+
+        return videoPage;
+    }
+
 
 
 /*    @Transactional

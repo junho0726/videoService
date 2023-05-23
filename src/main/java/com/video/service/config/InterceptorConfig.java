@@ -19,7 +19,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
             "/api/user/login",
             "/api/user/joinProc",
             "/api/user/checkId",
-            "/api/channel/findAll",
+            "/api/video/findAll",
             "/api/video/fileInsert",
             "/api/video/videoInsert"
     };

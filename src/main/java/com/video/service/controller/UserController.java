@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.Random;
 
 @RestController
 @ResponseBody
@@ -50,7 +51,10 @@ public class UserController {
                 response.setMessage("Successed!!");
                 response.setData(savedUser);
                 ChannelEntity channel = new ChannelEntity();
+                String channelName = randomCd();
+                channel.setChannelName(channelName);
                 channel.setUser(savedUser);
+
                 channelService.channelSave(channel);
             } else {
                 response.setCode("0001");
@@ -176,6 +180,27 @@ public class UserController {
         }
         return response;
     }
+
+
+    private String randomCd() {
+        Random rnd = new Random();
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < 8; i++) {
+            // rnd.nextBoolean() 는 랜덤으로 true, false 를 리턴. true일 시 랜덤 한 소문자를, false 일 시 랜덤 한
+            // 숫자를 StringBuffer 에 append 한다.
+            if (rnd.nextBoolean()) {
+                buf.append((char) ((int) (rnd.nextInt(26)) + 97));
+            } else {
+                buf.append((rnd.nextInt(10)));
+            }
+        }
+        String channelName = "@user-"+buf.toString();
+
+        return channelName;
+    }
+
+
+
 
 
 }
