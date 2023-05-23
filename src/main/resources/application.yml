@@ -5,6 +5,7 @@ server:
 
 spring:
   mvc:
+    static-path-pattern: /static/**
     view:
       prefix: /WEB-INF/views/
       suffix: .jsp
@@ -19,6 +20,7 @@ spring:
       location: src/main/resources/static
       max-request-size: 30MB
       max-file-size: 10MB
+
 
   jpa:
     open-in-view: true
