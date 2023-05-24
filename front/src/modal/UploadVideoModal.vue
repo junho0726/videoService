@@ -101,6 +101,7 @@ let linkForCopy = ref();
 let correctFile = ref(false);
 let isUploadFile = ref(false);
 let fileInfo = ref({
+  fileSeq: '',
   name: '',
   title: '',
   contents: '',
@@ -155,7 +156,6 @@ function openFile() {
 
 function checkType(file) {
     let resFile = file.data.fileOriginName;
-    console.log(resFile.substring(resFile.lastIndexOf('.') + 1, resFile.lastIndex));
     if(resFile.substring(resFile.lastIndexOf('.') + 1, resFile.lastIndex) === "mp4") {
         correctFile.value = true;
         return true;
@@ -175,13 +175,19 @@ function copyLink() {
 }
 
 function post() {
-    if(fileInfo.value.title.trim() == "") {
+    let requestFile = {
+      fileSeq: fileInfo.value.fileSeq,
+      title: fileInfo.value.title,
+      contents: fileInfo.value.contents
+    };
+    if(requestFile.title.trim() == "") {
         alert("제목은 필수 항목란입니다.");
     } else {
-      console.log(fileInfo.value)
+        console.log(requestFile)
+        console.log("!!!")
         axios.post("/api/video/videoInsert",
             {
-                  "videoDto" : fileInfo.value
+                  "videoDto" : requestFile
                 },
           { headers: {
                   'Content-Type': 'application/json; charset=UTF-8',
@@ -191,6 +197,7 @@ function post() {
             console.log(value);
         }).catch(reason => {
             console.log(reason);
+            alert('예기치 못한 오류가 발생했습니다.');
         })
     }
 }
