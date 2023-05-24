@@ -20,8 +20,6 @@ spring:
       location: src/main/resources/static
       max-request-size: 30MB
       max-file-size: 10MB
-
-
   jpa:
     open-in-view: true
     hibernate:
@@ -32,6 +30,10 @@ spring:
     show-sql: true
     properties:
       hibernate.format_sql: true
+  web:
+    resources:
+      cache:
+        period: 0
 
 
 logging:
