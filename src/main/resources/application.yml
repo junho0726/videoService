@@ -4,6 +4,13 @@ server:
     context-path: /
 
 spring:
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+
   mvc:
     static-path-pattern: /static/**
     view:
@@ -11,15 +18,18 @@ spring:
       suffix: .jsp
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://127.0.0.1:3308/video-service?serverTimezone=Asia/Seoul
-    username: min
-    password: qwe123!
+    url: jdbc:mariadb://127.0.0.1:3306/video-Service?serverTimezone=Asia/Seoul
+    username: jun
+    password: tkfkd786
+
   servlet:
     multipart:
       enabled: true
       location: src/main/resources/static
       max-request-size: 30MB
       max-file-size: 10MB
+
+
   jpa:
     open-in-view: true
     hibernate:
@@ -30,10 +40,7 @@ spring:
     show-sql: true
     properties:
       hibernate.format_sql: true
-  web:
-    resources:
-      cache:
-        period: 0
+
 
 logging:
   level:
@@ -51,16 +58,3 @@ com :
   video :
     upload :
       path : src/main/resources/static
-
-cloud:
-  aws:
-    s3:
-      bucket: video.service.file
-    credentials:
-      access-key: AKIATEMIZ4J6CHFOF6EQ
-      secret-key: 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
-    region:
-      static: ap-northeast-2
-      auto: false
-    stack:
-      auto: false
