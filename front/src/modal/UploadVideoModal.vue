@@ -56,8 +56,7 @@
                   controls
                   autoplay
                   preload="auto"
-                  poster="@/assets/my_logo.png"
-                  data-setup="{}">
+                  poster="@/assets/my_logo.png">
                   <source :src="fileInfo.link" type="video/mp4"/>
                 </video>
                 <div class="video-info">
@@ -91,7 +90,6 @@
 import { ref } from "vue";
 import axios from "axios";
 import store from "@/store";
-import router from "@/router";
 
 defineProps({
     showModal: Boolean
@@ -201,8 +199,6 @@ function post() {
         })
     }
 }
-
-
 
 </script>
 
