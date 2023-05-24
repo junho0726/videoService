@@ -91,6 +91,7 @@
 import { ref } from "vue";
 import axios from "axios";
 import store from "@/store";
+import router from "@/router";
 
 defineProps({
     showModal: Boolean
@@ -139,7 +140,6 @@ async function uploadFile(file) {
 function setFileInfo(responseFile) {
     if(checkType(responseFile)) {
       let file = responseFile.data;
-      console.log(file);
         fileInfo.value.name = file.fileOriginName;
         fileInfo.value.title = file.fileOriginName.substring(0, file.fileOriginName.lastIndexOf('.'));
         fileInfo.value.link = file.fileFullPath;
@@ -175,26 +175,26 @@ function copyLink() {
 }
 
 function post() {
-    let requestFile = {
-      fileSeq: fileInfo.value.fileSeq,
-      title: fileInfo.value.title,
-      contents: fileInfo.value.contents
-    };
-    if(requestFile.title.trim() == "") {
+    if(fileInfo.value.title.trim() == "") {
         alert("제목은 필수 항목란입니다.");
     } else {
-        console.log(requestFile)
-        console.log("!!!")
         axios.post("/api/video/videoInsert",
             {
-                  "videoDto" : requestFile
+                  "fileSeq" : fileInfo.value.fileSeq,
+                  "title" : fileInfo.value.title,
+                  "content" : fileInfo.value.contents
                 },
           { headers: {
                   'Content-Type': 'application/json; charset=UTF-8',
                   "Access_Token": store.getters['user/getToken']
                 }
         }).then(value => {
-            console.log(value);
+            if(value.status === 200) {
+              alert("성공적으로 등록되었습니다.");
+              isUploadFile.value = false;
+            } else {
+              alert('예기치 못한 오류가 발생했습니다.');
+            }
         }).catch(reason => {
             console.log(reason);
             alert('예기치 못한 오류가 발생했습니다.');
