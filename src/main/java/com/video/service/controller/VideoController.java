@@ -40,6 +40,9 @@ public class VideoController {
 
     private final ThumbnailService thumbnailService;
 
+    private final AwsS3Service awsS3Service;
+
+
     @PostMapping(value = "video/fileInsert")
     public ApiResponseDto fileInsert(@RequestHeader("Access_Token") String accessToken, @RequestPart MultipartFile videoFile) {
         ApiResponseDto response = new ApiResponseDto();
@@ -49,18 +52,8 @@ public class VideoController {
             user.setId(resultMap.get("fdId").toString());
             UserEntity findUser = userService.findByid(user);
 
-            String videoOriginalName = videoFile.getOriginalFilename().replaceAll("\\s", "");
-            String videoFileName = UUID.randomUUID().toString() + "_" + videoOriginalName;
-            String videoFolderPath = makeFolder();
-            Path videoSavePath = Paths.get(uploadPath, videoFolderPath, videoFileName);
-            videoFile.transferTo(videoSavePath);
-            String changePath = videoSavePath.toString();
-            FileEntity videoFileEntity = new FileEntity();
-            videoFileEntity.setFilePath(videoFolderPath.replaceAll("\\\\", "/"));
-            videoFileEntity.setFileFullPath(changePath.replaceAll("\\\\", "/"));
-            videoFileEntity.setFileOriginName(videoOriginalName);
-            videoFileEntity.setFileName(videoFileName);
-            FileEntity saveFile = fileService.insertFile(videoFileEntity);
+            FileEntity fileEntity = awsS3Service.saveFile(videoFile);
+            FileEntity saveFile = fileService.insertFile(fileEntity);
 
             response.setData(saveFile);
             response.setCode("0001");
@@ -122,17 +115,8 @@ public class VideoController {
                 return response;
             }
 
-            String thumbnailOriginalName = thumbnail.getOriginalFilename();
-            String thumbnailFileName = UUID.randomUUID().toString() + "_" + thumbnailOriginalName;
-            String thumbnailFolderPath = makeFolder();
-            Path thumbnailSavePath = Paths.get(uploadPath, thumbnailFolderPath, thumbnailFileName);
-            thumbnail.transferTo(thumbnailSavePath);
+            ThumbnailEntity thumbnailFile = awsS3Service.saveThumbnail(thumbnail);
 
-            ThumbnailEntity thumbnailFile = new ThumbnailEntity();
-            thumbnailFile.setFilePath(thumbnailFolderPath);
-            thumbnailFile.setFileFullPath(thumbnailSavePath.toString());
-            thumbnailFile.setFileOriginName(thumbnailOriginalName);
-            thumbnailFile.setFileName(thumbnailFileName);
             ThumbnailEntity saveThumbnail = thumbnailService.insertThumbnail(thumbnailFile);
 
             video.setThumbnail(saveThumbnail);
@@ -247,19 +231,6 @@ public class VideoController {
         }
 
         return apiResponseDto;
-    }
-
-
-    private String makeFolder(){
-        String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/DD"));
-
-        String folderPath = str.replace("/", File.separator);
-        File uploadPathFolder = new File(uploadPath, folderPath);
-
-        if(uploadPathFolder.exists() == false){
-            uploadPathFolder.mkdirs();
-        }
-        return folderPath;
     }
 
 }
