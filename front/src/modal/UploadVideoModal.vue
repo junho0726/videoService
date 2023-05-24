@@ -138,9 +138,10 @@ async function uploadFile(file) {
 function setFileInfo(responseFile) {
     if(checkType(responseFile)) {
       let file = responseFile.data;
+      console.log(file);
         fileInfo.value.name = file.fileOriginName;
         fileInfo.value.title = file.fileOriginName.substring(0, file.fileOriginName.lastIndexOf('.'));
-        fileInfo.value.link = "http://localhost:8080/" + file.filePath + '/' + file.fileName;
+        fileInfo.value.link = file.fileFullPath;
         fileInfo.value.fileSeq = file.fileSeq;
         isUploadFile.value = true;
     } else {

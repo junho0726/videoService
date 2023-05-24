@@ -35,17 +35,32 @@ spring:
       cache:
         period: 0
 
-
 logging:
   level:
     org:
       springframework:
         security:
           web: trace
-    zerock: debug
-
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+    service: debug
 
 com :
   video :
     upload :
       path : src/main/resources/static
+
+cloud:
+  aws:
+    s3:
+      bucket: video.service.file
+    credentials:
+      access-key: AKIATEMIZ4J6CHFOF6EQ
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false

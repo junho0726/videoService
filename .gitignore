@@ -13,11 +13,11 @@ build/
 .settings
 .springBeans
 .sts4-cache
-/src/main/resources/application.yml
 /src/main/resources/static/2023/**
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+!**/application.yml
 
 ### IntelliJ IDEA ###
 .idea
