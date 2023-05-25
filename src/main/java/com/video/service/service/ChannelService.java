@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -26,5 +27,10 @@ public class ChannelService {
         return channelRepository.findAll();
     }
 
+    public ChannelEntity findById(int channelSeq) throws Exception {
 
+        Optional <ChannelEntity>  channel =  channelRepository.findById(channelSeq);
+
+        return channel.get();
+    }
 }

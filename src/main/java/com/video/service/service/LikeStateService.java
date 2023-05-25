@@ -68,4 +68,14 @@ public class LikeStateService {
             throw new RuntimeException("좋아요/싫어요 처리 중 오류가 발생하였습니다.");
         }
     }
+
+    public int likeStateCountByVideo(VideoEntity video) throws Exception {
+        int videoSeq = video.getVideoSeq();
+        String likeState = "좋아요";
+
+        int likeStateCount = likeRepository.likeStateCountByVideo(videoSeq, likeState);
+
+        return likeStateCount;
+    }
+
 }

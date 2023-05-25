@@ -13,4 +13,8 @@ import java.util.Optional;
 public interface LikeStateRepository extends JpaRepository<LikeStateEntity, Integer> {
     @Query("SELECT l FROM LikeStateEntity l WHERE l.user.userSeq = :userSeq AND l.video.videoSeq = :videoSeq")
     Optional<LikeStateEntity> findByUserSeqAndVideoSeq (@Param("userSeq") int userSeq, @Param("videoSeq") int videoSeq);
+
+    @Query("SELECT COUNT(l) FROM LikeStateEntity l WHERE l.video.videoSeq = :videoSeq AND l.likeState = :likeState")
+    int likeStateCountByVideo(@Param("videoSeq") int videoSeq, @Param("likeState") String likeState);
+
 }

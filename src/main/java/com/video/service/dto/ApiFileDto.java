@@ -11,6 +11,8 @@ public class ApiFileDto {
 
     private String userName;
 
+    private String channelName;
+
     private int videoSeq ;
 
     private String videoTitle ;
@@ -24,5 +26,11 @@ public class ApiFileDto {
     private  String fileName;
 
     private String fileOriginName ;
+
+    private String thumbnailFullPath;
+
+    private int likeStateCount;
+
+
 
 }
