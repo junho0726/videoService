@@ -4,9 +4,12 @@
         <div class="content-wrap">
             <SideBar v-if="isShowSidebar"/>
             <div class="category-div">
-                <div class="category-row" v-for="category in categoryList">
-                    <button type="button" @click="findVideoByCategorySeq(category.categorySeq)" :id="'category-' + category.categorySeq" class="category">{{ category.name }}</button>
-                </div>
+              <div class="category-row">
+                <button type="button" @click="findVideoByCategorySeq()" class="category">전체</button>
+              </div>
+              <div class="category-row" v-for="category in categoryList">
+                  <button type="button" @click="findVideoByCategorySeq(category.categorySeq)" :id="'category-' + category.categorySeq" class="category">{{ category.name }}</button>
+              </div>
             </div>
             <div class="content" :class="{ 'show-side-bar-content':isShowSidebar }">
               <Video :video-list="videoList" :show-side-bar="isShowSidebar"/>
@@ -51,24 +54,44 @@ axios.get('/api/video/findAll').then(value => {
         alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
     }
 }).catch(reason => {
+    console.log(reason);
     alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
 })
 
 function findVideoByCategorySeq(categorySeq) {
-    axios.get('/api/video/findAll?categorySeq=' + categorySeq).then(value => {
+    if(categorySeq == null) {
+      axios.get('/api/video/findAll').then(value => {
         let data = value.data;
         let dataList = data.data;
         videoList.value = [];
         if(data.code === "0000") {
-            for(let i = 0; i < dataList.length; i++) {
-                videoList.value.push(dataList[i]);
-            }
+          for(let i = 0; i < dataList.length; i++) {
+            videoList.value.push(dataList[i]);
+          }
         } else {
-            alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
+          alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
         }
-    }).catch(reason => {
+      }).catch(reason => {
         console.log(reason);
-    })
+        alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
+      })
+    } else {
+      axios.get('/api/video/findAll?categorySeq=' + categorySeq).then(value => {
+          let data = value.data;
+          let dataList = data.data;
+          videoList.value = [];
+          if(data.code === "0000") {
+              for(let i = 0; i < dataList.length; i++) {
+                  videoList.value.push(dataList[i]);
+              }
+          } else {
+              alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
+          }
+      }).catch(reason => {
+          console.log(reason);
+          alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
+      })
+    }
 }
 
 function showSidebar() {

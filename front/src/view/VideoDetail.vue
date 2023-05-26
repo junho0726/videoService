@@ -5,7 +5,6 @@
           <SideBar v-if="isShowSidebar"/>
           <div class="content">
               <div class="video-content">
-
                   <video  v-if="video.fileFullPath != null"
                           id="video"
                           class="video-js"
@@ -28,10 +27,10 @@
                           </div>
                       </div>
                       <div class="feedback-div">
-                          <img src="/good.png" @click="goodFeedback()">
-                          <span>0</span>
+                          <img src="/good.png" :src="{ '/action_good.png' : isActionGood }" @click="feedback('Y')">
+                          <span>{{ video.likeStateCount }}</span>
                           <div class="line"></div>
-                          <img src="/bad.png">
+                          <img src="/bad.png" :src="{ '/action_bad.png' : isActionBad }" @click="feedback('N')">
                       </div>
                   </div>
               </div>
@@ -57,10 +56,13 @@ let props = defineProps({
 })
 
 let video = ref({});
+let isActionGood = ref(false);
+let isActionBad = ref(false);
 
 axios.get('/api/video/findDetail/' + props.seq).then(value => {
     let code = value.data.code;
     if(code === '0000') {
+        console.log(value.data.data);
         video.value = value.data.data;
     } else {
         alert('예상치 못한 오류 발생');
@@ -70,18 +72,48 @@ axios.get('/api/video/findDetail/' + props.seq).then(value => {
     alert('예상치 못한 오류 발생');
 });
 
-function goodFeedback() {
+function feedback(state) {
     if(store.getters['user/getToken'] === null) {
         alert('로그인 후 이용해주세요.');
         router.push('/login');
     } else {
-        // TODO !!
+        instance.post('/api/like/likeStateInsert', {
+          userSeq : store.getters['user/getUserSeq'],
+          likeState : state,
+          videoSeq : video.value.videoSeq
+        }).then(value => {
+          console.log(value.data);
+          let result = value.data;
+          if(result.code === '0000') {
+            if(result.likeState === 'Y') {
+              isActionGood.value = true;
+            } else if(result.likeState === 'N') {
+              isActionBad.value = true;
+            } else {
+              isActionBad.value = false;
+              isActionGood.value = false;
+            }
+          } else {
+            alert('예상치 못한 오류 발생');
+          }
+        }).catch(reason => {
+          alert('예상치 못한 오류 발생');
+          console.log(reason);
+        })
     }
 }
 
 </script>
 
 <style scoped>
+.content-wrap {
+  width: 100%;
+}
+
+.content {
+  width: 100%;
+  display: flex;
+}
 
 .video-content {
     width: 75%;
