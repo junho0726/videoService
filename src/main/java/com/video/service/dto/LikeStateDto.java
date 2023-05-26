@@ -16,10 +16,6 @@ public class LikeStateDto
 
     private int videoSeq;
 
-    public LikeStateDto(LikeStateEntity likeStateEntity){
-        likeState =likeStateEntity.getLikeState();
-        userSeq = likeStateEntity.getUser().getUserSeq();
-        videoSeq = likeStateEntity.getVideo().getVideoSeq();
-    }
+    private int likeCount;
 
 }
