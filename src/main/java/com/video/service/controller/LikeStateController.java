@@ -35,13 +35,13 @@ public class LikeStateController {
             UserEntity findUser = userService.findByid(user);
 
             likeStateDto.setUserSeq(findUser.getUserSeq());
-            likeStateService.likeInsert(likeStateDto);
+            LikeStateDto likeState = likeStateService.likeInsert(likeStateDto);
 
             VideoEntity videoEntity = new VideoEntity();
             videoEntity.setVideoSeq(likeStateDto.getVideoSeq());
             int count = likeStateService.likeStateCountByVideo(videoEntity);
-
-            response.setData(count);
+            likeState.setLikeCount(count);
+            response.setData(likeState);
             response.setCode("0000");
             response.setMessage("Successed!!");
         }catch (Exception e){
