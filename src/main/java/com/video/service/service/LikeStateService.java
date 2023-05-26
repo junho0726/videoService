@@ -30,7 +30,7 @@ public class LikeStateService {
                 if (DBStateEntity.getLikeState().equals(likeState.getLikeState())) {
                     likeRepository.delete(DBStateEntity);
                     LikeStateDto deletedLikeStateDto = new LikeStateDto();
-                    deletedLikeStateDto.setLikeState("삭제");
+                    deletedLikeStateDto.setLikeState("C");
                     deletedLikeStateDto.setUserSeq(userSeq);
                     deletedLikeStateDto.setVideoSeq(videoSeq);
                     return deletedLikeStateDto;
@@ -71,7 +71,7 @@ public class LikeStateService {
 
     public int likeStateCountByVideo(VideoEntity video) throws Exception {
         int videoSeq = video.getVideoSeq();
-        String likeState = "좋아요";
+        String likeState = "Y";
 
         int likeStateCount = likeRepository.likeStateCountByVideo(videoSeq, likeState);
 

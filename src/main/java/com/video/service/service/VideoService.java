@@ -46,11 +46,12 @@ public class VideoService {
     }
 
     public VideoEntity findById(int videoSeq) throws  Exception {
-        Optional <VideoEntity> video = videoRepository.findById(videoSeq);
+        VideoEntity videoEntity = videoRepository.findById(videoSeq).orElseThrow(() -> {
+            return new IllegalArgumentException("존재하지 않는 비디오입니다..");
+        });
 
-        return video.get();
+        return videoEntity;
     }
-
 
     public Page<VideoEntity> findAllByChannel(ChannelEntity channelEntity, Pageable pageable) throws Exception {
 
@@ -58,19 +59,5 @@ public class VideoService {
 
         return videoPage;
     }
-
-
-
-/*    @Transactional
-    public VideoEntity videoUpdate(VideoEntity video) throws Exception {
-        VideoEntity videoEntity = videoRepository.findById(video.getVideoSeq()).orElseThrow(() -> {
-            return new IllegalArgumentException("�������� �ʴ� �����Դϴ�..");
-        });
-
-        videoEntity.setTitle(video.getTitle());
-        videoEntity.setContent(video.getContent());
-
-        return videoEntity;
-    }*/
 
 }
