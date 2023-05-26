@@ -198,16 +198,26 @@ public class VideoController {
     }
 
     @GetMapping(value = "video/findDetail/{videoSeq}")
-    public ApiResponseDto videoFindDetail(@PathVariable("videoSeq") int videoSeq) {
+    public ApiResponseDto videoFindDetail(@RequestHeader(value = "Access_Token" , required = false) String accessToken, @PathVariable("videoSeq") int videoSeq) {
         ApiResponseDto response = new ApiResponseDto();
-
+        ApiFileDto apiFileDto = new ApiFileDto();
         try {
+            if (accessToken != null) {
+                UserEntity user = new UserEntity();
+                Map resultMap = jwtService.getSubject(accessToken);
+                user.setId(resultMap.get("fdId").toString());
+                UserEntity findUser = userService.findByid(user);
+                LikeStateEntity likeState = likeStateService.findByUserSeqAndVideoSeq(findUser.getUserSeq(), videoSeq);
+                if(likeState != null) {
+                    apiFileDto.setLikeState(likeState.getLikeState());
+                }
+            }
             VideoEntity video = videoService.findById(videoSeq);
             FileEntity file = fileService.findByVideo(video);
             ChannelEntity channel = channelService.findById(video.getChannel().getChannelSeq());
             ThumbnailEntity thumbnail = thumbnailService.findByVideo(video);
             int likeStateCount = likeStateService.likeStateCountByVideo(video);
-            ApiFileDto apiFileDto = new ApiFileDto();
+
             apiFileDto.setUserId(channel.getUser().getId());
             apiFileDto.setUserName(channel.getUser().getName());
             apiFileDto.setChannelName(channel.getChannelName());

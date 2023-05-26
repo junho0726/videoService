@@ -78,4 +78,11 @@ public class LikeStateService {
         return likeStateCount;
     }
 
+    public LikeStateEntity findByUserSeqAndVideoSeq(int userSeq, int videoSeq){
+        LikeStateEntity likeStateEntity = likeRepository.findByUserSeqAndVideoSeq(userSeq, videoSeq)
+                .orElse(null);
+
+        return likeStateEntity;
+    }
+
 }
