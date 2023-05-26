@@ -4,6 +4,7 @@ import com.video.service.dto.ApiResponseDto;
 import com.video.service.dto.LikeStateDto;
 import com.video.service.entity.LikeStateEntity;
 import com.video.service.entity.UserEntity;
+import com.video.service.entity.VideoEntity;
 import com.video.service.service.JwtService;
 import com.video.service.service.LikeStateService;
 import com.video.service.service.UserService;
@@ -34,8 +35,13 @@ public class LikeStateController {
             UserEntity findUser = userService.findByid(user);
 
             likeStateDto.setUserSeq(findUser.getUserSeq());
-            LikeStateDto likeState = likeStateService.likeInsert(likeStateDto);
-            response.setData(likeState);
+            likeStateService.likeInsert(likeStateDto);
+
+            VideoEntity videoEntity = new VideoEntity();
+            videoEntity.setVideoSeq(likeStateDto.getVideoSeq());
+            int count = likeStateService.likeStateCountByVideo(videoEntity);
+
+            response.setData(count);
             response.setCode("0000");
             response.setMessage("Successed!!");
         }catch (Exception e){
