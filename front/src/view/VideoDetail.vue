@@ -26,11 +26,21 @@
                               <button class="btn-subscribe">구독</button>
                           </div>
                       </div>
-                      <div class="feedback-div">
-                          <img :src="isActionGood === true ? '/action_good.png' : '/good.png'" @click="feedback('Y')">
-                          <span>{{ video.likeStateCount }}</span>
-                          <div class="line"></div>
-                          <img :src="isActionBad === true ? '/action_bad.png' : '/bad.png'" @click="feedback('N')">
+                      <div class="feedback-box">
+                        <div class="feedback-div">
+                            <img :src="isActionGood === true ? '/action_good.png' : '/good.png'" @click="feedback('Y')">
+                            <span>{{ video.likeStateCount }}</span>
+                            <div class="line"></div>
+                            <img :src="isActionBad === true ? '/action_bad.png' : '/bad.png'" @click="feedback('N')">
+                        </div>
+                        <div class="more-feedback-div" @mouseover="showMoreFeedbackList()" @mouseleave="closeMoreFeedbackList()">
+                          <img class="more-feedback-img" src="/more_feedback.png">
+                          <div class="more-feedback-list" v-if="isShowMoreFeedbackList">
+                            <span @click="sendFeedback('저장')">저장</span>
+                            <span @click="sendFeedback('신고')">신고</span>
+                            <span @click="sendFeedback('뭐하지')">뭐하지</span>
+                          </div>
+                        </div>
                       </div>
                   </div>
               </div>
@@ -44,10 +54,8 @@
 
 <script setup>
 import Header from "@/layout/Header.vue";
-import SideBar from "@/layout/SideBar.vue";
-import Video from "@/components/VideoList.vue";
+import SideBar from "@/layout/SideBar.vue"
 import {ref} from "vue";
-import axios from "axios";
 import store from "@/store";
 import router from "@/router";
 import instance from "@/api/axios";
@@ -58,6 +66,7 @@ let props = defineProps({
 let video = ref({});
 let isActionGood = ref(false);
 let isActionBad = ref(false);
+let isShowMoreFeedbackList = ref(false);
 
 instance.get('/api/video/findDetail/' + props.seq).then(value => {
     if(value.data.code === '0000') {
@@ -93,7 +102,8 @@ function feedback(state) {
           videoSeq : video.value.videoSeq
         }).then(value => {
           if(value.data.code === '0000') {
-            let result = value.data.data;
+            let result = value.data.data.likeState;
+            video.value.likeStateCount = value.data.data.likeCount;
             if(result.likeState === 'Y') {
               isActionGood.value = true;
               isActionBad.value = false;
@@ -112,6 +122,18 @@ function feedback(state) {
           console.log(reason);
         })
     }
+}
+
+function showMoreFeedbackList() {
+  isShowMoreFeedbackList.value = true;
+}
+
+function closeMoreFeedbackList() {
+  isShowMoreFeedbackList.value = false;
+}
+
+function sendFeedback(what) {
+  alert(what);
 }
 
 </script>
@@ -186,9 +208,14 @@ function feedback(state) {
     margin: 0 2%;
 }
 
+.feedback-box {
+  width: 26%;
+  display: flex;
+}
+
 .feedback-div {
     display: flex;
-    width: 11%;
+    width: 100%;
     background-color: #F9F9F9;
     border-radius: 40px;
     justify-content: left;
@@ -211,6 +238,46 @@ function feedback(state) {
     margin-left: 10%;
     width: 40px;
     height: 40px;
+}
+
+.more-feedback-div {
+  width: 20%;
+  padding: 0 10%;
+  display: flex;
+  margin: 0 10%;
+  background-color: #F9F9F9;
+  border-radius: 40px;
+  border: none;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.more-feedback-img {
+  height: 10px !important;
+  width: 50px !important;
+}
+
+.more-feedback-list {
+  position: absolute;
+  z-index: 999;
+  background-color: #F2F2F2;
+  border-color: #F2F2F2;
+  border-radius: 50px;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: center;
+  padding: 30% 0;
+  bottom: 100%;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.more-feedback-list span {
+  margin-bottom: 10%;
 }
 
 </style>

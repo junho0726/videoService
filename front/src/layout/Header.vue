@@ -22,6 +22,10 @@
 import {computed, ref} from 'vue';
 import store from "@/store";
 
+let props = defineProps({
+  isInChannel : false
+})
+
 let showProfileInfo = ref(false);
 let isLogin = computed(() => {
     return store.getters['user/getToken'] !== null;
