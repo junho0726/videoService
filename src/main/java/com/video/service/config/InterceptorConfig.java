@@ -20,7 +20,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
             "/api/user/joinProc",
             "/api/user/checkId",
             "/api/video/findAll",
-            "/api/video/findDetail/**"
+            "/api/video/findDetail/**",
+            "/api/category/findAll"
     };
 
     @Override
