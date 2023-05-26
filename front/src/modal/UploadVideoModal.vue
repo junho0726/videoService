@@ -187,7 +187,7 @@ function post() {
                   "Access_Token": store.getters['user/getToken']
                 }
         }).then(value => {
-            if(value.status === 200) {
+            if(value.data.code === "0000") {
               alert("성공적으로 등록되었습니다.");
               isUploadFile.value = false;
             } else {
