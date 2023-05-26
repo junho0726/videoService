@@ -3,8 +3,10 @@
         <Header @show-sidebar="showSidebar()"/>
         <div class="content-wrap">
             <SideBar v-if="isShowSidebar"/>
-            <div class="category-row" v-for="category in categoryList">
-              <input class="category" :value="category.categoryName">
+            <div class="category-div">
+                <div class="category-row" v-for="category in categoryList">
+                    <button type="button" @click="findVideoByCategorySeq(category.categorySeq)" :id="'category-' + category.categorySeq" class="category">{{ category.name }}</button>
+                </div>
             </div>
             <div class="content" :class="{ 'show-side-bar-content':isShowSidebar }">
               <Video :video-list="videoList" :show-side-bar="isShowSidebar"/>
@@ -25,8 +27,10 @@ let categoryList = ref([]);
 let videoList = ref([]);
 
 axios.post('/api/category/findAll').then(value => {
-        console.log(value);
     if(value.data.code === '0000') {
+        for (let i = 0; i < value.data.data.length; i++) {
+            categoryList.value.push(value.data.data[i]);
+        }
     } else {
         alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
     }
@@ -38,6 +42,7 @@ axios.post('/api/category/findAll').then(value => {
 axios.get('/api/video/findAll').then(value => {
     let data = value.data;
     let dataList = data.data;
+    videoList.value = [];
     if(data.code === "0000") {
         for(let i = 0; i < dataList.length; i++) {
             videoList.value.push(dataList[i]);
@@ -49,41 +54,67 @@ axios.get('/api/video/findAll').then(value => {
     alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
 })
 
+function findVideoByCategorySeq(categorySeq) {
+    axios.get('/api/video/findAll?categorySeq=' + categorySeq).then(value => {
+        let data = value.data;
+        let dataList = data.data;
+        videoList.value = [];
+        if(data.code === "0000") {
+            for(let i = 0; i < dataList.length; i++) {
+                videoList.value.push(dataList[i]);
+            }
+        } else {
+            alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
+        }
+    }).catch(reason => {
+        console.log(reason);
+    })
+}
+
 function showSidebar() {
     isShowSidebar.value = !isShowSidebar.value;
 }
 
 </script>
 
-<style>
+<style scoped>
+.category-div {
+    display: flex;
+    margin-left: 10%;
+}
+
+.category-row {
+    width: 7%;
+    margin: 0 0.5%;
+}
 
 .category {
-    width: 10%;
-    height: 70px;
+    width: 100%;
+    height: 45px;
     background-color: #F2F2F2;
     color: black;
     border: none;
-    border-radius: 15px;
+    border-radius: 10px;
 }
 
 .content-wrap {
     display: flex;
+    flex-direction: column;
 }
 
 .content {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 1% 3%;
-}
-
-.show-side-bar-content {
-    width: 100%;
+    width: 98%;
     display: flex;
     flex-wrap: wrap;
     padding: 1% 1%;
 }
 
-
+.show-side-bar-content {
+    margin-left: 10%;
+    width: 88%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1% 1%;
+}
 
 </style>
