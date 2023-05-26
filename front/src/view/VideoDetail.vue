@@ -27,10 +27,10 @@
                           </div>
                       </div>
                       <div class="feedback-div">
-                          <img src="/good.png" :src="{ '/action_good.png' : isActionGood }" @click="feedback('Y')">
+                          <img :src="isActionGood === true ? '/action_good.png' : '/good.png'" @click="feedback('Y')">
                           <span>{{ video.likeStateCount }}</span>
                           <div class="line"></div>
-                          <img src="/bad.png" :src="{ '/action_bad.png' : isActionBad }" @click="feedback('N')">
+                          <img :src="isActionBad === true ? '/action_bad.png' : '/bad.png'" @click="feedback('N')">
                       </div>
                   </div>
               </div>
@@ -59,11 +59,21 @@ let video = ref({});
 let isActionGood = ref(false);
 let isActionBad = ref(false);
 
-axios.get('/api/video/findDetail/' + props.seq).then(value => {
-    let code = value.data.code;
-    if(code === '0000') {
-        console.log(value.data.data);
-        video.value = value.data.data;
+instance.get('/api/video/findDetail/' + props.seq).then(value => {
+    if(value.data.code === '0000') {
+      video.value = value.data.data;
+      console.log(video.value);
+      console.log("!!");
+      if(video.value.likeState === 'Y') {
+        isActionGood.value = true;
+        isActionBad.value = false;
+      } else if(video.value.likeState === 'N') {
+        isActionBad.value = true;
+        isActionGood.value = false;
+      } else {
+        isActionBad.value = false;
+        isActionGood.value = false;
+      }
     } else {
         alert('예상치 못한 오류 발생');
     }
@@ -82,13 +92,14 @@ function feedback(state) {
           likeState : state,
           videoSeq : video.value.videoSeq
         }).then(value => {
-          console.log(value.data);
-          let result = value.data;
-          if(result.code === '0000') {
+          if(value.data.code === '0000') {
+            let result = value.data.data;
             if(result.likeState === 'Y') {
               isActionGood.value = true;
+              isActionBad.value = false;
             } else if(result.likeState === 'N') {
               isActionBad.value = true;
+              isActionGood.value = false;
             } else {
               isActionBad.value = false;
               isActionGood.value = false;
