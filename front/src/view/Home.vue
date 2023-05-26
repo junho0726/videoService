@@ -110,7 +110,8 @@ function showSidebar() {
 }
 
 .show-side-bar-content {
-    width: 98%;
+    margin-left: 10%;
+    width: 88%;
     display: flex;
     flex-wrap: wrap;
     padding: 1% 1%;
