@@ -3,7 +3,7 @@
         <div class="contents-wrap">
                 <div class="contents">
                         <div class="profile-box">
-                                <img class="channel-profile-img" src="../assets/basic_profile.png">
+                                <img class="channel-profile-img" src="/basic_profile.png">
                                 <div class="profile-detail">
                                         <span class="profile-name">경민 김</span>
                                         <div>
@@ -70,11 +70,6 @@ function toggleMenu(index) {
 
 .profile-name {
         font-size: 25px;
-}
-
-.channel-profile-img {
-        width: 130px;
-        height: 120px;
 }
 
 .channel-nav span {

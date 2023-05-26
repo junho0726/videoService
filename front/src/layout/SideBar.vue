@@ -13,7 +13,7 @@
 
 <style>
 .side-bar {
-    width: 25%;
+    width: 20%;
     background-color: white;
     height: 100%;
     flex-direction: column;

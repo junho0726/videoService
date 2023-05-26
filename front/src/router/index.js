@@ -6,6 +6,7 @@ import Join from "@/view/Join.vue";
 import MyChannel from "@/user/MyChannel.vue";
 import MyPage from "@/user/MyPage.vue";
 import store from "@/store";
+import VideoDetail from "@/view/VideoDetail.vue";
 
 // routes 배열 초기화
 const routes = [
@@ -38,6 +39,12 @@ const routes = [
         path: "/mychannel",
         name: "mychannel",
         component: MyChannel
+    },
+    {
+        path: "/videoDetail/:seq",
+        name: "videoDetail",
+        component: VideoDetail,
+        props: true
     }
 ];
 
@@ -48,7 +55,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
 
-    if(to.name !== 'login' && to.name !== 'home' && to.name !== 'join') {
+    if(to.name !== 'login' && to.name !== 'home' && to.name !== 'join' && to.name !== 'videoDetail') {
         if(store.getters['user/getToken'] == null) {
             next('/login');
         } else {

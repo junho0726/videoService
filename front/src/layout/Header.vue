@@ -6,7 +6,7 @@
         </div>
 
         <div class="profile-div" @mouseover="over()" @mouseleave="leave()">
-            <img class="profile-img" src="@/assets/basic_profile.png">
+            <img class="profile-img" src="/basic_profile.png">
             <div class="profile-menu" v-if="showProfileInfo">
                 <router-link v-if="!isLogin" to="/login">LOGIN</router-link>
                 <router-link v-if="!isLogin" to="/join">JOIN</router-link>
@@ -24,7 +24,6 @@ import store from "@/store";
 
 let showProfileInfo = ref(false);
 let isLogin = computed(() => {
-    console.log(store.getters['user/getToken']);
     return store.getters['user/getToken'] !== null;
 });
 
@@ -60,11 +59,6 @@ function logout() {
     width: 80px;
     height: 40px;
     margin-right: 30%;
-}
-
-.profile-img {
-    width: 55px;
-    height: 50px;
 }
 
 .profile-menu {
