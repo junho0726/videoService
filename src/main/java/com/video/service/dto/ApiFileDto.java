@@ -31,6 +31,8 @@ public class ApiFileDto {
 
     private int likeStateCount;
 
+    private String likeState;
+
 
 
 }
