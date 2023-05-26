@@ -137,7 +137,7 @@ public class VideoController {
     }
 
     @GetMapping(value = "video/findAll")
-    public ApiResponseDto videoFindAll(@RequestParam(defaultValue  = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, @RequestParam(value = "channelSeq", required = false) Integer channelSeq) {
+    public ApiResponseDto videoFindAll(@RequestParam(defaultValue  = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, @RequestParam(value = "channelSeq", required = false) Integer channelSeq,  @RequestParam(required = false) Integer categorySeq) {
         ApiResponseDto response = new ApiResponseDto();
         Pageable pageable = PageRequest.of(page - 1 , size);
         try {
@@ -151,7 +151,11 @@ public class VideoController {
                 channelEntity.setChannelSeq(seq);
                 videos = videoService.findAllByChannel(channelEntity, pageable);
             } else {
-                videos = videoService.findAll(pageable);
+                if(categorySeq != null){
+                    videos = videoService.findAllByCategory(categorySeq, pageable);
+                }else {
+                    videos = videoService.findAll(pageable);
+                }
             }
 
             result = videos.getContent().stream()
