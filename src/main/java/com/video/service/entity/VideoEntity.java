@@ -25,7 +25,7 @@ public class VideoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int videoSeq;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = true)

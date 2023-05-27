@@ -31,7 +31,6 @@ import { ref } from "vue";
 import ChannelHome from "@/components/channel/ChannelHome.vue";
 import ChannelList from "@/components/channel/ChannelList.vue";
 import ChannelInfo from "@/components/channel/ChannelInfo.vue";
-import instance from "@/api/axios";
 
 let isActive = ref([true, false, false]);
 

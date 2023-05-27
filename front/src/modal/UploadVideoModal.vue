@@ -10,7 +10,7 @@
         <div class="modal-contents">
             <button class="btn-upload"><img src="@/assets/upload_video.png"></button>
             <span>동영상 파일을 드래그 앤 드롭하여 업로드</span>
-            <input type="file" ref="inputFile" @change="insertFile()" style="display: none;">
+            <input type="file" ref="inputVideoFile" @change="insertVideoFile()" style="display: none;">
             <button class="btn-select"  @click="openFile()">파일 선택</button>
         </div>
     </div>
@@ -18,7 +18,7 @@
     <!--  파일 올린 후  -->
     <div v-if="isUploadFile" class="videoModal" v-show="showModal">
         <div class="modal-title">
-            <span>{{ fileInfo.title }}</span>
+            <span>{{ videoInfo.title }}</span>
             <button @click="$emit('closeModal')">X</button>
         </div>
         <div class="modal-file-info-box">
@@ -26,17 +26,19 @@
                 <br>
                 <div class="file-title">
                     <p>제목(필수 항목)</p>
-                    <textarea type="text" v-model="fileInfo.title"/>
+                    <textarea type="text" v-model="videoInfo.title"/>
                 </div>
                 <br>
                 <div class="file-contents">
                     <p>설명</p>
-                    <textarea type="text" v-model="fileInfo.contents" placeholder="시청자에게 동영상에 대해 이야기하기(채널을 멘션하려면 @ 입력)"/>
+                    <textarea type="text" v-model="videoInfo.contents" placeholder="시청자에게 동영상에 대해 이야기하기(채널을 멘션하려면 @ 입력)"/>
                 </div>
                 <div class="thumbnail-box">
                     <h5>미리보기 이미지</h5>
                     <div>
-                      <span>지금은 Shorts 동영상의 썸네일을 변경할 수 없습니다.</span>
+                      <input type="file" ref="inputThumbFile" @change="insertThumbFile()" style="display: none;">
+                      <span v-if="!isUploadThumb" @click="openThumbFile()">썸네일 업로드</span>
+                      <img v-if="isUploadThumb" class="img-thumbnail" :src="thumbInfo.link">
                     </div>
                 </div>
                 <div class="video-list-box">
@@ -57,14 +59,14 @@
                   autoplay
                   preload="auto"
                   poster="@/assets/my_logo.png">
-                  <source :src="fileInfo.link" type="video/mp4"/>
+                  <source :src="videoInfo.link" type="video/mp4"/>
                 </video>
                 <div class="video-info">
                   <div>
                     <p>동영상 링크</p>
                     <div class="link-row">
                       <div class="video-link">
-                        <a :href="fileInfo.link" target="_blank" ref="linkForCopy">{{ fileInfo.link }}</a>
+                        <a :href="videoInfo.link" target="_blank" ref="linkForCopy">{{ videoInfo.link }}</a>
                       </div>
                       <div class="copy-video-link">
                         <span @click="copyLink()">Link</span>
@@ -74,7 +76,7 @@
                   <br>
                   <div>
                     <p>파일 이름</p>
-                    <span>{{ fileInfo.name }}</span>
+                    <span>{{ videoInfo.name }}</span>
                   </div>
                     <div class="div-btn">
                         <button class="btn-cancel" @click="$emit('closeModal')">취소</button>
@@ -90,16 +92,27 @@
 import { ref } from "vue";
 import axios from "axios";
 import store from "@/store";
+import instance from "@/api/axios";
 
 defineProps({
     showModal: Boolean
 });
 
-let inputFile = ref();
+let inputVideoFile = ref();
+let inputThumbFile = ref();
 let linkForCopy = ref();
 let correctFile = ref(false);
 let isUploadFile = ref(false);
-let fileInfo = ref({
+let isUploadThumb = ref(false);
+let videoInfo = ref({
+  fileSeq: '',
+  name: '',
+  title: '',
+  contents: '',
+  link: ''
+});
+
+let thumbInfo = ref({
   fileSeq: '',
   name: '',
   title: '',
@@ -112,47 +125,75 @@ function dropFile(event) {
   uploadFile(event.dataTransfer.files[0]);
 }
 
-function insertFile() {
-  uploadFile(inputFile.value.files[0]);
+function insertVideoFile() {
+  uploadFile(inputVideoFile.value.files[0]);
+}
+
+function insertThumbFile()   {
+  uploadFile(inputThumbFile.value.files[0]);
 }
 
 async function uploadFile(file) {
-  console.log(file);
-  // eslint-disable-next-line no-unused-vars
   await axios.post('/api/video/fileInsert ', {
-      videoFile: file
+      file: file
   }, {
       headers: {
           'Content-Type': 'multipart/form-data',
           "Access_Token": store.getters['user/getToken']
       }
   }).then(value => {
-      // if(value.data.code == "0000") {
-        setFileInfo(value.data);
-      // }
+      let result = value.data;
+      if(result.code == "0000") {
+        if(result.data.fileOriginName.substring(result.data.fileOriginName.lastIndexOf('.') + 1, result.data.fileOriginName.lastIndex) === 'mp4') {
+          console.log(result.data.fileOriginName.substring(result.data.fileOriginName.lastIndexOf('.') + 1, result.data.fileOriginName.lastIndex));
+          setVideoInfo(result);
+        } else {
+          console.log(result.data.fileOriginName.substring(result.data.fileOriginName.lastIndexOf('.') + 1, result.data.fileOriginName.lastIndex));
+          setThumbInfo(result);
+        }
+      } else {
+        alert('오류 발생');
+      }
   }).catch(reason => {
       console.log(reason);
   });
 }
 
-function setFileInfo(responseFile) {
-    if(checkType(responseFile)) {
+function setVideoInfo(responseFile) {
+    if(checkVideoType(responseFile)) {
       let file = responseFile.data;
-        fileInfo.value.name = file.fileOriginName;
-        fileInfo.value.title = file.fileOriginName.substring(0, file.fileOriginName.lastIndexOf('.'));
-        fileInfo.value.link = file.fileFullPath;
-        fileInfo.value.fileSeq = file.fileSeq;
+        videoInfo.value.name = file.fileOriginName;
+        videoInfo.value.title = file.fileOriginName.substring(0, file.fileOriginName.lastIndexOf('.'));
+        videoInfo.value.link = file.fileFullPath;
+        videoInfo.value.fileSeq = file.fileSeq;
         isUploadFile.value = true;
     } else {
         alert('확장자를 확인하거나 재시도 해주세요.');
     }
 }
 
-function openFile() {
-    inputFile.value.click();
+function setThumbInfo(responseFile) {
+  if(checkThumbType(responseFile)) {
+    let file = responseFile.data;
+    thumbInfo.value.name = file.fileOriginName;
+    thumbInfo.value.title = file.fileOriginName.substring(0, file.fileOriginName.lastIndexOf('.'));
+    thumbInfo.value.link = file.fileFullPath;
+    thumbInfo.value.fileSeq = file.fileSeq;
+    isUploadThumb.value = true;
+  } else {
+    alert('확장자를 확인하거나 재시도 해주세요.');
+  }
 }
 
-function checkType(file) {
+function openFile() {
+    inputVideoFile.value.click();
+}
+
+function openThumbFile() {
+    inputThumbFile.value.click();
+}
+
+function checkVideoType(file) {
     let resFile = file.data.fileOriginName;
     if(resFile.substring(resFile.lastIndexOf('.') + 1, resFile.lastIndex) === "mp4") {
         correctFile.value = true;
@@ -162,9 +203,19 @@ function checkType(file) {
     }
 }
 
+function checkThumbType(file) {
+  let resFile = file.data.fileOriginName;
+  if(get확장자(resFile) === "png" || get확장자(resFile) === "jpg" || get확장자(resFile) === "jpeg") {
+    correctFile.value = true;
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function copyLink() {
     let copyLink = document.createElement('input');
-    copyLink.value = fileInfo.value.link;
+    copyLink.value = videoInfo.value.link;
     document.body.append(copyLink);
     copyLink.select();
     document.execCommand('copy');
@@ -173,31 +224,49 @@ function copyLink() {
 }
 
 function post() {
-    if(fileInfo.value.title.trim() == "") {
-        alert("제목은 필수 항목란입니다.");
+    if(videoInfo.value.title.trim() == "") {
+      alert("제목은 필수 항목란입니다.");
     } else {
-        axios.post("/api/video/videoInsert",
+        instance.post("/api/video/videoInsert",
             {
-                  "fileSeq" : fileInfo.value.fileSeq,
-                  "title" : fileInfo.value.title,
-                  "content" : fileInfo.value.contents
-                },
-          { headers: {
-                  'Content-Type': 'application/json; charset=UTF-8',
-                  "Access_Token": store.getters['user/getToken']
-                }
-        }).then(value => {
-            if(value.data.code === "0000") {
-              alert("성공적으로 등록되었습니다.");
-              isUploadFile.value = false;
-            } else {
-              alert('예기치 못한 오류가 발생했습니다.');
-            }
-        }).catch(reason => {
-            console.log(reason);
-            alert('예기치 못한 오류가 발생했습니다.');
-        })
+                    "title" : videoInfo.value.title,
+                    "content" : videoInfo.value.contents,
+                    "file" : { "fileSeq" : videoInfo.value.fileSeq }
+                }).then(value => {
+                  let result = value.data;
+                  if(result.code === "0000") {
+                    console.log('썸네일 통신');
+                    instance.post('/api/video/thumbnailInsert',
+                        {
+                          "videoSeq" : result.data.videoSeq,
+                          "thumbnail" : {
+                            "filePath" : thumbInfo.value.link,
+                            "fileFullPath" : thumbInfo.value.link,
+                            "fileOriginName" : thumbInfo.value.title,
+                            "fileName" : thumbInfo.value.name,
+                            "file" : { "fileSeq" : thumbInfo.value.fileSeq }
+                          }
+                        }).then(data => {
+                          console.log(data);
+                          console.log("?????");
+                          alert("성공적으로 등록되었습니다.");
+                          isUploadFile.value = false;
+                        }).catch(reason => {
+                          console.log(reason);
+                          console.log("!@#$@!#$");
+                        })
+                  } else {
+                    alert('예기치 못한 오류가 발생했습니다.');
+                  }
+                }).catch(reason => {
+                    console.log(reason);
+                    alert('예기치 못한 오류가 발생했습니다.');
+                })
     }
+}
+
+function get확장자(fileOriginName) {
+  return fileOriginName.substring(fileOriginName.lastIndexOf('.') + 1, fileOriginName.lastIndex).toLowerCase();
 }
 
 </script>
@@ -420,6 +489,11 @@ span {
 .btn-cancel {
     background-color: black;
     color: white;
+}
+
+.img-thumbnail {
+    width: 150px;
+    height: 80px;
 }
 
 </style>

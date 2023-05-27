@@ -49,10 +49,12 @@ public class VideoService {
 
 
 
+    @Transactional
     public VideoEntity findById(int videoSeq) throws  Exception {
         VideoEntity videoEntity = videoRepository.findById(videoSeq).orElseThrow(() -> {
             return new IllegalArgumentException("존재하지 않는 비디오입니다..");
         });
+        videoEntity.setCount(videoEntity.getCount() + 1);
 
         return videoEntity;
     }

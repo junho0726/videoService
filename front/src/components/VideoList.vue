@@ -5,7 +5,7 @@
                 class="video-js"
                 controls
                 preload="auto"
-                poster="@/assets/my_logo.png"
+                :poster="video.thumbnailFullPath"
                 @click="videoDetail(video.videoSeq)">
             <source :src="video.fileFullPath" type="video/mp4"/>
         </video>
@@ -65,7 +65,7 @@
 }
 
 .video-info-div span {
-    margin: 0.5% 0;
+    margin: 0.1% 0;
     font-size: 12px;
 }
 

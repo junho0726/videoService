@@ -47,7 +47,7 @@ public class VideoController {
     private final LikeStateService likeStateService;
 
     @PostMapping(value = "video/fileInsert")
-    public ApiResponseDto fileInsert(@RequestHeader("Access_Token") String accessToken, @RequestPart MultipartFile videoFile) {
+    public ApiResponseDto fileInsert(@RequestHeader("Access_Token") String accessToken, @RequestPart MultipartFile file) {
         ApiResponseDto response = new ApiResponseDto();
         try {
             UserEntity user = new UserEntity();
@@ -55,11 +55,11 @@ public class VideoController {
             user.setId(resultMap.get("fdId").toString());
             UserEntity findUser = userService.findByid(user);
 
-            FileEntity fileEntity = awsS3Service.saveFile(videoFile);
+            FileEntity fileEntity = awsS3Service.saveFile(file);
             FileEntity saveFile = fileService.insertFile(fileEntity);
 
             response.setData(saveFile);
-            response.setCode("0001");
+            response.setCode("0000");
             response.setMessage("성공");
 
         } catch (Exception e) {
@@ -71,7 +71,7 @@ public class VideoController {
     }
 
     @PostMapping(value = "video/videoInsert")
-    public ApiResponseDto videoInsert(@RequestHeader("Access_Token") String accessToken, @RequestBody VideoDto videoDto, MultipartFile thumbnail)  throws Exception {
+    public ApiResponseDto videoInsert(@RequestHeader("Access_Token") String accessToken, @RequestBody VideoEntity videoEntity)  throws Exception {
         ApiResponseDto response = new ApiResponseDto();
         try {
             UserEntity user = new UserEntity();
@@ -79,17 +79,8 @@ public class VideoController {
             user.setId(resultMap.get("fdId").toString());
             UserEntity findUser = userService.findByid(user);
 
-            VideoEntity videoEntity = new VideoEntity();
-            FileEntity fileEntity = new FileEntity();
-            fileEntity.setFileSeq(videoDto.getFileSeq());
-            videoEntity.setFile(fileEntity);
-            videoEntity.setTitle(videoDto.getTitle());
-            videoEntity.setContent(videoDto.getContent());
             videoEntity.setChannel(findUser.getChannel());
-
-            VideoEntity saveVideo = videoService.insertVideo(videoEntity);
-
-            response.setData(saveVideo);
+            response.setData(videoService.insertVideo(videoEntity));
             response.setCode("0000");
             response.setMessage("성공");
 
@@ -103,28 +94,17 @@ public class VideoController {
 
 
    @PostMapping(value = "video/thumbnailInsert")
-    public ApiResponseDto insertThumbnail(@RequestHeader("Access_Token") String accessToken, @RequestPart VideoEntity video, MultipartFile thumbnail) {
+    public ApiResponseDto insertThumbnail(@RequestHeader("Access_Token") String accessToken, @RequestBody VideoEntity videoEntity) {
         ApiResponseDto response = new ApiResponseDto();
         try {
             UserEntity user = new UserEntity();
             Map resultMap = jwtService.getSubject(accessToken);
             user.setId(resultMap.get("fdId").toString());
-            UserEntity findUser = userService.findByid(user);
+            userService.findByid(user);
 
-            if (!thumbnail.getContentType().startsWith("image")) {
-                response.setData("false");
-                response.setCode("0001");
-                response.setMessage("이미지 파일 형식이 아닙니다.");
-                return response;
-            }
-
-            ThumbnailEntity thumbnailFile = awsS3Service.saveThumbnail(thumbnail);
-            ThumbnailEntity saveThumbnail = thumbnailService.insertThumbnail(thumbnailFile);
-
-            video.setThumbnail(saveThumbnail);
-            VideoEntity videoEntity = videoService.updateVideo(video);
-
-            response.setData(videoEntity);
+            System.out.println("뭐냐 ㅅㅂ이건");
+            videoEntity.setThumbnail(thumbnailService.insertThumbnail(videoEntity.getThumbnail()));
+            response.setData(videoService.updateVideo(videoEntity));
             response.setCode("0000");
             response.setMessage("성공");
 
@@ -164,6 +144,7 @@ public class VideoController {
                     ChannelEntity channel = video.getChannel();
                     apiFileDto.setUserId(channel.getUser().getId());
                     apiFileDto.setUserName(channel.getUser().getName());
+                    apiFileDto.setChannelName(channel.getChannelName());
                     apiFileDto.setVideoSeq(video.getVideoSeq());
                     apiFileDto.setVideoTitle(video.getTitle());
                     apiFileDto.setVideoContent(video.getContent());

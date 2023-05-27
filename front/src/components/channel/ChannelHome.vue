@@ -13,8 +13,14 @@
                 <span><a href="https://www.youtube.com/creators/how-things-work/getting-started/?hl=ko" target="_blank">시작하는 방법 </a>알아보기</span>
             </div>
         </div>
-        <div v-if="!isEmptyVideo">
-          동영상아 나와라 ~~
+        <div class="uploaded-video-div" v-if="!isEmptyVideo">
+          <span class="span-upload" @click="handelModal()">동영상 업로드</span>
+          <div class="uploaded-video-box">
+            <h4>업로드된 동영상</h4>
+            <div v-for="myVideo in myVideoList">
+              {{ myVideo }}
+            </div>
+          </div>
         </div>
     </div>
     <UploadVideoModal @closeModal="handelModal()" :show-modal="showModal" />
@@ -28,12 +34,20 @@ import instance from "@/api/axios";
 
 let showModal = ref(false);
 let isEmptyVideo = ref(true);
+let myVideoList = ref([]);
 
 instance.get('/api/video/findMyVideoAll').then(value => {
   let result = value.data;
   if(result.code === '0000') {
       console.log(result);
-    isEmptyVideo.value = false;
+      if(result.data.length === 0) {
+        isEmptyVideo.value = true;
+      } else {
+        for(let i = 0; i < result.data.length; i++) {
+          myVideoList.value.push(result.data[i]);
+        }
+        isEmptyVideo.value = false;
+      }
   } else {
     alert('개발 중입니다. 서버를 재실행 해주세요.');
   }
@@ -79,6 +93,35 @@ a {
 
 h2 {
     margin-bottom: 5px;
+}
+
+h4 {
+  color: slategrey;
+  align-self: start;
+}
+
+.uploaded-video-div {
+  display: flex;
+  flex-direction: column;
+}
+
+.uploaded-video-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.span-upload {
+  display: flex;
+  align-self: end;
+  align-items: center;
+  justify-content: center;
+  background-color: #3EA6FF;
+  font-size: 15px;
+  width: 120px;
+  height: 35px;
+  border: none;
+  border-radius: 20px;
+  margin: 1%;
 }
 
 </style>

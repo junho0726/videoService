@@ -34,6 +34,10 @@ public class ThumbnailEntity {
     @Column(nullable = false)
     private String fileName;
 
+    @OneToOne
+    @JoinColumn(name = "fileSeq")
+    private FileEntity file;
+
     @Column(nullable = false)
     @CreationTimestamp
     private Timestamp createDate;

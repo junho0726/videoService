@@ -11,7 +11,7 @@
                           controls
                           autoplay
                           preload="auto"
-                          poster="@/assets/my_logo.png">
+                          :poster="video.thumbnailFullPath">
                       <source :src="video.fileFullPath" type="video/mp4">
                   </video>
                   <h2>{{ video.videoTitle }}</h2>
@@ -71,8 +71,6 @@ let isShowMoreFeedbackList = ref(false);
 instance.get('/api/video/findDetail/' + props.seq).then(value => {
     if(value.data.code === '0000') {
       video.value = value.data.data;
-      console.log(video.value);
-      console.log("!!");
       if(video.value.likeState === 'Y') {
         isActionGood.value = true;
         isActionBad.value = false;

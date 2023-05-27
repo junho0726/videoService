@@ -22,8 +22,8 @@
 import {computed, ref} from 'vue';
 import store from "@/store";
 
-let props = defineProps({
-  isInChannel : false
+defineProps({
+  isInChannel : Boolean
 })
 
 let showProfileInfo = ref(false);
