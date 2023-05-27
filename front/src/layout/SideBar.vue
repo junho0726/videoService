@@ -13,6 +13,7 @@
 
 <style>
 .side-bar {
+    z-index: 9999;
     width: 10%;
     background-color: white;
     height: 100%;

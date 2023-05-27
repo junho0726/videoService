@@ -2,9 +2,12 @@
     <div class="header">
         <div class="header-div">
             <img class="logo-img" src="@/assets/hamberger.png" @click="$emit('show-sidebar')">
-            <router-link to="/"><img class="logo-img" src="@/assets/my_logo_with_text.png" @click=""></router-link>
+            <router-link to="/"><img class="logo-img" src="@/assets/my_logo_with_text.png"></router-link>
         </div>
-
+        <div class="search-div">
+          <input v-model="searchKeyword" class="input-search" type="text" placeholder="뭐가 궁금하노?">
+          <img class="search-img" src="/search.png" @click="search()">
+        </div>
         <div class="profile-div" @mouseover="over()" @mouseleave="leave()">
             <img class="profile-img" src="/basic_profile.png">
             <div class="profile-menu" v-if="showProfileInfo">
@@ -26,6 +29,7 @@ defineProps({
   isInChannel : Boolean
 })
 
+let searchKeyword = ref('');
 let showProfileInfo = ref(false);
 let isLogin = computed(() => {
     return store.getters['user/getToken'] !== null;
@@ -44,6 +48,10 @@ function logout() {
     location.href = '/login';
 }
 
+function search() {
+  alert(searchKeyword.value);
+}
+
 </script>
 
 <style>
@@ -56,6 +64,7 @@ function logout() {
 
 .header-div {
     display: flex;
+    width: 25%;
     margin-right: 3%;
 }
 
@@ -68,6 +77,35 @@ function logout() {
 .profile-menu {
     display: flex;
     flex-direction: column;
+}
+
+.profile-div {
+  text-align: right;
+  width: 25%;
+}
+
+.search-div {
+  display: flex;
+  width: 40%;
+  position: relative;
+}
+
+.input-search {
+  align-self: center;
+  background-color: white;
+  border: solid 1px #F2F2F2;
+  border-radius: 35px;
+  width: 100%;
+  height: 100%;
+  padding: 0 3%;
+}
+
+.search-img {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  top: 15%;
+  right: 3%;
 }
 
 </style>

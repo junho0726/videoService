@@ -144,6 +144,7 @@ function sendFeedback(what) {
 .content {
   width: 100%;
   display: flex;
+  padding: 3%;
 }
 
 .video-content {
