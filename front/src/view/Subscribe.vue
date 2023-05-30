@@ -1,10 +1,17 @@
 <template>
     <div>
-        <Header @show-sidebar="showSidebar()" @send-keyword="search" :is-show-search="false"/>
+        <Header @show-sidebar="showSidebar()" :is-show-search="false"/>
         <div class="content-wrap">
             <SideBar v-if="isShowSidebar"/>
             <div class="content" :class="{ 'show-side-bar-content' : isShowSidebar }">
+                <div class="subscribe-list" v-for="item in subscribeList">
+                    <img class="subscribe-img" src="/basic_profile.png">
+                    <div class="subscribe-info">
+                        <div class="channel-col">
 
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -16,28 +23,24 @@ import SideBar from '@/layout/SideBar.vue';
 import {ref} from "vue";
 import axios from "axios";
 import router from "@/router";
+import VideoList from "@/components/VideoList.vue";
+import instance from "@/api/axios";
 
 let isShowSidebar = ref(false)
-let videoList = ref([]);
+let subscribeList = ref([]);
 
-function search(q) {
-    axios.get('/api/video/findAll?q=' + q).then(value => {
-        let data = value.data;
-        let dataList = data.data;
-        videoList.value = [];
-        if(data.code === "0000") {
-            for(let i = 0; i < dataList.length; i++) {
-                videoList.value.push(dataList[i]);
-            }
-            router.push('/');
-        } else {
-            alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
+instance.get('/api/subscribe/list').then(value => {
+    if(value.data.code == '0000') {
+        let result = value.data.data;
+        for (let i = 0; i < result.length; i++) {
+            subscribeList.value.push(result[i]);
         }
-    }).catch(reason => {
-        console.log(reason);
-        alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
-    })
-}
+        console.log(subscribeList.value);
+    }
+}).catch(reason => {
+    console.log(reason);
+})
+
 function showSidebar() {
     isShowSidebar.value = !isShowSidebar.value;
 }
@@ -49,8 +52,9 @@ function showSidebar() {
 .content {
     width: 98%;
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
-    padding: 1% 1%;
+    padding: 1% 10%;
 }
 
 .show-side-bar-content {
@@ -61,4 +65,18 @@ function showSidebar() {
     padding: 1% 1%;
 }
 
+.subscribe-list {
+    display: flex;
+    margin: 1% 0;
+}
+
+.subscribe-box {
+    display: flex;
+    flex-direction: column;
+    margin: 1% 0;
+}
+
+.subscribe-img {
+    width: 150px;
+}
 </style>
