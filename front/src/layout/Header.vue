@@ -34,7 +34,7 @@ defineProps({
 let q = ref('');
 let showProfileInfo = ref(false);
 let isLogin = computed(() => {
-    return store.getters['user/getToken'] !== null;
+    return localStorage.getItem('token') !== null;
 });
 
 function search() {

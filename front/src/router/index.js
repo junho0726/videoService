@@ -56,7 +56,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
 
     if(to.name !== 'login' && to.name !== 'home' && to.name !== 'join' && to.name !== 'videoDetail') {
-        if(store.getters['user/getToken'] == null) {
+        if(localStorage.getItem('token') == null) {
             next('/login');
         } else {
             next();

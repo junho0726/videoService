@@ -90,12 +90,12 @@ instance.get('/api/video/findDetail/' + props.seq).then(value => {
 });
 
 function feedback(state) {
-    if(store.getters['user/getToken'] === null) {
+    if(localStorage.getItem('token') === null) {
         alert('로그인 후 이용해주세요.');
         router.push('/login');
     } else {
         instance.post('/api/like/likeStateInsert', {
-          userSeq : store.getters['user/getUserSeq'],
+          userSeq : localStorage.getItem('seq'),
           likeState : state,
           videoSeq : video.value.videoSeq
         }).then(value => {

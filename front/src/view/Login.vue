@@ -49,8 +49,10 @@ let login = async () => {
             });
             console.log(response.data);
             if(response.data.code == "0000") {
+                localStorage.setItem('token', response.data.data.accessToken);
+                localStorage.setItem('seq', response.data.data.userSeq);
                 await store.dispatch('user/setToken', response.data.data.accessToken);
-                await store.dispatch('user/setUserSeq', 1);
+                await store.dispatch('user/setUserSeq', response.data.data.userSeq);
                 await router.push('/');
                 alert("환영합니다.");
             } else {

@@ -8,8 +8,8 @@ let instance = axios.create({
 });
 
 instance.interceptors.request.use(config => {
-    if(store.getters['user/getToken'] != null) {
-       config.headers['Access_Token'] = store.getters['user/getToken'];
+    if(localStorage.getItem('token') != null) {
+       config.headers['Access_Token'] = localStorage.getItem('token');
     }
     return config;
 });

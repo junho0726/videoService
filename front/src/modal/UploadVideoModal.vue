@@ -139,7 +139,7 @@ async function uploadFile(file) {
   }, {
       headers: {
           'Content-Type': 'multipart/form-data',
-          "Access_Token": store.getters['user/getToken']
+          "Access_Token": localStorage.getItem('token')
       }
   }).then(value => {
       let result = value.data;
