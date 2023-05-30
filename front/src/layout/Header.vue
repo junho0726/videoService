@@ -12,9 +12,12 @@
             <img class="profile-img" src="/basic_profile.png">
             <div class="profile-menu" v-if="showProfileInfo">
                 <router-link v-if="!isLogin" to="/login">LOGIN</router-link>
+                <div v-if="!isLogin" class="line"></div>
                 <router-link v-if="!isLogin" to="/join">JOIN</router-link>
                 <router-link v-if="isLogin" to="/mypage">MY PAGE</router-link>
+                <div v-if="isLogin" class="line"></div>
                 <router-link v-if="isLogin" to="/mychannel">MY CHANNEL</router-link>
+                <div v-if="isLogin" class="line"></div>
                 <span v-if="isLogin" @click="logout()">LOGOUT</span>
             </div>
         </div>
@@ -81,13 +84,26 @@ function logout() {
 }
 
 .profile-menu {
+    border: solid 1px #F2F2F2;
+    border-radius: 15px;
+    padding: 3%;
+    position: absolute;
+    right: -3%;
     display: flex;
     flex-direction: column;
+    text-align: center;
+}
+
+.profile-menu a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
 }
 
 .profile-div {
-  text-align: right;
-  width: 25%;
+    position: relative;
+      text-align: right;
+      width: 25%;
 }
 
 .search-div {
