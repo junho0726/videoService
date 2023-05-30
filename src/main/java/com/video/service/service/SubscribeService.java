@@ -32,6 +32,7 @@ public class SubscribeService{
                 SubscribeEntity subscribe = subscribeRepository.save(subscribeEntity);
                 subscribeDto = modelMapper.map(subscribe, SubscribeDto.class);
                 int count = subscribeRepository.subscribeCountByChannel(subscribeEntity.getChannel().getChannelSeq());
+                subscribeDto.setSubscribeState("Y");
                 subscribeDto.setSubscribeCount(count);
                 return subscribeDto;
             }

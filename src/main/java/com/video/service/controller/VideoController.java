@@ -190,12 +190,13 @@ public class VideoController {
         ApiFileDto apiFileDto = new ApiFileDto();
 
         try {
+            VideoEntity video = videoService.findById(videoSeq);
             if (accessToken != null) {
                 UserEntity user = new UserEntity();
                 Map resultMap = jwtService.getSubject(accessToken);
                 user.setId(resultMap.get("fdId").toString());
                 UserEntity findUser = userService.findByid(user);
-                SubscribeDto subscribeState =  subscribeService.findByUserSeqAndChannelSeq(findUser.getUserSeq(),findUser.getChannel().getChannelSeq());
+                SubscribeDto subscribeState =  subscribeService.findByUserSeqAndChannelSeq(findUser.getUserSeq(),video.getChannel().getChannelSeq());
                 if(subscribeState != null){
                     apiFileDto.setSubscribeState(subscribeState.getSubscribeState());
                 }
@@ -204,7 +205,6 @@ public class VideoController {
                     apiFileDto.setLikeState(likeState.getLikeState());
                 }
             }
-            VideoEntity video = videoService.findById(videoSeq);
             FileEntity file = fileService.findByVideo(video);
             ChannelEntity channel = channelService.findById(video.getChannel().getChannelSeq());
             int likeStateCount = likeStateService.likeStateCountByVideo(video);
