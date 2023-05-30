@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header @show-sidebar="showSidebar()" @search="search()" :q="q"/>
+        <Header @show-sidebar="showSidebar()" @send-keyword="search"/>
         <div class="content-wrap">
             <SideBar v-if="isShowSidebar"/>
             <div class="category-div">
@@ -28,7 +28,6 @@ import Video from "@/components/VideoList.vue";
 let isShowSidebar = ref(false);
 let categoryList = ref([]);
 let videoList = ref([]);
-let q = ref('');
 
 axios.post('/api/category/findAll').then(value => {
     if(value.data.code === '0000') {
@@ -59,8 +58,8 @@ axios.get('/api/video/findAll').then(value => {
     alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
 })
 
-function search() {
-    axios.get('/api/video/findAll/q=' + q.value).then(value => {
+function search(q) {
+    axios.get('/api/video/findAll/q=' + q).then(value => {
         let data = value.data;
         let dataList = data.data;
         videoList.value = [];

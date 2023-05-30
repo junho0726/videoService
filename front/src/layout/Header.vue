@@ -6,7 +6,7 @@
         </div>
         <div class="search-div">
           <input v-model="q" class="input-search" type="text" placeholder="뭐가 궁금하노?">
-          <img class="search-img" src="/search.png" @click="$emit('search')">
+          <img class="search-img" src="/search.png" @click="sendKeyword">
         </div>
         <div class="profile-div" @mouseover="over()" @mouseleave="leave()">
             <img class="profile-img" src="/basic_profile.png">
@@ -27,19 +27,20 @@ import store from "@/store";
 import router from "@/router";
 
 defineProps({
-  isInChannel : Boolean,
-    q : String
+  isInChannel : Boolean
 })
+
+let emit = defineEmits()
+
+let sendKeyword = () => {
+    emit('sendKeyword', q.value)
+}
 
 let q = ref('');
 let showProfileInfo = ref(false);
 let isLogin = computed(() => {
     return localStorage.getItem('token') !== null;
 });
-
-function search() {
-    router.push('/')
-}
 
 function over() {
     showProfileInfo.value = true;
