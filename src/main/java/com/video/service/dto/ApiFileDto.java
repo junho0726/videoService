@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ApiFileDto {
 
+    private int channelSeq;
+
     private String userId;
 
     private String userName;

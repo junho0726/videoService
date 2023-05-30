@@ -203,6 +203,7 @@ public class VideoController {
             ChannelEntity channel = channelService.findById(video.getChannel().getChannelSeq());
             int likeStateCount = likeStateService.likeStateCountByVideo(video);
 
+            apiFileDto.setChannelSeq(channel.getChannelSeq());
             apiFileDto.setUserId(channel.getUser().getId());
             apiFileDto.setUserName(channel.getUser().getName());
             apiFileDto.setChannelName(channel.getChannelName());
