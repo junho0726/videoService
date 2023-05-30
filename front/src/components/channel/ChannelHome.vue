@@ -36,7 +36,7 @@ let showModal = ref(false);
 let isEmptyVideo = ref(true);
 let myVideoList = ref([]);
 
-instance.get('/api/video/findMyVideoAll').then(value => {
+instance.get('/api/video/findAll?channelSeq=' + localStorage.getItem('channelSeq')).then(value => {
   let result = value.data;
   if(result.code === '0000') {
       console.log(result);

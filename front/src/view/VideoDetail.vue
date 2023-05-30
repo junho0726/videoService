@@ -43,6 +43,32 @@
                         </div>
                       </div>
                   </div>
+                  <div class="video-detail-info">
+                      <h4>조회수 {{ video.videoCount }}회</h4>
+                      <span>{{ video.videoContent}}</span>
+                  </div>
+                  <br>
+                  <div class="commend-write-div">
+                      <img class="profile-img" src="/basic_profile.png">
+                      <input v-model="commend" class="commend-input" type="text">
+                      <button class="btn-save-commend" @click="saveCommend()">작성</button>
+                  </div>
+                  <div class="commend-list">
+                      <div class="commend-line">
+                          <img class="profile-img" src="/basic_profile.png">
+                          <div class="commend-col">
+                              <span>경민상</span>
+                              <span>ㅋㅋㅋㅋㅋㅋㅋㅋ개웃기노</span>
+                          </div>
+                      </div>
+                      <div class="commend-line">
+                          <img class="profile-img" src="/basic_profile.png">
+                          <div class="commend-col">
+                              <span>슈퍼맨</span>
+                              <span>이게 웃기세요??</span>
+                          </div>
+                      </div>
+                  </div>
               </div>
               <div>
                 TODO
@@ -59,16 +85,18 @@ import {ref} from "vue";
 import store from "@/store";
 import router from "@/router";
 import instance from "@/api/axios";
+import axios from "axios";
 let props = defineProps({
     seq: String
 })
 
+let commend = ref('');
 let video = ref({});
 let isActionGood = ref(false);
 let isActionBad = ref(false);
 let isShowMoreFeedbackList = ref(false);
 
-instance.get('/api/video/findDetail/' + props.seq).then(value => {
+axios.get('/api/video/findDetail/' + props.seq).then(value => {
     if(value.data.code === '0000') {
       video.value = value.data.data;
       if(video.value.likeState === 'Y') {
@@ -81,6 +109,12 @@ instance.get('/api/video/findDetail/' + props.seq).then(value => {
         isActionBad.value = false;
         isActionGood.value = false;
       }
+      axios.get('/api/commend/list?videoSeq=' + video.value.videoSeq
+          ).then(value => {
+            console.log(value);
+          }).catch(reason => {
+            console.log(reason)
+          })
     } else {
         alert('예상치 못한 오류 발생');
     }
@@ -88,6 +122,18 @@ instance.get('/api/video/findDetail/' + props.seq).then(value => {
     console.log(reason);
     alert('예상치 못한 오류 발생');
 });
+
+
+function saveCommend() {
+    instance.post('/api/commned/save', {
+            'videoSeq' : video.value.videoSeq,
+            'commend' : commend.value
+          }).then(value => {
+              console.log(value);
+          }).catch(reason => {
+              console.log(reason);
+          })
+}
 
 function feedback(state) {
     if(localStorage.getItem('token') === null) {
@@ -137,6 +183,11 @@ function sendFeedback(what) {
 </script>
 
 <style scoped>
+
+h4 {
+    margin: 0 0;
+}
+
 .content-wrap {
   width: 100%;
 }
@@ -279,4 +330,64 @@ function sendFeedback(what) {
   margin-bottom: 10%;
 }
 
+.video-detail-info {
+    margin: 1% 0;
+    width: 100%;
+    height: auto;
+    background-color: #F2F2F2;
+    border: none;
+    border-radius: 15px;
+    padding: 2% 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.video-detail-info * {
+    margin: 0 2%;
+}
+
+.video-detail-info span {
+    margin-top: 1%;
+}
+
+.commend-write-div {
+    display: flex;
+}
+
+.commend-input {
+    width: 95%;
+    margin: 0 1%;
+    border: none;
+    border-bottom: solid 1px #F2F2F2;
+    outline: none;
+    font-weight: bold;
+}
+
+.btn-save-commend {
+    border: none;
+    background-color: #F2F2F2;
+    border-radius: 15px;
+    width: 5%;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.commend-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.commend-line {
+    display: flex;
+    margin: 2% 0 0;
+}
+
+.commend-col {
+    margin: 0 1%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    font-size: 17px;
+}
 </style>

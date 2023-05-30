@@ -30,7 +30,7 @@ defineProps({
   isInChannel : Boolean
 })
 
-let emit = defineEmits()
+let emit = defineEmits([])
 
 let sendKeyword = () => {
     emit('sendKeyword', q.value)

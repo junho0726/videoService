@@ -4,11 +4,13 @@ import com.video.service.dto.*;
 import com.video.service.entity.*;
 import com.video.service.service.*;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -101,7 +103,6 @@ public class VideoController {
             user.setId(resultMap.get("fdId").toString());
             userService.findByid(user);
 
-            System.out.println("뭐냐 ㅅㅂ이건");
             videoEntity.setThumbnail(thumbnailService.insertThumbnail(videoEntity.getThumbnail()));
             response.setData(videoService.updateVideo(videoEntity));
             response.setCode("0000");
