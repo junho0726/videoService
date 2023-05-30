@@ -5,8 +5,8 @@
             <router-link to="/"><img class="logo-img" src="@/assets/my_logo_with_text.png"></router-link>
         </div>
         <div class="search-div">
-          <input v-model="searchKeyword" class="input-search" type="text" placeholder="뭐가 궁금하노?">
-          <img class="search-img" src="/search.png" @click="search()">
+          <input v-model="q" class="input-search" type="text" placeholder="뭐가 궁금하노?">
+          <img class="search-img" src="/search.png" @click="search(q)">
         </div>
         <div class="profile-div" @mouseover="over()" @mouseleave="leave()">
             <img class="profile-img" src="/basic_profile.png">
@@ -24,16 +24,21 @@
 <script setup>
 import {computed, ref} from 'vue';
 import store from "@/store";
+import router from "@/router";
 
 defineProps({
   isInChannel : Boolean
 })
 
-let searchKeyword = ref('');
+let q = ref('');
 let showProfileInfo = ref(false);
 let isLogin = computed(() => {
     return store.getters['user/getToken'] !== null;
 });
+
+function search(q) {
+    router.push({ name : '/', params : { 'q' : q.value }})
+}
 
 function over() {
     showProfileInfo.value = true;
@@ -46,10 +51,6 @@ function leave() {
 function logout() {
     alert('로그아웃 되었습니다.');
     location.href = '/login';
-}
-
-function search() {
-  alert(searchKeyword.value);
 }
 
 </script>

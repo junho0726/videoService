@@ -16,9 +16,10 @@ const routes = [
         component: App // 컴포넌트 선언
     },
     {
-        path: "/",
+        path: "/:q",
         name: "home",
-        component: Home
+        component: Home,
+        props: true
     },
     {
         path: "/login",

@@ -29,7 +29,11 @@ let isShowSidebar = ref(false);
 let categoryList = ref([]);
 let videoList = ref([]);
 
-axios.post('/api/category/findAll').then(value => {
+let props = defineProps({
+    q : String
+})
+
+axios.post('/api/category/findAll?q=' + props.q).then(value => {
     if(value.data.code === '0000') {
         for (let i = 0; i < value.data.data.length; i++) {
             categoryList.value.push(value.data.data[i]);
