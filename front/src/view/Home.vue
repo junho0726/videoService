@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header @show-sidebar="showSidebar()"/>
+        <Header @show-sidebar="showSidebar()" @search="search()" :q="q"/>
         <div class="content-wrap">
             <SideBar v-if="isShowSidebar"/>
             <div class="category-div">
@@ -28,12 +28,9 @@ import Video from "@/components/VideoList.vue";
 let isShowSidebar = ref(false);
 let categoryList = ref([]);
 let videoList = ref([]);
+let q = ref('');
 
-let props = defineProps({
-    q : String
-})
-
-axios.post('/api/category/findAll?q=' + props.q).then(value => {
+axios.post('/api/category/findAll').then(value => {
     if(value.data.code === '0000') {
         for (let i = 0; i < value.data.data.length; i++) {
             categoryList.value.push(value.data.data[i]);
@@ -61,6 +58,24 @@ axios.get('/api/video/findAll').then(value => {
     console.log(reason);
     alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
 })
+
+function search() {
+    axios.get('/api/video/findAll/q=' + q.value).then(value => {
+        let data = value.data;
+        let dataList = data.data;
+        videoList.value = [];
+        if(data.code === "0000") {
+            for(let i = 0; i < dataList.length; i++) {
+                videoList.value.push(dataList[i]);
+            }
+        } else {
+            alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
+        }
+    }).catch(reason => {
+        console.log(reason);
+        alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
+    })
+}
 
 function findVideoByCategorySeq(categorySeq) {
     if(categorySeq == null) {

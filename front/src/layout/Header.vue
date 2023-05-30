@@ -6,7 +6,7 @@
         </div>
         <div class="search-div">
           <input v-model="q" class="input-search" type="text" placeholder="뭐가 궁금하노?">
-          <img class="search-img" src="/search.png" @click="search(q)">
+          <img class="search-img" src="/search.png" @click="$emit('search')">
         </div>
         <div class="profile-div" @mouseover="over()" @mouseleave="leave()">
             <img class="profile-img" src="/basic_profile.png">
@@ -27,7 +27,8 @@ import store from "@/store";
 import router from "@/router";
 
 defineProps({
-  isInChannel : Boolean
+  isInChannel : Boolean,
+    q : String
 })
 
 let q = ref('');
@@ -36,8 +37,8 @@ let isLogin = computed(() => {
     return store.getters['user/getToken'] !== null;
 });
 
-function search(q) {
-    router.push({ name : '/', params : { 'q' : q.value }})
+function search() {
+    router.push('/')
 }
 
 function over() {
