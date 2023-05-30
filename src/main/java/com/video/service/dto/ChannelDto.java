@@ -25,13 +25,8 @@ public class ChannelDto
 
     private String userName;
 
-    private List<FileDto> files;
+    private String channelName;
 
-        public ChannelDto(ChannelEntity channelEntity){
-            channelSeq =channelEntity.getChannelSeq();
-            userId = channelEntity.getUser().getId();
-            userName = channelEntity.getUser().getName();
-            files = new ArrayList<>();
-        }
+    private List<FileDto> files;
 
 }
