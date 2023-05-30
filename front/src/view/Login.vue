@@ -51,6 +51,7 @@ let login = async () => {
             if(response.data.code == "0000") {
                 localStorage.setItem('token', response.data.data.accessToken);
                 localStorage.setItem('seq', response.data.data.userSeq);
+                localStorage.setItem('channelSeq', response.data.data.channelSeq);
                 await store.dispatch('user/setToken', response.data.data.accessToken);
                 await store.dispatch('user/setUserSeq', response.data.data.userSeq);
                 await router.push('/');

@@ -22,8 +22,9 @@
                               <span class="channel-name">{{ video.channelName }}</span>
                               <span>구독자 0명</span>
                           </div>
-                          <div class="subscribe-div">
-                              <button class="btn-subscribe">구독</button>
+                          <div v-if="!isMyVideo" class="subscribe-div">
+                              <button v-if="!isSubscribe" class="btn-subscribe" @click="subscribe()">구독</button>
+                              <button v-if="isSubscribe" class="btn-subscribe" @click="subscribe()">구독 중</button>
                           </div>
                       </div>
                       <div class="feedback-box">
@@ -82,7 +83,6 @@
 import Header from "@/layout/Header.vue";
 import SideBar from "@/layout/SideBar.vue"
 import {ref} from "vue";
-import store from "@/store";
 import router from "@/router";
 import instance from "@/api/axios";
 import axios from "axios";
@@ -95,11 +95,16 @@ let video = ref({});
 let isActionGood = ref(false);
 let isActionBad = ref(false);
 let isShowMoreFeedbackList = ref(false);
+let isMyVideo = ref(false);
+let isSubscribe = ref(false);
 
 axios.get('/api/video/findDetail/' + props.seq).then(value => {
     if(value.data.code === '0000') {
       video.value = value.data.data;
-      handleLikeState(video.value.likeStateCount);
+      if(video.value.channelSeq === localStorage.getItem('channelSeq')) {
+          isMyVideo.value = true;
+      }
+      handleLikeState(video.value.likeState);
       axios.get('/api/commend/list?videoSeq=' + video.value.videoSeq
           ).then(value => {
             console.log(value);
@@ -114,16 +119,44 @@ axios.get('/api/video/findDetail/' + props.seq).then(value => {
     alert('예상치 못한 오류 발생');
 });
 
+function subscribe() {
+    if(localStorage.getItem('token') === null) {
+        alert('로그인 후 이용해주세요.');
+        router.push('/login');
+    } else {
+        instance.post('/api/subscribe/save', {
+            'channel': {'channelSeq': video.value.channelSeq},
+            'user': {'userSeq': localStorage.getItem('seq')}
+        }).then(value => {
+            if (value.data.code === '0000') {
+                let result = value.data.data;
+                if (result.subscribeState) {
+                    isSubscribe.value = true
+                } else {
+                    isSubscribe.value = false
+                }
+                video.value.subscribeCount = result.subscribeCount;
+            }
+        }).catch(reason => {
+            console.log(reason);
+        })
+    }
+}
 
 function saveCommend() {
-    instance.post('/api/commned/save', {
-            'videoSeq' : video.value.videoSeq,
-            'commend' : commend.value
-          }).then(value => {
-              console.log(value);
-          }).catch(reason => {
-              console.log(reason);
-          })
+    if(localStorage.getItem('token') === null) {
+        alert('로그인 후 이용해주세요.');
+        router.push('/login');
+    } else {
+        instance.post('/api/commned/save', {
+            'videoSeq': video.value.videoSeq,
+            'commend': commend.value
+        }).then(value => {
+            console.log(value);
+        }).catch(reason => {
+            console.log(reason);
+        })
+    }
 }
 
 function feedback(state) {
@@ -137,9 +170,8 @@ function feedback(state) {
           videoSeq : video.value.videoSeq
         }).then(value => {
           if(value.data.code === '0000') {
-            let result = value.data.data.likeState;
             video.value.likeStateCount = value.data.data.likeCount;
-              handleLikeState(video.value.likeStateCount);
+            handleLikeState(value.data.data.likeState);
           } else {
             alert('예상치 못한 오류 발생');
           }

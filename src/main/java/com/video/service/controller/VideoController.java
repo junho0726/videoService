@@ -157,7 +157,7 @@ public class VideoController {
                     apiFileDto.setFileFullPath(videoFile.getFileFullPath());
                     apiFileDto.setFileName(videoFile.getFileName());
                     apiFileDto.setFileOriginName(videoFile.getFileOriginName());
-                    if (video.getThumbnail() != null) {
+                    if (!Objects.isNull(video.getThumbnail())) {
                         ThumbnailEntity thumbnail = thumbnailService.findById(video.getThumbnail().getThumbnailSeq());
                         apiFileDto.setThumbnailFullPath(thumbnail.getFileFullPath());
                     }
@@ -215,7 +215,7 @@ public class VideoController {
             apiFileDto.setFileName(file.getFileName());
             apiFileDto.setFileOriginName(file.getFileOriginName());
             apiFileDto.setLikeStateCount(likeStateCount);
-            if (video.getThumbnail() != null) {
+            if (!Objects.isNull(video.getThumbnail())) {
                 ThumbnailEntity thumbnail = thumbnailService.findById(video.getThumbnail().getThumbnailSeq());
                 apiFileDto.setThumbnailFullPath(thumbnail.getFileFullPath());
             }

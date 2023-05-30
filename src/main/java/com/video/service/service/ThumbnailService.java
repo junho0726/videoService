@@ -20,7 +20,6 @@ public class ThumbnailService {
         return thumbnailRepository.save(thumbnailEntity);
     }
 
-
     public ThumbnailEntity findByVideo(VideoEntity videoEntity) {
         Optional<ThumbnailEntity> thumbnail = thumbnailRepository.findById(videoEntity.getFile().getFileSeq());
 
