@@ -47,8 +47,6 @@ public class VideoService {
         return videoPage;
     }
 
-
-
     @Transactional
     public VideoEntity findById(int videoSeq) throws  Exception {
         VideoEntity videoEntity = videoRepository.findById(videoSeq).orElseThrow(() -> {
@@ -104,6 +102,12 @@ public class VideoService {
         return videoPage;
     }
 
+    public Page<VideoEntity> findAllBySearch(Pageable pageable, String q) throws Exception {
+
+        Page<VideoEntity> videoPage = videoRepository.findAllBySearch(pageable, q);
+
+        return videoPage;
+    }
 
 
 }

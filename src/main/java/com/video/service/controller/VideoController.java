@@ -92,7 +92,6 @@ public class VideoController {
         return response;
     }
 
-
    @PostMapping(value = "video/thumbnailInsert")
     public ApiResponseDto insertThumbnail(@RequestHeader("Access_Token") String accessToken, @RequestBody VideoEntity videoEntity) {
         ApiResponseDto response = new ApiResponseDto();
@@ -117,7 +116,7 @@ public class VideoController {
     }
 
     @GetMapping(value = "video/findAll")
-    public ApiResponseDto videoFindAll(@RequestParam(defaultValue  = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, @RequestParam(value = "channelSeq", required = false) Integer channelSeq,  @RequestParam(required = false) Integer categorySeq) {
+    public ApiResponseDto videoFindAll(@RequestParam(defaultValue  = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, @RequestParam(value = "channelSeq", required = false) Integer channelSeq,  @RequestParam(required = false) Integer categorySeq, @RequestParam(required = false) String q) {
         ApiResponseDto response = new ApiResponseDto();
         Pageable pageable = PageRequest.of(page - 1 , size);
         try {
@@ -134,7 +133,11 @@ public class VideoController {
                 if(categorySeq != null){
                     videos = videoService.findAllByCategory(categorySeq, pageable);
                 }else {
-                    videos = videoService.findAll(pageable);
+                    if(q != null) {
+                        videos = videoService.findAllBySearch(pageable,q);
+                    }else{
+                        videos = videoService.findAll(pageable);
+                    }
                 }
             }
 
@@ -182,6 +185,7 @@ public class VideoController {
     public ApiResponseDto videoFindDetail(@RequestHeader(value = "Access_Token" , required = false) String accessToken, @PathVariable("videoSeq") int videoSeq) {
         ApiResponseDto response = new ApiResponseDto();
         ApiFileDto apiFileDto = new ApiFileDto();
+
         try {
             if (accessToken != null) {
                 UserEntity user = new UserEntity();
