@@ -1,5 +1,5 @@
 <template>
-    <Header/>
+    <Header :is-show-search="false"/>
     <div class="contents">
         <h1>회원 정보</h1>
         <br>
@@ -48,7 +48,9 @@ let userInfo = ref({});
 
 // eslint-disable-next-line no-unused-vars
 instance.post('/api/user/info').then(value => {
-  userInfo.value = value.data.data;
+    if(value.data.code == '0000') {
+        userInfo.value = value.data.data;
+    }
 }).catch(reason => {
     console.log(reason);
 });

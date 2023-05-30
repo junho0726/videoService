@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header @show-sidebar="showSidebar()" @send-keyword="search"/>
+        <Header @show-sidebar="showSidebar()" @send-keyword="search" :is-show-search="true"/>
         <div class="content-wrap">
             <SideBar v-if="isShowSidebar"/>
             <div class="category-div" :class="{ 'show-side-bar-category-div' : isShowSidebar }">

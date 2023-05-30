@@ -4,13 +4,11 @@
 <!--        <div class="line"></div>-->
         <a href="#">보관함</a>
         <div class="line"></div>
-        <a href="#">구독</a>
+        <router-link to="/subscribe">구독</router-link>
     </div>
 </template>
 
 <script setup>
-
-
 </script>
 
 <style>
@@ -19,7 +17,7 @@
     display: flex;
     flex-direction: column;
     width: 10%;
-    height: 100%;
+    height: auto;
     background-color: white;
     text-align: center;
 }

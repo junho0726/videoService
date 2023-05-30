@@ -1,9 +1,9 @@
 <template>
   <div>
-      <Header/>
+      <Header @show-sidebar="showSidebar()"/>
       <div class="content-wrap">
           <SideBar v-if="isShowSidebar"/>
-          <div class="content">
+          <div class="content" :class="{ 'show-side-bar-content' : isShowSidebar }">
               <div class="video-content">
                   <video  v-if="video.fileFullPath != null"
                           id="video"
@@ -20,7 +20,7 @@
                           <img class="profile-img" src="/basic_profile.png">
                           <div class="video-info-div">
                               <span class="channel-name">{{ video.channelName }}</span>
-                              <span>구독자 0명</span>
+                              <span>구독자 {{ video.subscribeCount }}명</span>
                           </div>
                           <div v-if="!isMyVideo" class="subscribe-div">
                               <button v-if="!isSubscribe" class="btn-subscribe" @click="subscribe()">구독</button>
@@ -28,13 +28,13 @@
                           </div>
                       </div>
                       <div class="feedback-box">
-                        <div class="feedback-div">
+                        <div class="feedback-div" :class="{ 'show-side-bar-feedback-div' : isShowSidebar }">
                             <img :src="isActionGood === true ? '/action_good.png' : '/good.png'" @click="feedback('Y')">
                             <span>{{ video.likeStateCount }}</span>
                             <div class="line"></div>
                             <img :src="isActionBad === true ? '/action_bad.png' : '/bad.png'" @click="feedback('N')">
                         </div>
-                        <div class="more-feedback-div" @mouseover="showMoreFeedbackList()" @mouseleave="closeMoreFeedbackList()">
+                        <div class="more-feedback-div" :class="{ 'show-side-bar-more-feedback-div' : isShowSidebar }" @mouseover="showMoreFeedbackList()" @mouseleave="closeMoreFeedbackList()">
                           <img class="more-feedback-img" src="/more_feedback.png">
                           <div class="more-feedback-list" v-if="isShowMoreFeedbackList">
                             <span @click="sendFeedback('저장')">저장</span>
@@ -44,7 +44,7 @@
                         </div>
                       </div>
                   </div>
-                  <div class="video-detail-info">
+                  <div class="video-detail-info" :class="{ 'show-side-bar-video-detail-info' : isShowSidebar }">
                       <h4>조회수 {{ video.videoCount }}회</h4>
                       <span>{{ video.videoContent}}</span>
                   </div>
@@ -52,7 +52,7 @@
                   <div class="commend-write-div">
                       <img class="profile-img" src="/basic_profile.png">
                       <input v-model="commend" class="commend-input" type="text">
-                      <button class="btn-save-commend" @click="saveCommend()">작성</button>
+                      <button class="btn-save-commend" :class="{ 'show-side-bar-btn-save-commend' : isShowSidebar }" @click="saveCommend()">작성</button>
                   </div>
                   <div class="commend-list">
                       <div class="commend-line">
@@ -92,17 +92,25 @@ let props = defineProps({
 
 let commend = ref('');
 let video = ref({});
+let isShowSidebar = ref(false);
 let isActionGood = ref(false);
 let isActionBad = ref(false);
 let isShowMoreFeedbackList = ref(false);
 let isMyVideo = ref(false);
 let isSubscribe = ref(false);
 
-axios.get('/api/video/findDetail/' + props.seq).then(value => {
+instance.get('/api/video/findDetail/' + props.seq).then(value => {
+    console.log(value.data.data)
     if(value.data.code === '0000') {
       video.value = value.data.data;
-      if(video.value.channelSeq === localStorage.getItem('channelSeq')) {
+      if(video.value.channelSeq == localStorage.getItem('channelSeq')) {
           isMyVideo.value = true;
+      } else {
+          if(video.value.subscribeState == 'Y') {
+              isSubscribe.value = true
+          } else {
+              isSubscribe.value = false
+          }
       }
       handleLikeState(video.value.likeState);
       axios.get('/api/commend/list?videoSeq=' + video.value.videoSeq
@@ -128,6 +136,7 @@ function subscribe() {
             'channel': {'channelSeq': video.value.channelSeq},
             'user': {'userSeq': localStorage.getItem('seq')}
         }).then(value => {
+            console.log(value)
             if (value.data.code === '0000') {
                 let result = value.data.data;
                 if (result.subscribeState) {
@@ -169,6 +178,7 @@ function feedback(state) {
           likeState : state,
           videoSeq : video.value.videoSeq
         }).then(value => {
+            console.log(value.data.data)
           if(value.data.code === '0000') {
             video.value.likeStateCount = value.data.data.likeCount;
             handleLikeState(value.data.data.likeState);
@@ -207,6 +217,10 @@ function handleLikeState(state) {
     }
 }
 
+function showSidebar() {
+    isShowSidebar.value = !isShowSidebar.value;
+}
+
 </script>
 
 <style scoped>
@@ -220,9 +234,16 @@ h4 {
 }
 
 .content {
-  width: 100%;
-  display: flex;
-  padding: 3%;
+    width: 100%;
+    display: flex;
+    padding: 3%;
+}
+
+.show-side-bar-content {
+    width: 100%;
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    padding: 3%;
 }
 
 .video-content {
@@ -299,6 +320,15 @@ h4 {
     align-items: center;
 }
 
+.show-side-bar-feedback-div {
+    display: flex;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 40px;
+    justify-content: left;
+    align-items: center;
+}
+
 .feedback-div span {
     margin: 0 4%;
     font-size: 20px;
@@ -328,6 +358,19 @@ h4 {
   align-items: center;
   justify-content: center;
   position: relative;
+}
+
+.show-side-bar-more-feedback-div {
+    width: 20%;
+    padding: 0 10%;
+    display: flex;
+    margin: 0 10%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 40px;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
 .more-feedback-img {
@@ -369,6 +412,18 @@ h4 {
     flex-direction: column;
 }
 
+.show-side-bar-video-detail-info {
+    margin: 1% 0;
+    width: 100%;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 15px;
+    padding: 2% 0;
+    display: flex;
+    flex-direction: column;
+}
+
 .video-detail-info * {
     margin: 0 2%;
 }
@@ -393,6 +448,15 @@ h4 {
 .btn-save-commend {
     border: none;
     background-color: #F2F2F2;
+    border-radius: 15px;
+    width: 5%;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.show-side-bar-btn-save-commend {
+    border: none;
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 15px;
     width: 5%;
     font-size: 17px;

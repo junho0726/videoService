@@ -1,5 +1,5 @@
 <template>
-    <Header/>
+    <Header :is-show-search="false"/>
     <div class="contents">
         <h1>회원 가입</h1>
         <br>

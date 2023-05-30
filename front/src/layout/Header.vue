@@ -4,13 +4,13 @@
             <img class="logo-img" src="@/assets/hamberger.png" @click="$emit('show-sidebar')">
             <router-link to="/"><img class="logo-img" src="@/assets/my_logo_with_text.png"></router-link>
         </div>
-        <div class="search-div">
+        <div class="search-div" v-if="isShowSearch">
           <input v-model="q" class="input-search" type="text" placeholder="뭐가 궁금하노?">
           <img class="search-img" src="/search.png" @click="sendKeyword">
         </div>
         <div class="profile-div" @mouseover="over()" @mouseleave="leave()">
             <img class="profile-img" src="/basic_profile.png">
-            <div class="profile-menu" v-if="showProfileInfo">
+            <div class="profile-menu" :class="{ 'is-login-profile-menu' : isLogin }" v-if="showProfileInfo">
                 <router-link v-if="!isLogin" to="/login">LOGIN</router-link>
                 <div v-if="!isLogin" class="line"></div>
                 <router-link v-if="!isLogin" to="/join">JOIN</router-link>
@@ -29,8 +29,9 @@ import {computed, ref} from 'vue';
 import store from "@/store";
 import router from "@/router";
 
-defineProps({
-  isInChannel : Boolean
+let props = defineProps({
+    isInChannel : Boolean,
+    isShowSearch : Boolean
 })
 
 let emit = defineEmits([])
@@ -89,6 +90,17 @@ function logout() {
     padding: 3%;
     position: absolute;
     right: -3%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.is-login-profile-menu {
+    border: solid 1px #F2F2F2;
+    border-radius: 15px;
+    padding: 3%;
+    position: absolute;
+    right: -10%;
     display: flex;
     flex-direction: column;
     text-align: center;

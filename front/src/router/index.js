@@ -3,10 +3,11 @@ import App from "@/App.vue";
 import Home from "@/view/Home.vue";
 import Login from "@/view/Login.vue";
 import Join from "@/view/Join.vue";
-import MyChannel from "@/user/MyChannel.vue";
-import MyPage from "@/user/MyPage.vue";
+import MyChannel from "@/view/MyChannel.vue";
+import MyPage from "@/view/MyPage.vue";
 import store from "@/store";
 import VideoDetail from "@/view/VideoDetail.vue";
+import Subscribe from "@/view/Subscribe.vue";
 
 // routes 배열 초기화
 const routes = [
@@ -45,6 +46,11 @@ const routes = [
         name: "videoDetail",
         component: VideoDetail,
         props: true
+    },
+    {
+        path: "/subscribe",
+        name: "subscribe",
+        component: Subscribe
     }
 ];
 

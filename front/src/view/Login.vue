@@ -1,5 +1,5 @@
 <template>
-    <Header />
+    <Header :is-show-search="false"/>
     <div class="contents">
     <h1>로그인</h1>
         <br>
