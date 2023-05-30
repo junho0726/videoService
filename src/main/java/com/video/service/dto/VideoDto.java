@@ -17,10 +17,4 @@ public class VideoDto
 
     private String content;
 
-    public VideoDto(VideoEntity videoEntity){
-        fileSeq =videoEntity.getFile().getFileSeq();
-        title = videoEntity.getTitle();
-        content = videoEntity.getContent();
-    }
-
 }

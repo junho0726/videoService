@@ -1,6 +1,7 @@
 package com.video.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -48,10 +50,6 @@ public class UserEntity {
     @JsonIgnore
     @OneToOne(mappedBy = "user")
     private TokenEntity token;
-
-//    @JsonIgnoreProperties("subscriber")
-//    @OneToMany(mappedBy = "subscriber", cascade = CascadeType.DETACH)
-//    private List<Channel> subscribeChannel;
 
     @Column(nullable = false)
     @CreationTimestamp

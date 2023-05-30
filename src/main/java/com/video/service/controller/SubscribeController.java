@@ -44,9 +44,9 @@ public class SubscribeController {
 
             ModelMapper modelMapper = new ModelMapper();
             SubscribeEntity subscribeEntity = modelMapper.map(subscribeDto, SubscribeEntity.class);
-            Boolean subscribeState = subscribeSerive.insertSubscribe(subscribeEntity);
+            SubscribeDto subscribe = subscribeSerive.insertSubscribe(subscribeEntity);
 
-            response.setData(subscribeState);
+            response.setData(subscribe);
             response.setCode("0000");
             response.setMessage("성공");
       }catch (Exception e){
@@ -68,11 +68,7 @@ public class SubscribeController {
             UserEntity findUser = userService.findByid(user);
 
             SubscribeEntity subscribeEntity = new SubscribeEntity();
-            UserEntity userEntity = new UserEntity();
-            userEntity.setUserSeq(findUser.getUserSeq());
-            subscribeEntity.setUser(userEntity);
-            List<ChannelDto> channelDtos = subscribeSerive.findByUserSeq(subscribeEntity);
-
+            List<ChannelDto> channelDtos = subscribeSerive.findByUserSeq(findUser.getUserSeq());
             response.setData(channelDtos);
             response.setCode("0000");
             response.setMessage("성공");

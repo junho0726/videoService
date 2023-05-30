@@ -23,4 +23,7 @@ public interface SubscribeRepository extends JpaRepository<SubscribeEntity, Inte
 
     @Query("SELECT s FROM SubscribeEntity s WHERE s.user.userSeq = :userSeq")
     List<SubscribeEntity> findByUserSeq(@Param("userSeq") int userSeq);
+
+    @Query("SELECT COUNT(s) FROM SubscribeEntity s WHERE s.channel.channelSeq = :channelSeq")
+    int subscribeCountByChannel(@Param("channelSeq") int channelSeq);
 }

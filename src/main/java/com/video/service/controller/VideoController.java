@@ -48,6 +48,8 @@ public class VideoController {
 
     private final LikeStateService likeStateService;
 
+    private final SubscribeService subscribeService;
+
     @PostMapping(value = "video/fileInsert")
     public ApiResponseDto fileInsert(@RequestHeader("Access_Token") String accessToken, @RequestPart MultipartFile file) {
         ApiResponseDto response = new ApiResponseDto();
@@ -193,6 +195,10 @@ public class VideoController {
                 Map resultMap = jwtService.getSubject(accessToken);
                 user.setId(resultMap.get("fdId").toString());
                 UserEntity findUser = userService.findByid(user);
+                SubscribeDto subscribeState =  subscribeService.findByUserSeqAndChannelSeq(findUser.getUserSeq(),findUser.getChannel().getChannelSeq());
+                if(subscribeState != null){
+                    apiFileDto.setSubscribeState(subscribeState.getSubscribeState());
+                }
                 LikeStateEntity likeState = likeStateService.findByUserSeqAndVideoSeq(findUser.getUserSeq(), videoSeq);
                 if(likeState != null) {
                     apiFileDto.setLikeState(likeState.getLikeState());
@@ -202,7 +208,7 @@ public class VideoController {
             FileEntity file = fileService.findByVideo(video);
             ChannelEntity channel = channelService.findById(video.getChannel().getChannelSeq());
             int likeStateCount = likeStateService.likeStateCountByVideo(video);
-
+            int subscribeCount = subscribeService.subscribeCountByChannel(channel.getChannelSeq());
             apiFileDto.setChannelSeq(channel.getChannelSeq());
             apiFileDto.setUserId(channel.getUser().getId());
             apiFileDto.setUserName(channel.getUser().getName());
@@ -215,7 +221,8 @@ public class VideoController {
             apiFileDto.setFileName(file.getFileName());
             apiFileDto.setFileOriginName(file.getFileOriginName());
             apiFileDto.setLikeStateCount(likeStateCount);
-            if (!Objects.isNull(video.getThumbnail())) {
+            apiFileDto.setSubscribeCount(subscribeCount);
+            if (video.getThumbnail() != null) {
                 ThumbnailEntity thumbnail = thumbnailService.findById(video.getThumbnail().getThumbnailSeq());
                 apiFileDto.setThumbnailFullPath(thumbnail.getFileFullPath());
             }

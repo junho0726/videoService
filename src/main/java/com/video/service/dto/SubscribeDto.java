@@ -13,4 +13,8 @@ public class SubscribeDto {
 
     private UserEntity user;
 
+    private String subscribeState;
+
+    private int subscribeCount;
+
 }

@@ -3,7 +3,6 @@ package com.video.service.service;
 import com.video.service.dto.ChannelDto;
 import com.video.service.dto.SubscribeDto;
 import com.video.service.entity.SubscribeEntity;
-import com.video.service.entity.UserEntity;
 import com.video.service.repository.SubscribeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +18,22 @@ public class SubscribeService{
     @Autowired
     private SubscribeRepository subscribeRepository;
 
-    public Boolean insertSubscribe(SubscribeEntity subscribeEntity) throws Exception{
+    public SubscribeDto insertSubscribe(SubscribeEntity subscribeEntity) throws Exception{
         try {
+            ModelMapper modelMapper = new ModelMapper();
+            SubscribeDto subscribeDto = new SubscribeDto();
             Optional<SubscribeEntity> subscribeOptional = subscribeRepository.findByUserSeqAndChannelSeq(subscribeEntity.getUser().getUserSeq(), subscribeEntity.getChannel().getChannelSeq());
             if (subscribeOptional.isPresent()) {
                 subscribeRepository.deleteByChannelSeqAndUserSeq(subscribeEntity.getUser().getUserSeq(), subscribeEntity.getChannel().getChannelSeq());
-                return false;
+                int count = subscribeRepository.subscribeCountByChannel(subscribeEntity.getChannel().getChannelSeq());
+                subscribeDto.setSubscribeCount(count);
+                return subscribeDto;
             } else {
-                subscribeRepository.save(subscribeEntity);
-                return true;
+                SubscribeEntity subscribe = subscribeRepository.save(subscribeEntity);
+                subscribeDto = modelMapper.map(subscribe, SubscribeDto.class);
+                int count = subscribeRepository.subscribeCountByChannel(subscribeEntity.getChannel().getChannelSeq());
+                subscribeDto.setSubscribeCount(count);
+                return subscribeDto;
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -35,11 +41,12 @@ public class SubscribeService{
         }
     }
 
-    public List<ChannelDto> findByUserSeq(SubscribeEntity subscribeEntity) throws  Exception{
+    public List<ChannelDto> findByUserSeq(int userSeq) throws  Exception{
+        System.out.println("userSeq="+userSeq);
         List<ChannelDto> channelDtos = new ArrayList<>();
         List<SubscribeEntity> subscribeEntities = new ArrayList<>();
         try {
-            subscribeEntities = subscribeRepository.findByUserSeq(subscribeEntity.getUser().getUserSeq());
+            subscribeEntities = subscribeRepository.findByUserSeq(userSeq);
             ModelMapper modelMapper = new ModelMapper();
             for (SubscribeEntity subscribe : subscribeEntities) {
                 ChannelDto channelDto = modelMapper.map(subscribe.getChannel(), ChannelDto.class);
@@ -49,5 +56,26 @@ public class SubscribeService{
             e.printStackTrace();
         }
         return channelDtos;
+    }
+
+    public int subscribeCountByChannel(int channelSeq) throws Exception {
+        int count = subscribeRepository.subscribeCountByChannel(channelSeq);
+
+        return count;
+    }
+
+    public SubscribeDto findByUserSeqAndChannelSeq(int userSeq, int channelSeq) throws  Exception{
+        SubscribeDto subscribeDto = new SubscribeDto();
+        try {
+            Optional<SubscribeEntity> subscribeOptional = subscribeRepository.findByUserSeqAndChannelSeq(userSeq, channelSeq);
+            if (subscribeOptional.isPresent()) {
+                subscribeDto.setSubscribeState("Y");
+            } else {
+                subscribeDto.setSubscribeState(null);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+            return subscribeDto;
     }
 }

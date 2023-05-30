@@ -35,6 +35,8 @@ public class ApiFileDto {
 
     private String likeState;
 
+    private int subscribeCount;
 
+    private String subscribeState;
 
 }
