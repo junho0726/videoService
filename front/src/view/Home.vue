@@ -3,7 +3,7 @@
         <Header @show-sidebar="showSidebar()" @send-keyword="search"/>
         <div class="content-wrap">
             <SideBar v-if="isShowSidebar"/>
-            <div class="category-div">
+            <div class="category-div" :class="{ 'show-side-bar-category-div' : isShowSidebar }">
               <div class="category-row">
                 <button type="button" @click="findVideoByCategorySeq()" class="category">전체</button>
               </div>
@@ -11,7 +11,7 @@
                   <button type="button" @click="findVideoByCategorySeq(category.categorySeq)" :id="'category-' + category.categorySeq" class="category">{{ category.name }}</button>
               </div>
             </div>
-            <div class="content" :class="{ 'show-side-bar-content':isShowSidebar }">
+            <div class="content" :class="{ 'show-side-bar-content' : isShowSidebar }">
               <Video :video-list="videoList" :show-side-bar="isShowSidebar"/>
             </div>
         </div>
@@ -123,6 +123,11 @@ function showSidebar() {
 <style scoped>
 .category-div {
     display: flex;
+    margin-left: 3%;
+}
+
+.show-side-bar-category-div {
+    display: flex;
     margin-left: 10%;
 }
 
@@ -141,6 +146,7 @@ function showSidebar() {
 }
 
 .content-wrap {
+    position: relative;
     display: flex;
     flex-direction: column;
 }

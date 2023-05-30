@@ -26,4 +26,8 @@
 h2 {
     margin: 13px 0;
 }
+
+.line {
+    border-bottom: solid 1px #F2F2F2;
+}
 </style>
