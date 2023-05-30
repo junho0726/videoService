@@ -99,16 +99,7 @@ let isShowMoreFeedbackList = ref(false);
 axios.get('/api/video/findDetail/' + props.seq).then(value => {
     if(value.data.code === '0000') {
       video.value = value.data.data;
-      if(video.value.likeState === 'Y') {
-        isActionGood.value = true;
-        isActionBad.value = false;
-      } else if(video.value.likeState === 'N') {
-        isActionBad.value = true;
-        isActionGood.value = false;
-      } else {
-        isActionBad.value = false;
-        isActionGood.value = false;
-      }
+      handleLikeState(video.value.likeStateCount);
       axios.get('/api/commend/list?videoSeq=' + video.value.videoSeq
           ).then(value => {
             console.log(value);
@@ -148,16 +139,7 @@ function feedback(state) {
           if(value.data.code === '0000') {
             let result = value.data.data.likeState;
             video.value.likeStateCount = value.data.data.likeCount;
-            if(result.likeState === 'Y') {
-              isActionGood.value = true;
-              isActionBad.value = false;
-            } else if(result.likeState === 'N') {
-              isActionBad.value = true;
-              isActionGood.value = false;
-            } else {
-              isActionBad.value = false;
-              isActionGood.value = false;
-            }
+              handleLikeState(video.value.likeStateCount);
           } else {
             alert('예상치 못한 오류 발생');
           }
@@ -178,6 +160,19 @@ function closeMoreFeedbackList() {
 
 function sendFeedback(what) {
   alert(what);
+}
+
+function handleLikeState(state) {
+    if(state === 'Y') {
+        isActionGood.value = true;
+        isActionBad.value = false;
+    } else if(state === 'N') {
+        isActionBad.value = true;
+        isActionGood.value = false;
+    } else {
+        isActionBad.value = false;
+        isActionGood.value = false;
+    }
 }
 
 </script>

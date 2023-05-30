@@ -86,6 +86,7 @@ function findVideoByCategorySeq(categorySeq) {
           for(let i = 0; i < dataList.length; i++) {
             videoList.value.push(dataList[i]);
           }
+            console.log(videoList.value);
         } else {
           alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
         }
@@ -102,6 +103,7 @@ function findVideoByCategorySeq(categorySeq) {
               for(let i = 0; i < dataList.length; i++) {
                   videoList.value.push(dataList[i]);
               }
+
           } else {
               alert('지금은 개발 단계입니다. 서버를 재실행 해주세요.');
           }

@@ -27,4 +27,7 @@ public class ThumbnailService {
         return thumbnail.orElseGet(() -> null);
     }
 
+    public ThumbnailEntity findById(int seq) {
+        return thumbnailRepository.findById(seq).orElse(null);
+    }
 }

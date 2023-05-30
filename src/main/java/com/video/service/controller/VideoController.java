@@ -157,8 +157,8 @@ public class VideoController {
                     apiFileDto.setFileFullPath(videoFile.getFileFullPath());
                     apiFileDto.setFileName(videoFile.getFileName());
                     apiFileDto.setFileOriginName(videoFile.getFileOriginName());
-                    ThumbnailEntity thumbnail = thumbnailService.findByVideo(video);
-                    if (thumbnail != null) {
+                    if (video.getThumbnail() != null) {
+                        ThumbnailEntity thumbnail = thumbnailService.findById(video.getThumbnail().getThumbnailSeq());
                         apiFileDto.setThumbnailFullPath(thumbnail.getFileFullPath());
                     }
 
@@ -201,7 +201,6 @@ public class VideoController {
             VideoEntity video = videoService.findById(videoSeq);
             FileEntity file = fileService.findByVideo(video);
             ChannelEntity channel = channelService.findById(video.getChannel().getChannelSeq());
-            ThumbnailEntity thumbnail = thumbnailService.findByVideo(video);
             int likeStateCount = likeStateService.likeStateCountByVideo(video);
 
             apiFileDto.setUserId(channel.getUser().getId());
@@ -215,7 +214,8 @@ public class VideoController {
             apiFileDto.setFileName(file.getFileName());
             apiFileDto.setFileOriginName(file.getFileOriginName());
             apiFileDto.setLikeStateCount(likeStateCount);
-            if (thumbnail != null) {
+            if (video.getThumbnail() != null) {
+                ThumbnailEntity thumbnail = thumbnailService.findById(video.getThumbnail().getThumbnailSeq());
                 apiFileDto.setThumbnailFullPath(thumbnail.getFileFullPath());
             }
             response.setData(apiFileDto);
