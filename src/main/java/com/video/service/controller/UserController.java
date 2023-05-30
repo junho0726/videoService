@@ -118,6 +118,7 @@ public class UserController {
                         ApiLoginTokenDto loginTokenDto = new ApiLoginTokenDto();
                         loginTokenDto.setAccessToken(accessToken);
                         loginTokenDto.setUserSeq(findUser.getUserSeq());
+                        loginTokenDto.setChannelSeq(findUser.getChannel().getChannelSeq());
                         response.setCode("0000");
                         response.setMessage("Successed!!");
                         response.setData(loginTokenDto);
