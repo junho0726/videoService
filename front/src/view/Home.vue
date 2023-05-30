@@ -59,7 +59,7 @@ axios.get('/api/video/findAll').then(value => {
 })
 
 function search(q) {
-    axios.get('/api/video/findAll/q=' + q).then(value => {
+    axios.get('/api/video/findAll?q=' + q).then(value => {
         let data = value.data;
         let dataList = data.data;
         videoList.value = [];
