@@ -21,7 +21,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
             "/api/user/checkId",
             "/api/video/findAll",
             "/api/video/findDetail/**",
-            "/api/category/findAll"
+            "/api/category/findAll",
+            "/api/comment/**"
     };
 
     @Override

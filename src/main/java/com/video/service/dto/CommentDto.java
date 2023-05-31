@@ -29,7 +29,6 @@ public class CommentDto {
 
     private Timestamp createDate;
 
-
     public CommentDto (CommentEntity commentEntity){
         commentSeq = commentEntity.getCommentSeq();
         videoSeq = commentEntity.getVideo().getVideoSeq();

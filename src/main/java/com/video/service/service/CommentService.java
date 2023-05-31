@@ -30,7 +30,8 @@ public class CommentService {
         commentEntity.setUser(userEntity);
         commentEntity.setVideo(videoEntity);
         if (commentDto.getParentSeq() != 0) {
-            commentEntity.setCommentSeq(commentDto.getParentSeq());
+            commentEntity.setParent(new CommentEntity());
+            commentEntity.getParent().setCommentSeq(commentDto.getParentSeq());
         }
 
         CommentEntity comment = commentRepository.save(commentEntity);
@@ -64,4 +65,11 @@ public class CommentService {
 
     }
 
+    public List<CommentDto> findParentByVideoEntity(VideoEntity videoEntity) {
+        List<CommentDto> commentDtoList = new ArrayList<>();
+        commentRepository.findAllByVideoAndParentIsNull((videoEntity)).forEach(commentEntity -> {
+            commentDtoList.add(new CommentDto(commentEntity));
+        });
+        return commentDtoList;
+    }
 }

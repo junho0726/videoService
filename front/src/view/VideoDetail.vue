@@ -49,25 +49,42 @@
                       <span>{{ video.videoContent}}</span>
                   </div>
                   <br>
-                  <div class="commend-write-div">
+                  <div class="comment-write-div">
                       <img class="profile-img" src="/basic_profile.png">
-                      <input v-model="commend" class="commend-input" type="text">
-                      <button class="btn-save-commend" :class="{ 'show-side-bar-btn-save-commend' : isShowSidebar }" @click="saveCommend()">작성</button>
+                      <input v-model="comment" class="comment-input" type="text">
+                      <button class="btn-save-comment" :class="{ 'show-side-bar-btn-save-comment' : isShowSidebar }" @click="saveComment()">작성</button>
                   </div>
-                  <div class="commend-list">
-                      <div class="commend-line">
-                          <img class="profile-img" src="/basic_profile.png">
-                          <div class="commend-col">
-                              <span>경민상</span>
-                              <span>ㅋㅋㅋㅋㅋㅋㅋㅋ개웃기노</span>
+                  <div class="comment-list" v-for="(comment, index) in commentList">
+                      <div class="comment-line">
+                          <div class="comment-info-box">
+                              <img class="profile-img" src="/basic_profile.png">
+                              <div class="comment-col">
+                                  <span>{{ comment.userName }}</span>
+                                  <span>{{ comment.content }}</span>
+                              </div>
+                          </div>
+                          <div class="more-comment">
+                              <span v-if="writeCommentMoreIndex != index" @click="writeCommentMore(index)">더 보기</span>
+                              <span v-if="writeCommentMoreIndex == index" @click="writeCommentMore(index)">취소</span>
                           </div>
                       </div>
-                      <div class="commend-line">
-                          <img class="profile-img" src="/basic_profile.png">
-                          <div class="commend-col">
-                              <span>슈퍼맨</span>
-                              <span>이게 웃기세요??</span>
+                      <br>
+                      <div class="comment-list" v-for="moreComment in comment.children" v-show="writeCommentMoreIndex == index">
+                          <div class="more-comment-line">
+                              <div class="more-comment-info-box">
+                                  <img class="more-profile-img" src="/basic_profile.png">
+                                  <div class="more-comment-col">
+                                      <span>{{ moreComment.userName }}</span>
+                                      <span>{{ moreComment.content }}</span>
+                                  </div>
+                              </div>
                           </div>
+                        <br>
+                      </div>
+                      <div class="comment-write-div" v-if="writeCommentMoreIndex == index">
+                          <img class="more-profile-img" src="/basic_profile.png">
+                          <input v-model="moreComment" class="comment-input" type="text">
+                          <button class="btn-save-comment" :class="{ 'show-side-bar-btn-save-comment' : isShowSidebar }" @click="saveComment(comment.commentSeq)">작성</button>
                       </div>
                   </div>
               </div>
@@ -90,14 +107,17 @@ let props = defineProps({
     seq: String
 })
 
-let commend = ref('');
+let comment = ref('');
+let moreComment = ref('');
 let video = ref({});
+let commentList = ref([]);
 let isShowSidebar = ref(false);
 let isActionGood = ref(false);
 let isActionBad = ref(false);
 let isShowMoreFeedbackList = ref(false);
 let isMyVideo = ref(false);
 let isSubscribe = ref(false);
+let writeCommentMoreIndex = ref(-1);
 
 instance.get('/api/video/findDetail/' + props.seq).then(value => {
     console.log(value.data.data)
@@ -113,12 +133,7 @@ instance.get('/api/video/findDetail/' + props.seq).then(value => {
           }
       }
       handleLikeState(video.value.likeState);
-      axios.get('/api/commend/list?videoSeq=' + video.value.videoSeq
-          ).then(value => {
-            console.log(value);
-          }).catch(reason => {
-            console.log(reason)
-          })
+      getCommentList();
     } else {
         alert('예상치 못한 오류 발생');
     }
@@ -152,19 +167,40 @@ function subscribe() {
     }
 }
 
-function saveCommend() {
+function saveComment(commentSeq) {
     if(localStorage.getItem('token') === null) {
         alert('로그인 후 이용해주세요.');
         router.push('/login');
     } else {
-        instance.post('/api/commned/save', {
-            'videoSeq': video.value.videoSeq,
-            'commend': commend.value
-        }).then(value => {
-            console.log(value);
-        }).catch(reason => {
-            console.log(reason);
-        })
+        if(commentSeq == null) {
+            instance.post('/api/comment/save', {
+                'videoSeq': video.value.videoSeq,
+                'content': comment.value
+            }).then(value => {
+                if(value.data.code === '0000') {
+                    alert('댓글이 정상적으로 작성되었습니다.');
+                    getCommentList();
+                    comment.value = '';
+                    moreComment.value = '';
+                }
+            }).catch(reason => {
+                console.log(reason);
+            })
+        } else {
+            instance.post('/api/comment/save', {
+                'videoSeq': video.value.videoSeq,
+                'content': moreComment.value,
+                'parentSeq': commentSeq
+            }).then(value => {
+                if(value.data.code === '0000') {
+                    alert('댓글이 정상적으로 작성되었습니다.');
+                    getCommentList();
+                    comment.value = '';
+                }
+            }).catch(reason => {
+                console.log(reason);
+            })
+        }
     }
 }
 
@@ -189,6 +225,30 @@ function feedback(state) {
           alert('예상치 못한 오류 발생');
           console.log(reason);
         })
+    }
+}
+
+function getCommentList() {
+    axios.get('/api/comment/parent/list?videoSeq=' + video.value.videoSeq
+    ).then(value => {
+        if(value.data.code === '0000') {
+            commentList.value = [];
+            let result = value.data.data;
+            for (let i = 0; i < result.length; i++) {
+                commentList.value.push(result[i])
+            }
+            console.log(commentList.value)
+        }
+    }).catch(reason => {
+        console.log(reason)
+    })
+}
+
+function writeCommentMore(index) {
+    if(writeCommentMoreIndex.value == index) {
+        writeCommentMoreIndex.value = -1
+    } else {
+        writeCommentMoreIndex.value = index
     }
 }
 
@@ -421,11 +481,11 @@ h4 {
     margin-top: 1%;
 }
 
-.commend-write-div {
+.comment-write-div {
     display: flex;
 }
 
-.commend-input {
+.comment-input {
     width: 95%;
     margin: 0 1%;
     border: none;
@@ -434,7 +494,7 @@ h4 {
     font-weight: bold;
 }
 
-.btn-save-commend {
+.btn-save-comment {
     border: none;
     background-color: #F2F2F2;
     border-radius: 15px;
@@ -443,7 +503,7 @@ h4 {
     font-weight: bold;
 }
 
-.show-side-bar-btn-save-commend {
+.show-side-bar-btn-save-comment {
     border: none;
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 15px;
@@ -452,22 +512,58 @@ h4 {
     font-weight: bold;
 }
 
-.commend-list {
+.comment-list {
     display: flex;
     flex-direction: column;
 }
 
-.commend-line {
+.comment-line {
     display: flex;
     margin: 2% 0 0;
 }
 
-.commend-col {
+.more-comment-line {
+    display: flex;
+    margin: 0 2%;
+}
+
+.comment-info-box {
+    display: flex;
+    width: 93%;
+}
+
+.more-comment-info-box {
+    display: flex;
+    width: 93%;
+}
+
+.comment-col {
     margin: 0 1%;
     display: flex;
     flex-direction: column;
     align-items: start;
     justify-content: center;
     font-size: 17px;
+}
+
+.more-comment-col {
+    margin: 0 1%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.more-comment {
+    display: flex;
+    width: 7%;
+    align-self: end;
+    margin-bottom: 5px;
+}
+
+.more-profile-img {
+    width: 40px;
+    height: 40px;
 }
 </style>

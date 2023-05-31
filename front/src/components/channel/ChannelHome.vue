@@ -39,7 +39,6 @@ let myVideoList = ref([]);
 instance.get('/api/video/findAll?channelSeq=' + localStorage.getItem('channelSeq')).then(value => {
   let result = value.data;
   if(result.code === '0000') {
-      console.log(result);
       if(result.data.length === 0) {
         isEmptyVideo.value = true;
       } else {

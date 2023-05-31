@@ -43,7 +43,7 @@ public class CommentEntity {
     @OneToMany(mappedBy = "parent")
     private List<CommentEntity> children;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @CreationTimestamp
     private Timestamp createDate;
 }
