@@ -295,17 +295,6 @@ h4 {
     padding-top: 11px;
 }
 
-.btn-subscribe {
-    border: none;
-    border-radius: 40px;
-    background-color: black;
-    color: white;
-    font-size: 16px;
-    width: 80px;
-    height: 40px;
-    margin: 0 2%;
-}
-
 .feedback-box {
   width: 26%;
   display: flex;

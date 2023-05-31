@@ -30,4 +30,15 @@ h2 {
 .line {
     border-bottom: solid 1px #F2F2F2;
 }
+
+.btn-subscribe {
+    border: none;
+    border-radius: 40px;
+    background-color: black;
+    color: white;
+    font-size: 16px;
+    width: 90px;
+    height: 40px;
+    margin: 0 2%;
+}
 </style>

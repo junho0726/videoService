@@ -8,8 +8,8 @@
           <input v-model="q" class="input-search" type="text" placeholder="뭐가 궁금하노?">
           <img class="search-img" src="/search.png" @click="sendKeyword">
         </div>
-        <div class="profile-div" @mouseover="over()" @mouseleave="leave()">
-            <img class="profile-img" src="/basic_profile.png">
+        <div class="profile-div">
+            <img class="profile-img" src="/basic_profile.png" @click="show()">
             <div class="profile-menu" :class="{ 'is-login-profile-menu' : isLogin }" v-if="showProfileInfo">
                 <router-link v-if="!isLogin" to="/login">LOGIN</router-link>
                 <div v-if="!isLogin" class="line"></div>
@@ -46,12 +46,8 @@ let isLogin = computed(() => {
     return localStorage.getItem('token') !== null;
 });
 
-function over() {
-    showProfileInfo.value = true;
-}
-
-function leave() {
-    showProfileInfo.value = false;
+function show() {
+    showProfileInfo.value = !showProfileInfo.value;
 }
 
 function logout() {
