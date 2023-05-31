@@ -1,7 +1,7 @@
 package com.video.service.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,39 +19,31 @@ import java.util.List;
 @Builder
 @Entity
 @DynamicInsert
-public class VideoEntity {
+public class CommentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int videoSeq;
+    private int commentSeq;
 
     @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = true)
     private String content;
 
-    @Column(nullable = true)
-    private int count;
-
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "channelSeq")
-    private ChannelEntity channel;
+    @JoinColumn(name = "userSeq")
+    private UserEntity user;
 
-    @OneToOne
-    @JoinColumn(name = "fileSeq")
-    private FileEntity file;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "videoSeq")
+    private VideoEntity video;
 
-    @OneToOne
-    @JoinColumn(name = "thumbnailSeq")
-    private ThumbnailEntity thumbnail;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parentSeq")
+    private CommentEntity parent;
 
-    @OneToMany(mappedBy = "video")
-    private List<CommentEntity> comment;
+    @OneToMany(mappedBy = "parent")
+    private List<CommentEntity> children;
 
     @Column(nullable = false)
     @CreationTimestamp
     private Timestamp createDate;
-
 }

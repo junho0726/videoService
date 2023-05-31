@@ -25,8 +25,4 @@ public class CategoryEntity {
     @Column(nullable = false)
     private String name;
 
-    @JsonIgnoreProperties("category")
-    @ManyToMany(mappedBy = "category", cascade = CascadeType.DETACH)
-    private List<VideoEntity> video;
-
 }

@@ -3,6 +3,8 @@ package com.video.service.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 public class ApiFileDto {
@@ -39,4 +41,5 @@ public class ApiFileDto {
 
     private String subscribeState;
 
+    private List<CommentDto> comment;
 }

@@ -50,6 +50,8 @@ public class VideoController {
 
     private final SubscribeService subscribeService;
 
+    private final CommentService commentService;
+
     @PostMapping(value = "video/fileInsert")
     public ApiResponseDto fileInsert(@RequestHeader("Access_Token") String accessToken, @RequestPart MultipartFile file) {
         ApiResponseDto response = new ApiResponseDto();
@@ -209,6 +211,8 @@ public class VideoController {
             ChannelEntity channel = channelService.findById(video.getChannel().getChannelSeq());
             int likeStateCount = likeStateService.likeStateCountByVideo(video);
             int subscribeCount = subscribeService.subscribeCountByChannel(channel.getChannelSeq());
+            List<CommentDto> commment = commentService.findByVideoSeq(video.getVideoSeq());
+
             apiFileDto.setChannelSeq(channel.getChannelSeq());
             apiFileDto.setUserId(channel.getUser().getId());
             apiFileDto.setUserName(channel.getUser().getName());
@@ -222,6 +226,7 @@ public class VideoController {
             apiFileDto.setFileOriginName(file.getFileOriginName());
             apiFileDto.setLikeStateCount(likeStateCount);
             apiFileDto.setSubscribeCount(subscribeCount);
+            apiFileDto.setComment(commment);
             if (video.getThumbnail() != null) {
                 ThumbnailEntity thumbnail = thumbnailService.findById(video.getThumbnail().getThumbnailSeq());
                 apiFileDto.setThumbnailFullPath(thumbnail.getFileFullPath());
