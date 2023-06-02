@@ -34,7 +34,7 @@ public class SubscribeController {
     public ApiResponseDto insertSubscribe(@RequestHeader("Access_Token") String accessToken, @RequestBody SubscribeDto subscribeDto) {
         ApiResponseDto response = new ApiResponseDto();
         try {
-        UserEntity user = new UserEntity();
+            UserEntity user = new UserEntity();
             Map resultMap = jwtService.getSubject(accessToken);
             user.setId(resultMap.get("fdId").toString());
             UserEntity findUser = userService.findByid(user);
@@ -49,12 +49,12 @@ public class SubscribeController {
             response.setData(subscribe);
             response.setCode("0000");
             response.setMessage("성공");
-      }catch (Exception e){
-          e.printStackTrace();
-          response.setCode("0001");
-          response.setMessage("Error :" + e.getMessage());
-      }
-      return response;
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setCode("0001");
+            response.setMessage("Error :" + e.getMessage());
+        }
+        return response;
     }
 
 
@@ -80,19 +80,22 @@ public class SubscribeController {
         return response;
     }
 
-    @PostMapping("/subscribe/historyList")
-    public ApiResponseDto historyList(@RequestHeader("Access_Token") String accessToken, @RequestBody List<Integer> channelSeqList) {
+    @GetMapping("subscribe/historyList")
+    public ApiResponseDto historyList(@RequestHeader("Access_Token") String accessToken) {
         ApiResponseDto response = new ApiResponseDto();
 
-        try {
-            UserEntity user = new UserEntity();
-            Map resultMap = jwtService.getSubject(accessToken);
-            user.setId(resultMap.get("fdId").toString());
-            UserEntity userEntity = userService.findByid(user);
+            try {
+                UserEntity user = new UserEntity();
+                Map resultMap = jwtService.getSubject(accessToken);
+                user.setId(resultMap.get("fdId").toString());
+                UserEntity userEntity = userService.findByid(user);
 
-            response.setCode("0000");
-            response.setMessage("Successed!!");
-        } catch (Exception e) {
+                System.out.println(userEntity.getUserSeq() + "!!!!");
+                List<VideoEntity> videoList = subscribeSerive.findVideoByUserSeq(userEntity.getUserSeq());
+
+                response.setCode("0000");
+                response.setMessage("Successed!!");
+            } catch (Exception e) {
             e.printStackTrace();
             response.setCode("0001");
             response.setMessage("Error: " + e.getMessage());

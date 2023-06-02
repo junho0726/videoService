@@ -3,6 +3,7 @@ package com.video.service.service;
 import com.video.service.dto.ChannelDto;
 import com.video.service.dto.SubscribeDto;
 import com.video.service.entity.SubscribeEntity;
+import com.video.service.entity.VideoEntity;
 import com.video.service.repository.SubscribeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,4 +80,16 @@ public class SubscribeService{
         }
             return subscribeDto;
     }
+
+  public List<VideoEntity> findVideoByUserSeq(int userSeq) throws Exception {
+      List<VideoEntity> aa = new ArrayList<>();
+      try{
+          aa =  subscribeRepository.findVideoByUserSeq(userSeq);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return aa;
+  }
+
+
 }

@@ -2,6 +2,7 @@ package com.video.service.repository;
 
 
 import com.video.service.entity.SubscribeEntity;
+import com.video.service.entity.VideoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+
+
 
 
 public interface SubscribeRepository extends JpaRepository<SubscribeEntity, Integer> {
@@ -26,4 +29,12 @@ public interface SubscribeRepository extends JpaRepository<SubscribeEntity, Inte
 
     @Query("SELECT COUNT(s) FROM SubscribeEntity s WHERE s.channel.channelSeq = :channelSeq")
     int subscribeCountByChannel(@Param("channelSeq") int channelSeq);
+
+    @Query(value = "SELECT * FROM videoentity v " +
+            "LEFT OUTER JOIN subscribeentity s ON v.channelSeq = s.channelSeq " +
+            "LEFT OUTER JOIN viewinghistoryentity vh ON vh.videoSeq = v.videoSeq " +
+            "WHERE vh.userSeq = :userSeq"
+            , nativeQuery = true)
+    List<VideoEntity>findVideoByUserSeq(@Param("userSeq") int userSeq);
+
 }
