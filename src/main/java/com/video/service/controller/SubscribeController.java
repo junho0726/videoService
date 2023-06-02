@@ -90,9 +90,9 @@ public class SubscribeController {
                 user.setId(resultMap.get("fdId").toString());
                 UserEntity userEntity = userService.findByid(user);
 
-                System.out.println(userEntity.getUserSeq() + "!!!!");
                 List<VideoEntity> videoList = subscribeSerive.findVideoByUserSeq(userEntity.getUserSeq());
 
+                response.setData(videoList);
                 response.setCode("0000");
                 response.setMessage("Successed!!");
             } catch (Exception e) {

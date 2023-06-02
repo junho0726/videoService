@@ -30,11 +30,4 @@ public interface SubscribeRepository extends JpaRepository<SubscribeEntity, Inte
     @Query("SELECT COUNT(s) FROM SubscribeEntity s WHERE s.channel.channelSeq = :channelSeq")
     int subscribeCountByChannel(@Param("channelSeq") int channelSeq);
 
-    @Query(value = "SELECT * FROM videoentity v " +
-            "LEFT OUTER JOIN subscribeentity s ON v.channelSeq = s.channelSeq " +
-            "LEFT OUTER JOIN viewinghistoryentity vh ON vh.videoSeq = v.videoSeq " +
-            "WHERE vh.userSeq = :userSeq"
-            , nativeQuery = true)
-    List<VideoEntity>findVideoByUserSeq(@Param("userSeq") int userSeq);
-
 }

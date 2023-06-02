@@ -5,6 +5,7 @@ import com.video.service.dto.SubscribeDto;
 import com.video.service.entity.SubscribeEntity;
 import com.video.service.entity.VideoEntity;
 import com.video.service.repository.SubscribeRepository;
+import com.video.service.repository.VideoRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,10 @@ public class SubscribeService{
 
     @Autowired
     private SubscribeRepository subscribeRepository;
+
+    @Autowired
+    private VideoRepository videoRepository;
+
 
     public SubscribeDto insertSubscribe(SubscribeEntity subscribeEntity) throws Exception{
         try {
@@ -84,7 +89,7 @@ public class SubscribeService{
   public List<VideoEntity> findVideoByUserSeq(int userSeq) throws Exception {
       List<VideoEntity> aa = new ArrayList<>();
       try{
-          aa =  subscribeRepository.findVideoByUserSeq(userSeq);
+          aa =  videoRepository.findVideoByUserSeq(userSeq);
         }catch (Exception e) {
             e.printStackTrace();
         }
