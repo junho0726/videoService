@@ -52,6 +52,8 @@ public class VideoController {
 
     private final CommentService commentService;
 
+    private final ViewingHistoryService viewingHistoryService;
+
     @PostMapping(value = "video/fileInsert")
     public ApiResponseDto fileInsert(@RequestHeader("Access_Token") String accessToken, @RequestPart MultipartFile file) {
         ApiResponseDto response = new ApiResponseDto();
@@ -206,6 +208,8 @@ public class VideoController {
                 if(likeState != null) {
                     apiFileDto.setLikeState(likeState.getLikeState());
                 }
+                viewingHistoryService.findByUserAndVideo(findUser, video);
+
             }
             FileEntity file = fileService.findByVideo(video);
             ChannelEntity channel = channelService.findById(video.getChannel().getChannelSeq());

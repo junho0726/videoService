@@ -50,6 +50,10 @@ public class VideoEntity {
     @OneToMany(mappedBy = "video")
     private List<CommentEntity> comment;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "video")
+    private List<ViewingHistoryEntity> viewingHistory;
+
     @Column(nullable = false)
     @CreationTimestamp
     private Timestamp createDate;

@@ -48,6 +48,10 @@ public class UserEntity {
     private ChannelEntity channel;
 
     @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<ViewingHistoryEntity> viewingHistory;
+
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     private TokenEntity token;
 
