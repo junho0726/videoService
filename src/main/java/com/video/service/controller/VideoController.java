@@ -211,7 +211,7 @@ public class VideoController {
             ChannelEntity channel = channelService.findById(video.getChannel().getChannelSeq());
             int likeStateCount = likeStateService.likeStateCountByVideo(video);
             int subscribeCount = subscribeService.subscribeCountByChannel(channel.getChannelSeq());
-            List<CommentDto> commment = commentService.findByVideoSeq(video.getVideoSeq());
+            List<CommentDto> commment = commentService.findParentByVideoEntity(video);
 
             apiFileDto.setChannelSeq(channel.getChannelSeq());
             apiFileDto.setUserId(channel.getUser().getId());

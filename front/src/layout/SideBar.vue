@@ -18,6 +18,7 @@
     flex-direction: column;
     width: 10%;
     height: auto;
+    z-index: 9999;
     background-color: white;
     text-align: center;
 }

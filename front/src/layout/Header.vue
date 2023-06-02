@@ -89,6 +89,7 @@ function logout() {
     display: flex;
     flex-direction: column;
     text-align: center;
+    z-index: 9999;
 }
 
 .is-login-profile-menu {

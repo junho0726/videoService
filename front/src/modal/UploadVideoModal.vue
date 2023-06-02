@@ -235,7 +235,6 @@ function post() {
                 }).then(value => {
                   let result = value.data;
                   if(result.code === "0000") {
-                    console.log('썸네일 통신');
                     instance.post('/api/video/thumbnailInsert',
                         {
                           "videoSeq" : result.data.videoSeq,
@@ -247,13 +246,15 @@ function post() {
                             "file" : { "fileSeq" : thumbInfo.value.fileSeq }
                           }
                         }).then(data => {
-                          console.log(data);
-                          console.log("?????");
-                          alert("성공적으로 등록되었습니다.");
-                          isUploadFile.value = false;
+                            if(data.data.code == '0000') {
+                              alert("성공적으로 등록되었습니다.");
+                              isUploadFile.value = false;
+                              location.reload();
+                            } else {
+                              alert('예기치 못한 오류가 발생했습니다.');
+                            }
                         }).catch(reason => {
-                          console.log(reason);
-                          console.log("!@#$@!#$");
+                          alert('예기치 못한 오류가 발생했습니다.');
                         })
                   } else {
                     alert('예기치 못한 오류가 발생했습니다.');

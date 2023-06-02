@@ -5,7 +5,7 @@
             <SideBar v-if="isShowSidebar"/>
             <div class="content" :class="{ 'show-side-bar-content' : isShowSidebar }">
                 <h3>구독한 채널</h3>
-                <div class="subscribe-list" v-for="item in subscribeList">
+                <div class="subscribe-list" v-for="item in subscribeList" v-show="!isNoSubscribeList">
                     <div class="subscribe-row">
                         <img class="subscribe-img" src="/basic_profile.png">
                         <div class="subscribe-info">
@@ -18,6 +18,9 @@
                     <div class="div-subscribe">
                         <button class="btn-subscribe" @click="cancelSubscribe(item.channelSeq)">구독 취소</button>
                     </div>
+                </div>
+                <div v-show="isNoSubscribeList">
+                     <h1>현재 구독하신 채널이 없습니다.</h1>
                 </div>
                 <br>
                 <div class="line"></div>
@@ -52,13 +55,21 @@ import VideoList from "@/components/VideoList.vue";
 import instance from "@/api/axios";
 
 let isShowSidebar = ref(false)
+let isNoSubscribeList = ref(true)
+let isNoWatchedVideoList = ref(true)
 let subscribeList = ref([]);
+let watchedVideoList = ref([]);
 
 instance.get('/api/subscribe/list').then(value => {
     if(value.data.code == '0000') {
         let result = value.data.data;
-        for (let i = 0; i < result.length; i++) {
-            subscribeList.value.push(result[i]);
+        if (result.length == 0) {
+            isNoSubscribeList.value = true
+        } else {
+            for (let i = 0; i < result.length; i++) {
+                subscribeList.value.push(result[i]);
+            }
+            isNoSubscribeList.value = false
         }
     }
 }).catch(reason => {
@@ -83,8 +94,13 @@ function cancelSubscribe(channelSeq) {
                 instance.get('/api/subscribe/list').then(value => {
                     if(value.data.code == '0000') {
                         let result = value.data.data;
-                        for (let i = 0; i < result.length; i++) {
-                            subscribeList.value.push(result[i]);
+                        if (result.length == 0) {
+                            isNoSubscribeList.value = true
+                        } else {
+                            for (let i = 0; i < result.length; i++) {
+                                subscribeList.value.push(result[i]);
+                            }
+                            isNoSubscribeList.value = false
                         }
                     }
                 }).catch(reason => {

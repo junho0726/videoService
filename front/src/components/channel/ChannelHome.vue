@@ -17,8 +17,17 @@
           <span class="span-upload" @click="handelModal()">동영상 업로드</span>
           <div class="uploaded-video-box">
             <h4>업로드된 동영상</h4>
-            <div v-for="myVideo in myVideoList">
-              {{ myVideo }}
+              <div class="line"></div>
+              <br>
+            <div class="video-list">
+              <div class="video-box" v-for="myVideo in myVideoList">
+                  <img :src="myVideo.thumbnailFullPath">
+                  <div class="video-info">
+                    <span>{{ myVideo.videoTitle }}</span>
+                    <span>조회수 {{ myVideo.videoCount }}</span>
+                    <span>좋아요 {{ myVideo.likeStateCount }}</span>
+                  </div>
+              </div>
             </div>
           </div>
         </div>
@@ -63,6 +72,27 @@ function handelModal() {
 </script>
 
 <style scoped>
+
+.video-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.video-box {
+    display: flex;
+    margin: 1%;
+}
+
+.video-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: 0 1%;
+}
+
+.video-info span {
+    align-self: start;
+}
 
 .contents {
     text-align: center;

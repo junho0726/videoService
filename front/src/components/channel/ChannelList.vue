@@ -1,6 +1,6 @@
 <template>
-    <div>
-      난 재생 목록
+    <div class="contents">
+
     </div>
 </template>
 
