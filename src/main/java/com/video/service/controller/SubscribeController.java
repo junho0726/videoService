@@ -80,6 +80,25 @@ public class SubscribeController {
         return response;
     }
 
+    @PostMapping("/subscribe/historyList")
+    public ApiResponseDto historyList(@RequestHeader("Access_Token") String accessToken, @RequestBody List<Integer> channelSeqList) {
+        ApiResponseDto response = new ApiResponseDto();
 
+        try {
+            UserEntity user = new UserEntity();
+            Map resultMap = jwtService.getSubject(accessToken);
+            user.setId(resultMap.get("fdId").toString());
+            UserEntity userEntity = userService.findByid(user);
+
+            response.setCode("0000");
+            response.setMessage("Successed!!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode("0001");
+            response.setMessage("Error: " + e.getMessage());
+        }
+
+        return response;
+    }
 
 }
