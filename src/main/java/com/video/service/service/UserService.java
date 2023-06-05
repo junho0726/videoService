@@ -1,7 +1,7 @@
 package com.video.service.service;
 
 import com.video.service.entity.UserEntity;
-import com.video.service.repository.UserRepository;
+import com.video.service.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
