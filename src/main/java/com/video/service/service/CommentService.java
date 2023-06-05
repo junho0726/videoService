@@ -4,7 +4,7 @@ import com.video.service.dto.CommentDto;
 import com.video.service.entity.CommentEntity;
 import com.video.service.entity.UserEntity;
 import com.video.service.entity.VideoEntity;
-import com.video.service.repository.CommentRepository;
+import com.video.service.repository.comment.CommentRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,7 +67,7 @@ public class CommentService {
 
     public List<CommentDto> findParentByVideoEntity(VideoEntity videoEntity) {
         List<CommentDto> commentDtoList = new ArrayList<>();
-        commentRepository.findAllByVideoAndParentIsNull((videoEntity)).forEach(commentEntity -> {
+        commentRepository.findAllByVideoAndParentIsNull((videoEntity.getVideoSeq())).forEach(commentEntity -> {
             commentDtoList.add(new CommentDto(commentEntity));
         });
         return commentDtoList;
