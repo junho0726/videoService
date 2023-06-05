@@ -16,6 +16,7 @@ import java.util.Optional;
 
 
 public interface SubscribeRepository extends JpaRepository<SubscribeEntity, Integer> {
+
     @Query("SELECT s FROM SubscribeEntity s WHERE s.user.userSeq = :userSeq AND s.channel.channelSeq = :channelSeq")
     Optional<SubscribeEntity> findByUserSeqAndChannelSeq (@Param("userSeq") int userSeq, @Param("channelSeq") int channelSeq);
 

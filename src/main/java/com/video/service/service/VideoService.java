@@ -25,6 +25,9 @@ public class VideoService {
     private KeywordService keywordService;
 
 
+    @Autowired
+    private ViewingHistoryService viewingHistoryService;
+
     public VideoEntity insertVideo(VideoEntity video) throws Exception{
         return videoRepository.save(video);
     }
@@ -58,7 +61,6 @@ public class VideoService {
     }
 
     public Page<VideoEntity> findAllByChannel(ChannelEntity channelEntity, Pageable pageable) throws Exception {
-
         Page<VideoEntity> videoPage = videoRepository.findAllByChannel(channelEntity.getChannelSeq(), pageable);
 
         return videoPage;
@@ -108,6 +110,4 @@ public class VideoService {
 
         return videoPage;
     }
-
-
 }

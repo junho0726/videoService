@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ViewingHistoryRepository extends JpaRepository<ViewingHistoryEntity, Integer> {
 
     Optional<ViewingHistoryEntity> findByUserAndVideo(UserEntity userEntity, VideoEntity videoEntity);
+
 }

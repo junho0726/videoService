@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Service
 public class ViewingHistoryService {
@@ -29,9 +30,4 @@ public class ViewingHistoryService {
         return viewingHistoryEntity;
     }
 
-    @Transactional
-    public void save(ViewingHistoryEntity viewingHistory) {
-        viewingHistoryRepository.save(viewingHistory);
-
-    }
 }

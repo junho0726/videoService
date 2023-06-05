@@ -17,6 +17,9 @@ public interface VideoRepository extends JpaRepository<VideoEntity, Integer> {
     @Query("SELECT v FROM VideoEntity v WHERE v.title LIKE %:q%")
     Page<VideoEntity> findAllBySearch(Pageable pageable, @Param("q") String q);
 
+    @Query(" SELECT v FROM VideoEntity v WHERE v.channel.channelSeq = :channelSeq ")
+    List<VideoEntity> findAllByChannelSeq(int channelSeq);
+
     @Query(value = "SELECT v.* FROM videoentity v " +
             "LEFT OUTER JOIN subscribeentity s ON v.channelSeq = s.channelSeq " +
             "LEFT OUTER JOIN viewinghistoryentity vh ON vh.videoSeq = v.videoSeq " +

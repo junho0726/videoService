@@ -76,6 +76,12 @@ instance.get('/api/subscribe/list').then(value => {
     console.log(reason);
 })
 
+instance.get('/api/subscribe/historyList').then(value => {
+    console.log(value);
+}).catch(reason => {
+    console.log(reason);
+})
+
 function showSidebar() {
     isShowSidebar.value = !isShowSidebar.value;
 }
