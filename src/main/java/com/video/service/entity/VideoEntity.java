@@ -47,11 +47,16 @@ public class VideoEntity {
     @JoinColumn(name = "thumbnailSeq")
     private ThumbnailEntity thumbnail;
 
-    @OneToMany(mappedBy = "video")
+    @JsonIgnore
+    @OneToMany(mappedBy = "video", cascade = CascadeType.REMOVE)
     private List<CommentEntity> comment;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "video")
+    @OneToMany(mappedBy = "video", cascade = CascadeType.REMOVE)
+    private List<LikeStateEntity> likeState;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "video", cascade = CascadeType.REMOVE)
     private List<ViewingHistoryEntity> viewingHistory;
 
     @Column(nullable = false)

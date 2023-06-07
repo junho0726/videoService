@@ -32,9 +32,9 @@
                   <div class="video-menu" @mouseover="showMoreMenu(index)" @mouseleave="closeMoreMenu(index)">
                       <img src="/more_feedback.png">
                       <div class="more-menu" v-if="isShowMoreMenu[index]" @mouseover="showMoreMenu(index)" @mouseleave="closeMoreMenu(index)">
-                          <span @click="updateVideo()">수정</span>
+                          <span @click="updateVideo(myVideo.videoSeq)">수정</span>
                           <div class="line"></div>
-                          <span @click="deleteVideo()">삭제</span>
+                          <span @click="deleteVideo(myVideo.videoSeq)">삭제</span>
                       </div>
                   </div>
               </div>
@@ -94,8 +94,20 @@ function closeMoreMenu(index) {
     isShowMoreMenu.value[index] = false
 }
 
-function deleteVideo() {
-    alert('삭제 ~')
+function deleteVideo(videoSeq) {
+    if (prompt('정말 삭제하시겠습니까?')) {
+      instance.get('/api/video/delete/' + videoSeq
+      ).then(value => {
+          if (value.data.code == '0000') {
+              alert('삭제되었습니다.');
+              location.reload();
+          } else {
+              alert(value.data.data)
+          }
+      }).catch(reason => {
+          alert('예상치 못한 오류 발생')
+      })
+    }
 }
 
 function updateVideo() {

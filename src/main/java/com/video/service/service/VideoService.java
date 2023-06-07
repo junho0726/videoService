@@ -110,4 +110,17 @@ public class VideoService {
 
         return videoPage;
     }
+
+    public boolean delete(int userSeq, int videoSeq) {
+        VideoEntity videoEntity = videoRepository.findById(videoSeq).orElseThrow(() -> {
+            return new IllegalArgumentException("존재하지 않는 비디오입니다.");
+        });
+
+        if (videoEntity.getChannel().getUser().getUserSeq() == userSeq) {
+            videoRepository.delete(videoEntity);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

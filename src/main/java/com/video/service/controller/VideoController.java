@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @ResponseBody
-@RequestMapping("/api/")
+@RequestMapping("/api/video/")
 @RequiredArgsConstructor
 public class VideoController {
 
@@ -54,7 +54,7 @@ public class VideoController {
 
     private final ViewingHistoryService viewingHistoryService;
 
-    @PostMapping(value = "video/fileInsert")
+    @PostMapping(value = "fileInsert")
     public ApiResponseDto fileInsert(@RequestHeader("Access_Token") String accessToken, @RequestPart MultipartFile file) {
         ApiResponseDto response = new ApiResponseDto();
         try {
@@ -78,7 +78,7 @@ public class VideoController {
         return response;
     }
 
-    @PostMapping(value = "video/videoInsert")
+    @PostMapping(value = "videoInsert")
     public ApiResponseDto videoInsert(@RequestHeader("Access_Token") String accessToken, @RequestBody VideoEntity videoEntity)  throws Exception {
         ApiResponseDto response = new ApiResponseDto();
         try {
@@ -100,7 +100,7 @@ public class VideoController {
         return response;
     }
 
-   @PostMapping(value = "video/thumbnailInsert")
+   @PostMapping(value = "thumbnailInsert")
     public ApiResponseDto insertThumbnail(@RequestHeader("Access_Token") String accessToken, @RequestBody VideoEntity videoEntity) {
         ApiResponseDto response = new ApiResponseDto();
         try {
@@ -122,7 +122,7 @@ public class VideoController {
         return response;
     }
 
-    @GetMapping(value = "video/findAll")
+    @GetMapping(value = "findAll")
     public ApiResponseDto videoFindAll(@RequestParam(defaultValue  = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, @RequestParam(value = "channelSeq", required = false) Integer channelSeq,  @RequestParam(required = false) Integer categorySeq, @RequestParam(required = false) String q) {
         ApiResponseDto response = new ApiResponseDto();
         Pageable pageable = PageRequest.of(page - 1 , size);
@@ -192,7 +192,7 @@ public class VideoController {
         return response;
     }
 
-    @GetMapping(value = "video/findDetail/{videoSeq}")
+    @GetMapping(value = "findDetail/{videoSeq}")
     public ApiResponseDto videoFindDetail(@RequestHeader(value = "Access_Token" , required = false) String accessToken, @PathVariable("videoSeq") int videoSeq) {
         ApiResponseDto response = new ApiResponseDto();
         ApiFileDto apiFileDto = new ApiFileDto();
@@ -248,7 +248,7 @@ public class VideoController {
         return response;
     }
 
-    @GetMapping(value = "video/findMyVideoAll")
+    @GetMapping(value = "findMyVideoAll")
     public ApiResponseDto findMyVideoAll(@RequestHeader("Access_Token") String accessToken, @RequestParam(defaultValue  = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         ApiResponseDto response = new ApiResponseDto();
         Pageable pageable = PageRequest.of(page - 1 , size);
@@ -295,4 +295,27 @@ public class VideoController {
         return response;
     }
 
+    @GetMapping("delete/{videoSeq}")
+    public ApiResponseDto delete(@RequestHeader("Access_Token") String accessToken, @PathVariable int videoSeq) {
+        ApiResponseDto response = new ApiResponseDto();
+
+        try {
+            Map resultMap = jwtService.getSubject(accessToken);
+            UserEntity findUser = userService.findByid(UserEntity.builder().id(resultMap.get("fdId").toString()).build());
+
+            if (videoService.delete(findUser.getUserSeq(), videoSeq)) {
+                response.setCode("0000");
+                response.setMessage("Successed!!");
+            } else {
+                response.setCode("0001");
+                response.setMessage("님은 동영상을 게시한 사람이 아닌데요?");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode("0001");
+            response.setMessage("Error: " + e.getMessage());
+        }
+
+        return response;
+    }
 }
