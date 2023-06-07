@@ -39,6 +39,8 @@ public class VideoService {
         });
 
         videoEntity.setThumbnail(video.getThumbnail());
+        videoEntity.setTitle(video.getTitle());
+        videoEntity.setContent(video.getContent());
 
         return videoEntity;
     }

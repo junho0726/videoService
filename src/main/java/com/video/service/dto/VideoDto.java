@@ -1,20 +1,19 @@
 package com.video.service.dto;
 
-import com.video.service.entity.ChannelEntity;
-import com.video.service.entity.FileEntity;
-import com.video.service.entity.VideoEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class VideoDto
 {
 
-    private int fileSeq;
+    private int videoSeq;
 
-    private String title;
+    private String videoTitle;
 
-    private String content;
+    private String videoContent;
 
 }

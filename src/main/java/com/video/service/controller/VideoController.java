@@ -318,4 +318,29 @@ public class VideoController {
 
         return response;
     }
+
+    @PostMapping("update")
+    public ApiResponseDto update(@RequestHeader("Access_Token") String accessToken, @RequestBody VideoDto videoDto) {
+        ApiResponseDto response = new ApiResponseDto();
+        try {
+
+            Map resultMap = jwtService.getSubject(accessToken);
+            UserEntity findUser = userService.findByid(UserEntity.builder().id(resultMap.get("fdId").toString()).build());
+
+            videoService.updateVideo(VideoEntity.builder()
+                                                .videoSeq(videoDto.getVideoSeq())
+                                                .title(videoDto.getVideoTitle())
+                                                .content(videoDto.getVideoContent())
+                                                .build());
+
+            response.setCode("0000");
+            response.setMessage("Successed!!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode("0001");
+            response.setMessage("Error: " + e.getMessage());
+        }
+        return response;
+    }
+
 }

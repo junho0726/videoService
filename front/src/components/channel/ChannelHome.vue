@@ -32,10 +32,11 @@
                   <div class="video-menu" @mouseover="showMoreMenu(index)" @mouseleave="closeMoreMenu(index)">
                       <img src="/more_feedback.png">
                       <div class="more-menu" v-if="isShowMoreMenu[index]" @mouseover="showMoreMenu(index)" @mouseleave="closeMoreMenu(index)">
-                          <span @click="updateVideo(myVideo.videoSeq)">수정</span>
+                          <span @click="updateVideo(index)">수정</span>
                           <div class="line"></div>
                           <span @click="deleteVideo(myVideo.videoSeq)">삭제</span>
                       </div>
+                      <UpdateVideoModal @closeModal="handelUpdateModal(index)" :video-seq="myVideo.videoSeq" :show-modal="showUpdateModal[index]"/>
                   </div>
               </div>
             </div>
@@ -49,14 +50,15 @@
 <script setup>
 import {ref} from "vue";
 import UploadVideoModal from "@/modal/UploadVideoModal.vue";
+import UpdateVideoModal from "@/modal/UpdateVideoModal.vue";
 import instance from "@/api/axios";
 import router from "@/router";
-import index from "vuex";
 
 let showModal = ref(false);
 let isEmptyVideo = ref(true);
 let myVideoList = ref([]);
 let isShowMoreMenu = ref([]);
+let showUpdateModal = ref([]);
 
 instance.get('/api/video/findAll?channelSeq=' + localStorage.getItem('channelSeq')).then(value => {
   let result = value.data;
@@ -67,6 +69,7 @@ instance.get('/api/video/findAll?channelSeq=' + localStorage.getItem('channelSeq
         for(let i = 0; i < result.data.length; i++) {
           myVideoList.value.push(result.data[i]);
           isShowMoreMenu.value[i] = false
+          showUpdateModal.value[i] = false
         }
         isEmptyVideo.value = false;
       }
@@ -80,6 +83,10 @@ instance.get('/api/video/findAll?channelSeq=' + localStorage.getItem('channelSeq
 
 function handelModal() {
     showModal.value = !showModal.value;
+}
+
+function handelUpdateModal(index) {
+    showUpdateModal.value[index] = false;
 }
 
 function showVideoDetail(videoSeq) {
@@ -102,16 +109,29 @@ function deleteVideo(videoSeq) {
               alert('삭제되었습니다.');
               location.reload();
           } else {
-              alert(value.data.data)
+              alert(value.data.message);
           }
       }).catch(reason => {
-          alert('예상치 못한 오류 발생')
+          console.log(reason);
+          alert('예상치 못한 오류 발생');
       })
     }
 }
 
-function updateVideo() {
-    alert('수정 ~')
+function updateVideo(index) {
+    showUpdateModal.value[index] = true;
+    // instance.get('/api/video/update/' + videoSeq
+    // ).then(value => {
+    //     if (value.data.code == '0000') {
+    //         alert('삭제되었습니다.');
+    //         location.reload();
+    //     } else {
+    //         alert(value.data.message);
+    //     }
+    // }).catch(reason => {
+    //     console.log(reason);
+    //     alert('예상치 못한 오류 발생');
+    // })
 }
 
 </script>
