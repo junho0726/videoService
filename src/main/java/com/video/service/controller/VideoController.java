@@ -151,23 +151,27 @@ public class VideoController {
             result = videos.getContent().stream()
                 .map(video -> {
                     ApiFileDto apiFileDto = new ApiFileDto();
-                    ChannelEntity channel = video.getChannel();
-                    apiFileDto.setUserId(channel.getUser().getId());
-                    apiFileDto.setUserName(channel.getUser().getName());
-                    apiFileDto.setChannelName(channel.getChannelName());
-                    apiFileDto.setVideoSeq(video.getVideoSeq());
-                    apiFileDto.setVideoTitle(video.getTitle());
-                    apiFileDto.setVideoContent(video.getContent());
-                    apiFileDto.setVideoCount(video.getCount());
-                    FileEntity videoFile = fileService.findByVideo(video);
-                    apiFileDto.setFileFullPath(videoFile.getFileFullPath());
-                    apiFileDto.setFileName(videoFile.getFileName());
-                    apiFileDto.setFileOriginName(videoFile.getFileOriginName());
+                    try {
+                        ChannelEntity channel = video.getChannel();
+                        apiFileDto.setUserId(channel.getUser().getId());
+                        apiFileDto.setUserName(channel.getUser().getName());
+                        apiFileDto.setChannelName(channel.getChannelName());
+                        apiFileDto.setVideoSeq(video.getVideoSeq());
+                        apiFileDto.setVideoTitle(video.getTitle());
+                        apiFileDto.setVideoContent(video.getContent());
+                        apiFileDto.setVideoCount(video.getCount());
+                        FileEntity videoFile = fileService.findByVideo(video);
+                        apiFileDto.setFileFullPath(videoFile.getFileFullPath());
+                        apiFileDto.setFileName(videoFile.getFileName());
+                        apiFileDto.setFileOriginName(videoFile.getFileOriginName());
+                        apiFileDto.setLikeStateCount(likeStateService.likeStateCountByVideo(video));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                     if (!Objects.isNull(video.getThumbnail())) {
                         ThumbnailEntity thumbnail = thumbnailService.findById(video.getThumbnail().getThumbnailSeq());
                         apiFileDto.setThumbnailFullPath(thumbnail.getFileFullPath());
                     }
-
                     return apiFileDto;
                 })
                 .collect(Collectors.toList());

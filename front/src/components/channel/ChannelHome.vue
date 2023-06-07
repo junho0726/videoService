@@ -20,12 +20,22 @@
               <div class="line"></div>
               <br>
             <div class="video-list">
-              <div class="video-box" v-for="myVideo in myVideoList">
-                  <img :src="myVideo.thumbnailFullPath">
-                  <div class="video-info">
-                    <span>{{ myVideo.videoTitle }}</span>
-                    <span>조회수 {{ myVideo.videoCount }}</span>
-                    <span>좋아요 {{ myVideo.likeStateCount }}</span>
+              <div class="video-box" v-for="(myVideo, index) in myVideoList">
+                  <div class="video-div">
+                    <img :src="myVideo.thumbnailFullPath" @click="showVideoDetail(myVideo.videoSeq)">
+                    <div class="video-info">
+                      <span @click="showVideoDetail(myVideo.videoSeq)">{{ myVideo.videoTitle }}</span>
+                      <span>조회수 {{ myVideo.videoCount }}</span>
+                      <span>좋아요 {{ myVideo.likeStateCount }}</span>
+                    </div>
+                  </div>
+                  <div class="video-menu" @mouseover="showMoreMenu(index)" @mouseleave="closeMoreMenu(index)">
+                      <img src="/more_feedback.png">
+                      <div class="more-menu" v-if="isShowMoreMenu[index]" @mouseover="showMoreMenu(index)" @mouseleave="closeMoreMenu(index)">
+                          <span @click="updateVideo()">수정</span>
+                          <div class="line"></div>
+                          <span @click="deleteVideo()">삭제</span>
+                      </div>
                   </div>
               </div>
             </div>
@@ -40,10 +50,13 @@
 import {ref} from "vue";
 import UploadVideoModal from "@/modal/UploadVideoModal.vue";
 import instance from "@/api/axios";
+import router from "@/router";
+import index from "vuex";
 
 let showModal = ref(false);
 let isEmptyVideo = ref(true);
 let myVideoList = ref([]);
+let isShowMoreMenu = ref([]);
 
 instance.get('/api/video/findAll?channelSeq=' + localStorage.getItem('channelSeq')).then(value => {
   let result = value.data;
@@ -53,6 +66,7 @@ instance.get('/api/video/findAll?channelSeq=' + localStorage.getItem('channelSeq
       } else {
         for(let i = 0; i < result.data.length; i++) {
           myVideoList.value.push(result.data[i]);
+          isShowMoreMenu.value[i] = false
         }
         isEmptyVideo.value = false;
       }
@@ -68,6 +82,25 @@ function handelModal() {
     showModal.value = !showModal.value;
 }
 
+function showVideoDetail(videoSeq) {
+    router.push({ name: 'videoDetail', params: { seq: videoSeq }})
+}
+
+function showMoreMenu(index) {
+    isShowMoreMenu.value[index] = true
+}
+
+function closeMoreMenu(index) {
+    isShowMoreMenu.value[index] = false
+}
+
+function deleteVideo() {
+    alert('삭제 ~')
+}
+
+function updateVideo() {
+    alert('수정 ~')
+}
 
 </script>
 
@@ -80,6 +113,14 @@ function handelModal() {
 
 .video-box {
     display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 1%;
+}
+
+.video-div {
+    display: flex;
+    width: 80%;
     margin: 1%;
 }
 
@@ -87,7 +128,8 @@ function handelModal() {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    margin: 0 1%;
+    width: 30%;
+    margin: 0 3%;
 }
 
 .video-info span {
@@ -153,4 +195,29 @@ h4 {
   margin: 1%;
 }
 
+.video-menu {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 10%;
+}
+
+.video-menu img {
+    width: 50px;
+    height: 10px;
+}
+
+.more-menu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    border:  solid 1px #F2F2F2;
+    border-radius: 15px;
+    padding: 8% 12%;
+    bottom: 60%;
+    font-weight: bold;
+    font-size: 17px;
+}
 </style>

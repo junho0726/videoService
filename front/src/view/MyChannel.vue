@@ -6,9 +6,13 @@
                                 <div class="profile-box">
                                         <img class="channel-profile-img" src="/basic_profile.png">
                                         <div class="profile-detail">
-                                                <span class="profile-name">경민 김</span>
-                                                <div>
-                                                        <span>@user-gc1asfdoi</span><span>구독자 없음</span><span>동영상 없음</span>
+                                                <span class="profile-name">{{ channelInfo.userName }}</span>
+                                                <div class="profile-col">
+                                                        <span>{{ channelInfo.channelName }}</span>
+                                                        <span v-if="channelInfo.subscribeCount == 0">구독자 없음</span>
+                                                        <span v-if="channelInfo.subscribeCount != 0">구독자 {{ channelInfo.subscribeCount }}명</span>
+                                                        <span v-if="channelInfo.videoEntityListSize == 0">동영상 없음</span>
+                                                        <span v-if="channelInfo.videoEntityListSize != 0">동영상 {{ channelInfo.videoEntityListSize }}개</span>
                                                 </div>
                                         </div>
                                 </div>
@@ -33,9 +37,26 @@ import ChannelHome from "@/components/channel/ChannelHome.vue";
 import ChannelList from "@/components/channel/ChannelList.vue";
 import ChannelInfo from "@/components/channel/ChannelInfo.vue";
 import SideBar from "@/layout/SideBar.vue";
+import instance from "@/api/axios";
 
 let isActive = ref([true, false, false]);
 let isShowSidebar = ref(false);
+let channelInfo = ref({});
+
+let props = defineProps({
+        channelSeq: String
+})
+
+instance.get('/api/channel/detail/' + props.channelSeq
+).then(value => {
+        if (value.data.code == '0000') {
+                channelInfo.value = value.data.data;
+        } else {
+                alert('재로그인 후 진행해주세요.');
+        }
+}).catch(reason => {
+        alert('재로그인 후 진행해주세요.');
+})
 
 function toggleMenu(index) {
         for (let i = 0; i < isActive.value.length; i++) {
@@ -92,5 +113,10 @@ function showSidebar() {
 .active {
         color: black !important;
         font-weight: bold;
+}
+
+.profile-col {
+        display: flex;
+        flex-direction: column;
 }
 </style>

@@ -37,9 +37,10 @@ const routes = [
         component: MyPage
     },
     {
-        path: "/mychannel",
+        path: "/mychannel/:channelSeq",
         name: "mychannel",
-        component: MyChannel
+        component: MyChannel,
+        props: true
     },
     {
         path: "/videoDetail/:seq",

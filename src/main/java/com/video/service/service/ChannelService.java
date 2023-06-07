@@ -1,16 +1,11 @@
 package com.video.service.service;
 
 import com.video.service.entity.ChannelEntity;
-import com.video.service.entity.UserEntity;
-import com.video.service.entity.VideoEntity;
-import com.video.service.repository.ChannelRepository;
-import com.video.service.repository.VideoRepository;
+import com.video.service.repository.channel.ChannelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -28,9 +23,14 @@ public class ChannelService {
     }
 
     public ChannelEntity findById(int channelSeq) throws Exception {
+        return channelRepository.findById(channelSeq).orElseThrow(() -> {
+            return new IllegalArgumentException("존재하지 않는 채널입니다.");
+        });
+    }
 
-        Optional <ChannelEntity>  channel =  channelRepository.findById(channelSeq);
-
-        return channel.get();
+    public ChannelEntity findByUserSeq(int userSeq) throws Exception {
+        return channelRepository.findByUserSeq(userSeq).orElseThrow(() -> {
+            return new IllegalArgumentException("존재하지 않는 채널입니다.");
+        });
     }
 }

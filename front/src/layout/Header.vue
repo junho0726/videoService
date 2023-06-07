@@ -16,7 +16,7 @@
                 <router-link v-if="!isLogin" to="/join">JOIN</router-link>
                 <router-link v-if="isLogin" to="/mypage">MY PAGE</router-link>
                 <div v-if="isLogin" class="line"></div>
-                <router-link v-if="isLogin" to="/mychannel">MY CHANNEL</router-link>
+                <router-link v-if="isLogin" to="/mychannel/0">MY CHANNEL</router-link>
                 <div v-if="isLogin" class="line"></div>
                 <span v-if="isLogin" @click="logout()">LOGOUT</span>
             </div>
