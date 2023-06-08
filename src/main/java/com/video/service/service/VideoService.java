@@ -38,9 +38,9 @@ public class VideoService {
             return new IllegalArgumentException("존재하지 않는 비디오입니다..");
         });
 
-        videoEntity.setThumbnail(video.getThumbnail());
-        videoEntity.setTitle(video.getTitle());
-        videoEntity.setContent(video.getContent());
+        videoEntity.setThumbnail(video.getThumbnail() == null ? videoEntity.getThumbnail() : video.getThumbnail());
+        videoEntity.setTitle(video.getTitle() == null ? videoEntity.getTitle() : video.getTitle());
+        videoEntity.setContent(video.getContent() == null ? videoEntity.getContent() : video.getContent());
 
         return videoEntity;
     }

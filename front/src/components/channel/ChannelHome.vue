@@ -102,7 +102,7 @@ function closeMoreMenu(index) {
 }
 
 function deleteVideo(videoSeq) {
-    if (prompt('정말 삭제하시겠습니까?')) {
+    if (confirm('정말 삭제하시겠습니까?')) {
       instance.get('/api/video/delete/' + videoSeq
       ).then(value => {
           if (value.data.code == '0000') {
@@ -120,18 +120,6 @@ function deleteVideo(videoSeq) {
 
 function updateVideo(index) {
     showUpdateModal.value[index] = true;
-    // instance.get('/api/video/update/' + videoSeq
-    // ).then(value => {
-    //     if (value.data.code == '0000') {
-    //         alert('삭제되었습니다.');
-    //         location.reload();
-    //     } else {
-    //         alert(value.data.message);
-    //     }
-    // }).catch(reason => {
-    //     console.log(reason);
-    //     alert('예상치 못한 오류 발생');
-    // })
 }
 
 </script>

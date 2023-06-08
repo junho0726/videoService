@@ -21,8 +21,8 @@
                 <div class="thumbnail-box">
                     <h5>미리보기 이미지</h5>
                     <div>
-                      <input type="file" ref="inputThumbFile" @change="" style="display: none;">
-                      <span v-if="!isUploadThumb" @click="">썸네일 업로드</span>
+                      <input type="file" ref="inputThumbFile" style="display: none;">
+                      <span v-if="!isUploadThumb">썸네일 업로드</span>
                       <img v-if="isUploadThumb" class="img-thumbnail" :src="videoInfo.thumbnailFullPath">
                     </div>
                 </div>
@@ -100,13 +100,20 @@ instance.get('/api/video/findDetail/' + props.videoSeq).then(value => {
 })
 
 function update() {
-    console.log(videoInfo.value)
     instance.post('/api/video/update', {
-        'videoDto' : videoInfo.value
+        'videoSeq' : videoInfo.value.videoSeq,
+        'videoTitle' : videoInfo.value.videoTitle,
+        'videoContent' : videoInfo.value.videoContent
     }).then(value => {
-        console.log(value);
+        if (value.data.code == '0000') {
+            alert('성공적으로 수정되었습니다.');
+            location.reload();
+        } else {
+            alert('예기치 못 한 오류가 발생');
+        }
     }).catch(reason => {
         console.log(reason);
+        alert('예기치 못 한 오류가 발생');
     })
 }
 </script>
