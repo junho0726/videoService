@@ -135,6 +135,7 @@ function updateVideo(index) {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    height: auto !important;
     margin: 1%;
 }
 
@@ -148,16 +149,12 @@ function updateVideo(index) {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    width: 30%;
+    width: 30% !important;
     margin: 0 3%;
 }
 
 .video-info span {
     align-self: start;
-}
-
-.contents {
-    text-align: center;
 }
 
 .div-none-video {
@@ -176,10 +173,6 @@ img {
     height: 35px;
     border: none;
     border-radius: 20px;
-}
-
-a {
-    color: #3EA6FF;
 }
 
 h2 {

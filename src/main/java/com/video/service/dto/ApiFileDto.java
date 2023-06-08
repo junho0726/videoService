@@ -25,6 +25,10 @@ public class ApiFileDto {
 
     private int videoCount ;
 
+    private String saveVideoState;
+
+    private int saveVideoStateSeq;
+
     private String fileFullPath;
 
     private  String fileName;

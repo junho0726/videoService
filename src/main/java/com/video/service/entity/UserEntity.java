@@ -52,6 +52,10 @@ public class UserEntity {
     private List<ViewingHistoryEntity> viewingHistory;
 
     @JsonIgnore
+    @OneToMany(mappedBy = "video", cascade = CascadeType.REMOVE)
+    private List<SaveVideoEntity> saveVideo;
+
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     private TokenEntity token;
 

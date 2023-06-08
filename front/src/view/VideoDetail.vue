@@ -37,7 +37,8 @@
                         <div class="more-feedback-div" :class="{ 'show-side-bar-more-feedback-div' : isShowSidebar }" @mouseover="showMoreFeedbackList()" @mouseleave="closeMoreFeedbackList()">
                           <img class="more-feedback-img" src="/more_feedback.png">
                           <div class="more-feedback-list" v-if="isShowMoreFeedbackList">
-                            <span @click="sendFeedback('저장')">저장</span>
+                            <span @click="handleSaveVideoState('Y')" v-if="video.saveVideoState == 'N' || video.saveVideoState == null">저장</span>
+                            <span @click="handleSaveVideoState('N')" v-if="video.saveVideoState == 'Y'">저장됨</span>
                             <span @click="sendFeedback('신고')">신고</span>
                             <span @click="sendFeedback('뭐하지')">뭐하지</span>
                           </div>
@@ -68,7 +69,6 @@
                               <span v-if="writeCommentMoreIndex == index" @click="writeCommentMore(index)">취소</span>
                           </div>
                       </div>
-                      <br>
                       <div class="comment-list" v-for="moreComment in comment.children" v-show="writeCommentMoreIndex == index">
                           <div class="more-comment-line">
                               <div class="more-comment-info-box">
@@ -79,7 +79,6 @@
                                   </div>
                               </div>
                           </div>
-                        <br>
                       </div>
                       <div class="comment-write-div" v-if="writeCommentMoreIndex == index">
                           <img class="more-profile-img" src="/basic_profile.png">
@@ -260,8 +259,31 @@ function closeMoreFeedbackList() {
   isShowMoreFeedbackList.value = false;
 }
 
-function sendFeedback(what) {
-  alert(what);
+function sendFeedback() {
+}
+
+function handleSaveVideoState(state) {
+    if (video.value.saveVideoState != null) {
+        instance.post('/api/saveVideo/handleState', {
+            'saveVideoSeq':video.value.saveVideoStateSeq,
+            'state':state,
+            'videoSeq':video.value.videoSeq
+        }).then(value => {
+            if (value.data.code == '0000') {
+                let result = value.data.data;
+                video.value.saveVideoState = result.state;
+                video.value.saveVideoStateSeq = result.saveVideoSeq;
+            } else {
+                console.log('실패')
+                console.log(value)
+            }
+        }).catch(reason => {
+            console.log(reason);
+        })
+    } else {
+        alert('로그인 후 이용해주세요.');
+        location.href = '/login';
+    }
 }
 
 function handleLikeState(state) {
@@ -437,16 +459,16 @@ h4 {
   height: 100px;
   display: flex;
   flex-direction: column;
-  justify-content: left;
+  justify-content: center;
   align-items: center;
   padding: 30% 0;
   bottom: 100%;
-  font-size: 20px;
-  font-weight: bold;
 }
 
 .more-feedback-list span {
-  margin-bottom: 10%;
+    margin-bottom: 10%;
+    font-size: 20px !important;
+    font-weight: bold;
 }
 
 .video-detail-info {
@@ -482,6 +504,7 @@ h4 {
 }
 
 .comment-write-div {
+    margin: 1% 7.5px 0;
     display: flex;
 }
 
@@ -519,12 +542,13 @@ h4 {
 
 .comment-line {
     display: flex;
+    justify-content: space-between;
     margin: 2% 0 0;
 }
 
 .more-comment-line {
     display: flex;
-    margin: 0 2%;
+    margin: 1% 7.5px 0;
 }
 
 .comment-info-box {
@@ -557,8 +581,9 @@ h4 {
 
 .more-comment {
     display: flex;
-    width: 7%;
-    align-self: end;
+    align-items: center;
+    width: max-content;
+    margin-right: 1%;
     margin-bottom: 5px;
 }
 

@@ -274,57 +274,8 @@ function get확장자(fileOriginName) {
 
 <style scoped>
 
-a {
-  display: block;
-  color: #3EA6FF !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 h5 {
   margin-bottom: 8px;
-}
-
-span {
-  font-size: 12px;
-  color: slategrey;
-}
-
-.videoModal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    z-index: 10000;
-    width: 60%;
-    height: 90%;
-    display: flex;
-    flex-direction: column;
-}
-
-.modal-title {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: solid 1px black;
-    padding-bottom: 20px;
-}
-
-.modal-title span {
-    font-size: 22px;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.modal-title button {
-    border: none;
-    background-color: white;
-    color: black;
-    font-size: 22px;
 }
 
 .modal-contents {
@@ -394,56 +345,6 @@ span {
     outline: none;
     color: black;
     font-weight: bold;
-}
-
-.videoBox {
-  position: relative;
-  width: 30%;
-  padding: 2%;
-}
-
-#video-box {
-  width: 100%;
-  height: 20%;
-}
-
-.video-info {
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.link-row {
-  display: flex;
-  width: 100%;
-}
-
-.video-link {
-  width: 90%;
-}
-
-.copy-video-link {
-  width: 10%;
-}
-
-.copy-video-link span {
-  margin-left: 5px;
-}
-
-.thumbnail-box {
-  display: flex;
-  flex-direction: column;
-}
-
-.thumbnail-box div {
-  background-color: #F9F9F9;
-  border: none;
-  border-radius: 5px;
-  width: 98%;
-  height: auto;
-  text-align: left;
-  padding: 8px;
 }
 
 .select-list {

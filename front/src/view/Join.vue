@@ -177,19 +177,9 @@ function checkEmpty() {
 
 <style scoped>
 
-.contents {
-    text-align: center;
-    margin-top: 5%;
-}
-
 .contents-row {
     display: flex;
     justify-content: center;
-}
-
-.contents input {
-    width: 13%;
-    margin-right: 1%;
 }
 
 .contents-row button {

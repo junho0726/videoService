@@ -23,7 +23,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
             "/api/video/findDetail/**",
             "/api/category/findAll",
             "/api/comment/**",
-            "/api/channel/**"
+            "/api/channel/**",
+            "/api/saveVideo/**"
     };
 
     @Override

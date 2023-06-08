@@ -54,6 +54,8 @@ public class VideoController {
 
     private final ViewingHistoryService viewingHistoryService;
 
+    private final SaveVideoService saveVideoService;
+
     @PostMapping(value = "fileInsert")
     public ApiResponseDto fileInsert(@RequestHeader("Access_Token") String accessToken, @RequestPart MultipartFile file) {
         ApiResponseDto response = new ApiResponseDto();
@@ -214,6 +216,9 @@ public class VideoController {
                 }
                 viewingHistoryService.findByUserAndVideo(findUser, video);
 
+                SaveVideoEntity saveVideoEntity = saveVideoService.findByUserSeqAndVideoSeq(findUser.getUserSeq(), videoSeq);
+                apiFileDto.setSaveVideoState(saveVideoEntity.getState());
+                apiFileDto.setSaveVideoStateSeq(saveVideoEntity.getSaveVideoSeq());
             }
             FileEntity file = fileService.findByVideo(video);
             ChannelEntity channel = channelService.findById(video.getChannel().getChannelSeq());

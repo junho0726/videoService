@@ -25,7 +25,7 @@
 
 .side-bar a {
     text-decoration: none;
-    color: black;
+    color: black !important;
     font-size: 25px;
     margin: 3% 0;
 }

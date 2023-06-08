@@ -85,16 +85,6 @@ function checkEmpty() {
 
 <style scoped>
 
-.contents {
-    text-align: center;
-    margin-top: 5%;
-}
-
-.contents input {
-    width: 13%;
-    margin-right: 1%;
-}
-
 .btn-login {
     width: 8%;
     margin-right: 1%;

@@ -2,7 +2,7 @@
         <Header @show-sidebar="showSidebar()" :is-in-channel="false"/>
         <SideBar v-if="isShowSidebar"/>
                 <div class="contents-wrap">
-                        <div class="contents">
+                        <div class="contents-col">
                                 <div class="profile-box">
                                         <img class="channel-profile-img" src="/basic_profile.png">
                                         <div class="profile-detail">
@@ -79,7 +79,7 @@ function showSidebar() {
         margin: 0% 15%;
 }
 
-.contents {
+.contents-col {
         display: flex;
         flex-direction: column;
 }
@@ -92,13 +92,13 @@ function showSidebar() {
 .profile-detail {
         display: flex;
         flex-direction: column;
-        margin-top: 15px;
-        margin-left: 15px;
+        margin: 15px;
 }
 
 .profile-name {
         font-size: 25px;
 }
+
 
 .channel-nav span {
         margin: 0% 2%;

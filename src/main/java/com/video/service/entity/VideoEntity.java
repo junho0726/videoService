@@ -57,6 +57,10 @@ public class VideoEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "video", cascade = CascadeType.REMOVE)
+    private List<SaveVideoEntity> saveVideo;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "video", cascade = CascadeType.REMOVE)
     private List<ViewingHistoryEntity> viewingHistory;
 
     @Column(nullable = false)

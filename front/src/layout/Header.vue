@@ -103,9 +103,14 @@ function logout() {
     text-align: center;
 }
 
+.is-login-profile-menu span {
+    font-size: 18px;
+    color: black;
+}
+
 .profile-menu a {
     text-decoration: none;
-    color: black;
+    color: black !important;
     font-size: 18px;
 }
 
