@@ -42,11 +42,11 @@
                     </div>
                 </div>
                 <div class="video-list-box">
-                  <h5>재생목록 </h5>
+                  <h5>재생목록</h5>
                   <div>
                     <span>동영상을 1개 이상의 재생목록에 추가하세요. 시청자가 내 콘텐츠를 더 빨리 발견하는 데 도움이 될 수 있습니다.</span>
                   </div>
-                  <button class="select-list">
+                  <button class="select-list" @click="handlePlayListModal()">
                     선택
                   </button>
                 </div>
@@ -86,6 +86,7 @@
             </div>
         </div>
     </div>
+  <PlayListModal :show-modal="isShowPlayListModal" @close-modal="handlePlayListModal()"/>
 </template>
 
 <script setup>
@@ -93,10 +94,12 @@ import { ref } from "vue";
 import axios from "axios";
 import store from "@/store";
 import instance from "@/api/axios";
+import PlayListModal from "@/modal/PlayListModal.vue";
 
 defineProps({
     showModal: Boolean
 });
+
 
 let inputVideoFile = ref();
 let inputThumbFile = ref();
@@ -104,6 +107,7 @@ let linkForCopy = ref();
 let correctFile = ref(false);
 let isUploadFile = ref(false);
 let isUploadThumb = ref(false);
+let isShowPlayListModal = ref(false);
 let videoInfo = ref({
   fileSeq: '',
   name: '',
@@ -270,6 +274,11 @@ function get확장자(fileOriginName) {
   return fileOriginName.substring(fileOriginName.lastIndexOf('.') + 1, fileOriginName.lastIndex).toLowerCase();
 }
 
+function handlePlayListModal() {
+    isShowPlayListModal.value = !isShowPlayListModal.value;
+}
+
+
 </script>
 
 <style scoped>
@@ -355,7 +364,7 @@ h5 {
   border-radius: 15px;
   text-align: start;
   padding: 10px 20px;
-  margin: 5% 0;
+  margin: 2% 0;
 }
 
 .div-btn {

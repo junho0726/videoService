@@ -73,7 +73,7 @@ h2 {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
+    z-index: 9998;
 }
 
 /* 비디오 모달 */
@@ -84,7 +84,7 @@ h2 {
     transform: translate(-50%, -50%);
     background-color: white;
     padding: 20px;
-    z-index: 10000;
+    z-index: 9999;
     width: 60%;
     height: 90%;
     display: flex;
@@ -95,7 +95,7 @@ h2 {
     display: flex;
     justify-content: space-between;
     border-bottom: solid 1px black;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .modal-title span {

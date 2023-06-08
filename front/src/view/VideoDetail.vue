@@ -374,7 +374,7 @@ h4 {
     flex-direction: column;
     align-content: end;
     text-align: right;
-    padding-top: 11px;
+    padding: 7px 3% 0;
 }
 
 .feedback-box {

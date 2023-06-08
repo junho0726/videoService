@@ -63,6 +63,10 @@ public class VideoEntity {
     @OneToMany(mappedBy = "video", cascade = CascadeType.REMOVE)
     private List<ViewingHistoryEntity> viewingHistory;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "playListSeq")
+    private PlayListEntity playList;
+
     @Column(nullable = false)
     @CreationTimestamp
     private Timestamp createDate;
